@@ -1,0 +1,24 @@
+<div id="wrapper-home">
+  <div id="container" class="scroll">
+    <header>
+      <h1 class="welcome">
+        Bienvenido a Reporte Tablero de control del SGI
+      </h1>
+      <div class="description">
+        Acontinuación encontrara un listado con los tableros disponibles
+
+      </div>
+    </header>
+    <section>
+      <div class="config-card" *ngFor="let opt of options" [routerLink]="opt.route">
+        <div class="description">
+          <mat-icon class="max-size" aria-label="label">{{opt.icon}}</mat-icon>
+          <div>
+            <h2>{{opt.title}}</h2>
+            <p>{{opt.description}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

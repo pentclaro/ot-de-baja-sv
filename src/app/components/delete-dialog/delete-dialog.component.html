@@ -1,0 +1,18 @@
+<div id="wrapper-delete">
+  <div id="container">
+    <header>
+      <h3 class="title">Eliminar</h3>
+      <form ngNativeValidate #form (ngSubmit)="form.checkValidity() ? send() : null">
+        <h4>{{Data.message}}</h4>
+        <div id="actions">
+          <button class="button-cancel secundary-color" mat-raised-button mat-dialog-close>
+            <mat-icon aria-label="label">cancel</mat-icon> Cancelar
+          </button>
+          <button class="button-ok primary-color" mat-raised-button type="submit">
+            <mat-icon aria-label="label">delete</mat-icon> Eliminar {{Data.module}}
+          </button>
+        </div>
+      </form>
+    </header>
+  </div>
+</div>

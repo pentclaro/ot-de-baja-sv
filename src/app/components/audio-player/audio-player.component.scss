@@ -1,0 +1,37 @@
+@import "src/assets/styles/variables";
+
+.album-picture{
+  width: 100%;
+  min-height: 50px;
+  max-height: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  background: -webkit-linear-gradient($primary-color, $secundary-color);
+
+  img {
+    width: auto;
+    height: 100%;
+    display: block;
+  }
+}
+
+mat-basic-audio-player{
+  mat-card{
+    background: #f5f5f5;
+  }
+  .ngx-basic-audio-player{
+    background: #f5f5f5;
+  }
+}
+mat-card[_ngcontent-ixm-c251]{
+  background: #f5f5f5 !important;
+}
+
+// ::ng-deep .mat-accent .mat-slider-track-fill, .mat-accent .mat-slider-thumb, .mat-accent .mat-slider-thumb-label{
+//   background-color: $primary-color !important;
+// }
+
+// ::ng-deep .mat-slider-thumb{
+//   background-color: $primary-color !important;
+// }

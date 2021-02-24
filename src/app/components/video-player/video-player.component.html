@@ -1,0 +1,12 @@
+<mat-video #video [title]="title" [src]="src" [autoplay]="true" [preload]="true"
+  [fullscreen]="true" [download]="false" color="accent" spinner="spin">
+  <!-- <mat-video #video title="My Tutorial Title" [autoplay]="true" [preload]="true" [fullscreen]="true" [download]="false" color="accent" spinner="spin" poster="image.jpg"> -->
+  <!-- <source matVideoSource src="assets/video/test.mp4" type="video/mp4"> -->
+  <!-- <source src="tutorial.webm" type="video/webm"> -->
+  <div *ngFor="let subtitle of subtitles">
+    <track matVideoTrack src="{{subtitle.src}}" kind="subtitles" srclang="{{subtitle.scrlang}}"
+      label="{{subtitle.title}}">
+  </div>
+  <!-- <track matVideoTrack src="subtitles_no.vtt" kind="subtitles" srclang="no" label="Norwegian">
+  <track src="subtitles_no.vtt" kind="subtitles" srclang="no" label="Norwegian"> -->
+</mat-video>

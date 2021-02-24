@@ -10,10 +10,27 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
+## Specific comands
+
+Run `[ng g c|ng generate component] page/component-name` and add `--skip-tests --skip-import` to skip create spec.ts and auto import component.
+Run `[ng g module| ng generate module] page/module-name` to create a module file.
+
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Add `--base-href /[service_manager|service_manager_desarrollos]/project-name/` flag for specific route on server
 
+If the project not work add a file named `.htaccess` with this configuration
+```apacheconf
+RewriteEngine on
+# Don't rewrite files or directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Rewrite everything else to index.html to allow html5 state links
+RewriteRule ^ index.html [L]
+```
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).

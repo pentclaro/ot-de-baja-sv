@@ -1,0 +1,16 @@
+<div id="wrapper-message-dialog">
+  <div id="container">
+    <header>
+      <mat-icon *ngIf="Data.valid" class="big ok" aria-label="label">done_outline</mat-icon>
+      <mat-icon *ngIf="!Data.valid" class="big error" aria-label="label">error_outline</mat-icon>
+      <h3>{{Data.message}}</h3>
+      <form ngNativeValidate>
+        <div class="actions">
+          <button mat-raised-button color="primary" mat-dialog-close type="submit" class="action-ok"> Entendido </button>
+        </div>
+      </form>
+    </header>
+    <section>
+    </section>
+  </div>
+</div>

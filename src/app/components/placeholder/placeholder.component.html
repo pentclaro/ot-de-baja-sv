@@ -1,0 +1,5 @@
+<div class="placeholder">
+  <mat-icon *ngIf="!loading" class="image row-of-icons">warning</mat-icon>
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <h3 *ngIf="!loading"> {{message}} </h3>
+</div>

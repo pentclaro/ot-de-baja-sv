@@ -1,0 +1,63 @@
+@import "src/assets/styles/variables";
+
+.primary-button {
+  height: 40px;
+  background: $primary-color;
+  color: $text-color;
+  border-radius: 7px;
+
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &:hover {
+    background: $primary-hover;
+  }
+
+  &.space {
+    margin: 5px !important;
+    height: 36px !important;
+  }
+}
+
+.secundary-button {
+  height: 40px;
+  background: $secundary-color;
+  color: $text-color;
+  border-radius: 7px;
+
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &:hover {
+    background: $primary-hover;
+  }
+
+  &.space {
+    margin: 5px !important;
+    height: 36px !important;
+  }
+}
+
+.cancel-button {
+  height: 40px;
+  background: $cancel-color;
+  color: $text-color;
+  border-radius: 7px;
+
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.input-width {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-type-mat-native-select.mat-focused:not(.mat-form-field-invalid) .mat-form-field-infix::after {
+  transform: rotate(180deg) !important;
+}

@@ -1,0 +1,44 @@
+$error: red;
+$success: green;
+$warning: orange;
+
+.snack {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  min-width: 300px;
+  border-radius: 4px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  margin: 24px;
+}
+
+.error {
+  background-color: $error;
+}
+
+.success {
+  background-color: $success;
+}
+
+.warning {
+  background-color: $warning;
+}
+
+::ng-deep .cdk-overlay-pane {
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+
+::ng-deep .mat-snack-bar-container {
+  border-radius: 4px;
+  box-sizing: none !important;
+  display: block;
+  margin: 0 !important;
+  max-width: 33vw;
+  min-width: 344px;
+  padding: 0;
+  min-height: 48px;
+  transform-origin: center;
+  background-color: rgba(255, 255, 255, 0) !important;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0), 0px 6px 10px 0px rgba(0, 0, 0, 0), 0px 1px 18px 0px rgba(0, 0, 0, 0) !important;
+}

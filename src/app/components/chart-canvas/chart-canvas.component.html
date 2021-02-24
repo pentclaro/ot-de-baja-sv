@@ -1,0 +1,22 @@
+<div class="controls" *ngIf="control">
+    <h3 class="h2 title">Controles</h3>
+  <div class="controls">
+    <button mat-raised-button class="pointer secundary-button" (click)="change('bar')" [ngClass]="{'selected': lineChartType === 'bar'}">
+      Barras
+    </button>
+    <button mat-raised-button class="pointer secundary-button" (click)="change('line')" [ngClass]="{'selected': lineChartType === 'line'}">
+      Lineal
+    </button>
+    <button mat-raised-button class="pointer secundary-button" (click)="change('pie')" [ngClass]="{'selected': lineChartType === 'pie'}">
+      Pie
+    </button>
+    <button mat-raised-button class="pointer secundary-button" (click)="change('radar')" [ngClass]="{'selected': lineChartType === 'radar'}">
+      Radar
+    </button>
+  </div>
+</div>
+<div class="chart-view">
+  <canvas #chart baseChart width="100%" [height]="height + 'px'" [datasets]="lineChartData" [labels]="lineChartLabels"
+    [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+    [plugins]="lineChartPlugins"></canvas>
+</div>

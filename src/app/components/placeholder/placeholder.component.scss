@@ -1,0 +1,21 @@
+@import "src/assets/styles/variables";
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5% 8px 5% 8px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 20%);
+  transition: all 200ms ease-out;
+
+  .image {
+    color: $primary-color;
+    font-size: 140px;
+    height: 140px;
+    width: 140px;
+    pointer-events: none;
+  }
+}

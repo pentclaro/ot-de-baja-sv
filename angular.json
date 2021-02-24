@@ -23,14 +23,35 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js",
+              "xlsx",
+              "file-saver",
+              "jquery",
+              "w2ui"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/assets/styles/theme.scss",
+              "src/styles.scss",
+              "./node_modules/pivottable/dist/pivot.min.css",
+              "./node_modules/subtotal/dist/subtotal.min.css",
+              "src/assets/vendor/w2ui/w2ui.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/jquery-ui-dist/jquery-ui.js",
+              "./node_modules/pivottable/dist/pivot.min.js",
+              "./node_modules/subtotal/dist/subtotal.min.js",
+              "./node_modules/pivottable/dist/gchart_renderers.js",
+              "./node_modules/pivottable/dist/pivot.es.min.js",
+              "./node_modules/w2ui/w2ui.min.js",
+              "src/assets/vendor/googlejsapi.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -91,6 +112,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/styles/theme.scss",
               "src/styles.scss"
             ],
             "scripts": []

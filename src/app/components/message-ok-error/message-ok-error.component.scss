@@ -1,0 +1,116 @@
+@import "src/assets/styles/variables";
+
+#wrapper-message-dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+  margin: 45px auto;
+
+  .big {
+    font-size: 70px;
+    height: inherit;
+    width: auto;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .ok {
+    color: $primary-color;
+    text-align: center;
+  }
+
+  .error {
+    color: $cancel-color;
+    text-align: center;
+  }
+
+  .actions {
+    width: 80%;
+    display: flex;
+    flex-direction: unset;
+    justify-content: center;
+    margin: 0 auto;
+
+    button {
+      border-radius: 5px;
+      color: white;
+      height: 40px;
+      width: 150px;
+      font-size: 10px;
+      margin: 3px;
+
+      &:hover {
+        background: $primary-color;
+      }
+
+      background: $primary-color;
+    }
+
+    .action-ok {
+      color: #ffffff;
+    }
+
+    .action-cancel {
+      background-color: $cancel-color !important;
+      color: #ffffff;
+      text-emphasis: bold;
+      margin-left: 15px;
+
+      &:hover {
+        background-color: rgba(141, 138, 138, 0.692) !important;
+      }
+    }
+  }
+
+  #container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+
+    header {
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        margin-top: 0;
+        color: #000000;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        justify-items: center;
+        margin-top: 20px;
+
+        mat-form-field {
+          margin-bottom: -1em;
+        }
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  #wrapper-update-create {
+    #container {
+      header {
+        form {
+          .row {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      }
+    }
+  }
+}

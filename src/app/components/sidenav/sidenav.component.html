@@ -1,0 +1,21 @@
+<ng-container *ngIf="shouldRun">
+
+  <mat-toolbar>
+
+    <mat-toolbar-row>
+      <div class="info">
+        <a mat-list-item routerLinkActive="is-active" [routerLink]="nav.route" *ngFor="let nav of fillerNav">
+          <div class="menu-items">
+            <mat-icon matPrefix>{{nav.icon}}</mat-icon>
+            <h3 matLine class="item-list-menu">{{nav.name}}</h3>
+          </div>
+        </a>
+        <!-- <mat-slide-toggle [(ngModel)]="dark" (ngModelChange)="onSetTheme();">Tema</mat-slide-toggle> -->
+      </div>
+    </mat-toolbar-row>
+
+  </mat-toolbar>
+
+  <router-outlet> </router-outlet>
+
+</ng-container>

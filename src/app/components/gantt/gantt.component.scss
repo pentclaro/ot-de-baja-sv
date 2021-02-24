@@ -1,0 +1,65 @@
+@import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
+
+gantt {
+  width: 100% !important;
+}
+
+.gantt-chart {
+  position: relative;
+  width: 100%;
+  height: 600px;
+}
+
+.gantt_cal_light,
+.gantt_cal_quick_info,
+.gantt_container,
+.gantt_message_area,
+.gantt_modal_box,
+.gantt_tooltip {
+  width: auto;
+  height: 50vh;
+}
+
+.week-end {
+  background-color: #e91212 !important;
+  color: #fff !important;
+}
+
+.nested_task .gantt_add {
+  display: none !important;
+}
+
+.gantt_add {
+  display: none !important;
+}
+
+.gantt_grid_head_cell.gantt_grid_head_add.gantt_last_cell {
+  display: none !important;
+}
+
+.subtask_item {
+  position: absolute;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.gantt_task_content {
+  overflow: visible;
+}
+
+.subtask_milestone {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-radius: 4px;
+  background-color: #d33daf;
+  border: 1px solid #a9328b;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  position: absolute;
+}

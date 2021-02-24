@@ -1,0 +1,107 @@
+<ng-progress></ng-progress>
+<div id="wrapper-module">
+  <div id="container" class="scroll">
+    <div class="row">
+      <div class="col col-12 filters">
+
+        <div id="header">
+          <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData(form)" class="flex-container">
+            <!-- <mat-form-field appearance="outline" class="search">
+              <mat-label>País</mat-label>
+              <mat-select required placeholder="placeholder" [(ngModel)]="search.pais" name="country">
+                <mat-option value="TODOS">Todos</mat-option>
+                <mat-option *ngFor="let item of countries " [value]="item.title">{{item.title}}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+
+            <ng-select required name="country" [items]="countries" placeholder="Pais" appearance="outline"
+              [multiple]="true" bindLabel="title" [closeOnSelect]="false" bindValue="title" [(ngModel)]="search.pais"
+              class="search required">
+              <ng-template ng-header-tmp class="flex-container">
+                <button mat-flat-button (click)="selectAll()" class="primary-button space" type="button">Todos</button>
+                <button mat-flat-button (click)="unselectAll()" class="primary-button space" type="button">Ninguno</button>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" [ngModelOptions]="{standalone: true}" type="checkbox"
+                  [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                  <span class="ng-value-label">{{item.title}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true"> × </span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 1">
+                  <span class="ng-value-label">{{items.length - 1}} más...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <mat-form-field appearance="outline" class="search">
+              <mat-label>Categiría</mat-label>
+              <mat-select required placeholder="placeholder" [(ngModel)]="search.categoria" name="category">
+                <mat-option value="TODOS">Todas</mat-option>
+                <mat-option *ngFor="let item of categories " [value]="item.title">{{item.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="search">
+              <mat-label>Estado</mat-label>
+              <mat-select required placeholder="placeholder" [(ngModel)]="search.type" name="type">
+                <mat-option value="open">Abiertas</mat-option>
+                <mat-option value="close">Cerradas</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="search">
+              <mat-label>Fecha inicial</mat-label>
+              <input matInput autocomplete="off" [matDatepicker]="start" [(ngModel)]="search.start"
+                [required]="search.start || search.type === 'close'" placeholder="día/mes/año" name="start">
+              <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+              <mat-datepicker #start></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="search">
+              <mat-label>Fecha final</mat-label>
+              <input matInput autocomplete="off" [matDatepicker]="end" [(ngModel)]="search.end"
+                [required]="search.start || search.type === 'close'" [min]="search.start" placeholder="día/mes/año"
+                name="end">
+              <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+              <mat-datepicker #end></mat-datepicker>
+            </mat-form-field>
+
+            <button mat-flat-button class="primary-button" type="submit">
+              <mat-icon matPrefix>search</mat-icon>BUSCAR
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12" *ngIf="dataSource.length >= 1">
+        <div class="center" id="tituloPrincipal">
+          <h1>
+            REPORTE DE SLA'S (FALLAS)
+          </h1>
+          <h3 id="tituloTiempo">
+            Datos obtenidos el: {{updatedAt | date:'short'}}
+          </h3>
+          <br>
+        </div>
+      </div>
+      <div class="col col-12">
+
+        <mat-tab-group *ngIf="dataSource.length >= 1" (selectedTabChange)="refresh($event);">
+          <mat-tab label="W2UI">
+            <app-w2ui-grid #w2ui *ngIf="dataSource.length >= 1" [name]="name" [header]="header" [records]="dataSource"
+              [columns]="columns" [searches]="searches" [show]="show"></app-w2ui-grid>
+          </mat-tab>
+          <mat-tab label="Tabla dinámica">
+            <ngx-pivot-table [data]="dataSource" [ngModel]="'{}'" name="pivot-table" ngDefaultControl></ngx-pivot-table>
+          </mat-tab>
+        </mat-tab-group>
+
+        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="dataSource.length === 0">
+        </app-placeholder>
+
+      </div>
+    </div>
+  </div>
+</div>

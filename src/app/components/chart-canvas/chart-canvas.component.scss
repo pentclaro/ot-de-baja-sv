@@ -1,0 +1,29 @@
+@import "src/assets/styles/variables";
+
+.chart-view {
+  display: block;
+  width: 100%;
+  min-height: 500px;
+}
+.controls{
+  display: flex;
+  justify-content: space-between;
+
+}
+
+button {
+  height: 40px;
+  background: #fff;
+  color: #000;
+  border-radius: 7px;
+
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.selected{
+  background: $primary-color;
+  color: #fff;
+}

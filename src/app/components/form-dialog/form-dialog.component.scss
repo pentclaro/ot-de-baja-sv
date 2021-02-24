@@ -1,0 +1,124 @@
+@import "src/assets/styles/variables";
+@import "src/assets/styles/material";
+
+#wrapper-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+
+  form {
+    padding: 0;
+    margin: 25px auto;
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+
+    .item-form {
+      margin: 0px auto;
+      width: calc((100% / 12)*6) !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .input {
+        width: 95%;
+      }
+    }
+  }
+
+  #container {
+
+    .title {
+      color: $primary-color;
+    }
+
+    #actions {
+      width: 100%;
+      display: flex;
+      flex-direction: unset;
+      justify-content: center;
+      margin: 0 auto;
+
+      .button-ok {
+        border-radius: 5px;
+        color: white;
+        height: 40px;
+        width: 150px;
+        padding-left: 5px;
+        font-size: 10px;
+        margin: 3px;
+
+        &:hover {
+          background: $primary-color;
+        }
+
+        background: $primary-color;
+      }
+
+      .button-cancel {
+        border-radius: 5px;
+        color: white;
+        height: 40px;
+        width: 150px;
+        padding-left: 5px;
+        font-size: 10px;
+        border: 1px solid $cancel-color;
+        margin: 3px;
+
+        &:hover {
+          background: $cancel-color;
+        }
+
+        background: $cancel-color;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        margin-top: 0;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        justify-items: center;
+
+        mat-form-field {
+          margin-bottom: -1em;
+        }
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  #wrapper-form {
+    #container {
+      header {
+        form {
+          .row {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      }
+    }
+  }
+}

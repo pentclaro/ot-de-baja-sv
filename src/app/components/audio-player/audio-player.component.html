@@ -1,0 +1,10 @@
+<div class="album-picture" *ngIf="picture">
+  <img [src]="picture" [alt]="title">
+</div>
+<!-- <mat-basic-audio-player [audioUrl]="url" [title]="title" [autoPlay]="false" muted="muted"
+  [displayTitle]="displayTitle" [displayVolumeControls]="controls"></mat-basic-audio-player> -->
+<ngx-audio-player [playlist]="msaapPlaylist" [displayTitle]="msaapDisplayTitle" [autoPlay]="false" muted="muted"
+  [displayPlaylist]="msaapDisplayPlayList" [pageSizeOptions]="msaapPageSizeOptions" [displayArtist]="msaapDisplayArtist"
+  [displayDuration]="msaapDisplayDuration" [expanded]="true"
+  [displayVolumeControls]="msaapDisplayVolumeControls" [disablePositionSlider]="msaapDisablePositionSlider">
+</ngx-audio-player>
