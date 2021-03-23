@@ -29,7 +29,8 @@
               "xlsx",
               "file-saver",
               "jquery",
-              "w2ui"
+              "w2ui",
+              "chartjs-plugin-datalabels"
             ],
             "assets": [
               "src/favicon.ico",
@@ -38,18 +39,15 @@
             "styles": [
               "src/assets/styles/theme.scss",
               "src/styles.scss",
-              "./node_modules/pivottable/dist/pivot.min.css",
-              "./node_modules/subtotal/dist/subtotal.min.css",
-              "src/assets/vendor/w2ui/w2ui.min.css"
+              "src/assets/styles/pivottable.scss",
+              "./node_modules/@derekyle/w2ui/dist/w2ui.min.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/jquery-ui-dist/jquery-ui.js",
               "./node_modules/pivottable/dist/pivot.min.js",
-              "./node_modules/subtotal/dist/subtotal.min.js",
               "./node_modules/pivottable/dist/gchart_renderers.js",
-              "./node_modules/pivottable/dist/pivot.es.min.js",
-              "./node_modules/w2ui/w2ui.min.js",
+              "./node_modules/@derekyle/w2ui/dist/w2ui.min.js",
               "src/assets/vendor/googlejsapi.js"
             ]
           },

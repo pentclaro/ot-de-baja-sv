@@ -16,37 +16,39 @@ export class HomeComponent implements OnInit {
     protected sanitizer: DomSanitizer) { }
 
   options: any[] = [
+    // {
+    //   name: 'SLA`S',
+    //   title: 'SLA`S',
+    //   description: 'Lorem ipsum dolor sit amet.',
+    //   route: '/page/company',
+    //   icon: 'business'
+    // }, 
     {
-      name: 'SLA`S',
-      title: 'SLA`S',
-      description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/company',
-      icon: 'business'
-    }, {
       name: 'OLA`S',
       title: 'OLA`S',
       description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/company',
+      route: '/page/ola',
       icon: 'business'
-    }, {
-      name: 'Controles de seguridad',
-      title: 'Controles de seguridad',
-      description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/company',
-      icon: 'business'
-    }, {
-      name: 'Contratos',
-      title: 'Contratos',
-      description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/company',
-      icon: 'business'
-    }, {
-      name: 'Procesos SGI',
-      title: 'Procesos SGI',
-      description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/company',
-      icon: 'business'
-    }
+    }, 
+    // {
+    //   name: 'Controles de seguridad',
+    //   title: 'Controles de seguridad',
+    //   description: 'Lorem ipsum dolor sit amet.',
+    //   route: '/page/company',
+    //   icon: 'business'
+    // }, {
+    //   name: 'Contratos',
+    //   title: 'Contratos',
+    //   description: 'Lorem ipsum dolor sit amet.',
+    //   route: '/page/company',
+    //   icon: 'business'
+    // }, {
+    //   name: 'Procesos SGI',
+    //   title: 'Procesos SGI',
+    //   description: 'Lorem ipsum dolor sit amet.',
+    //   route: '/page/company',
+    //   icon: 'business'
+    // }
   ];
 
   ngOnInit() {

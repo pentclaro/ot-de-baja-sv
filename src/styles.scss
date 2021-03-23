@@ -161,9 +161,14 @@ html {
 .scroll::-webkit-scrollbar-thumb {
   background: #555;
   border-radius: 20px;
+
+  &:hover {
+    background: #757575;
+  }
 }
 
 .mat-drawer-inner-container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
@@ -177,8 +182,13 @@ html {
 
 .mat-drawer-inner-container::-webkit-scrollbar-thumb {
   border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
   background-color: #6d6d6d;
+
+  &:hover {
+    background: #757575;
+  }
 }
 
 .mat-grid-tile .mat-figure {
@@ -207,6 +217,7 @@ html {
   border-right: 1px solid #b3adad54 !important;
   background-image: -webkit-linear-gradient(#606060, #606060) !important;
   border-bottom: 1px solid #b3adad54 !important;
+  color: white !important;
 
 }
 
@@ -226,8 +237,24 @@ p {
   border-bottom: 1px solid #b3adad54 !important;
 }
 
+.w2ui-toolbar table.w2ui-button {
+  color: white !important;
+
+  .w2ui-tb-text {
+    color: white !important;
+  }
+
+  &:hover {
+    color: black !important;
+
+    .w2ui-tb-text {
+      color: black !important;
+    }
+  }
+}
+
 .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-  background-color: $primary-color;
+  background-color: $tertiay-color;
   border-radius: 2px;
   color: #fff;
   padding: 2px 5px;

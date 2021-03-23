@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -17,27 +17,30 @@ export class SidenavComponent implements OnInit {
       name: 'Inicio',
       route: './home',
       icon: 'home'
-    }, {
-      name: 'SLA`S',
-      route: './company',
-      icon: 'business'
-    }, {
+    },
+    // {
+    //   name: 'SLA`S',
+    //   route: './company',
+    //   icon: 'business'
+    // },
+    {
       name: 'OLA`S',
-      route: './temp',
+      route: './ola',
       icon: 'business'
-    }, {
-      name: 'Controles de seguridad',
-      route: './temp',
-      icon: 'business'
-    }, {
-      name: 'Contratos',
-      route: './temp',
-      icon: 'business'
-    }, {
-      name: 'Procesos SGI',
-      route: './temp',
-      icon: 'business'
-    }
+    }, 
+    // {
+    //   name: 'Controles de seguridad',
+    //   route: './temp',
+    //   icon: 'business'
+    // }, {
+    //   name: 'Contratos',
+    //   route: './temp',
+    //   icon: 'business'
+    // }, {
+    //   name: 'Procesos SGI',
+    //   route: './temp',
+    //   icon: 'business'
+    // }
   ];
   dark: boolean = false;
   flag: any = {

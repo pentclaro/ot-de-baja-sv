@@ -2,16 +2,16 @@ import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChang
 import { SaveFileService } from 'src/app/services/save/save.service';
 
 declare var $: any;
-// declare var that: any;
+// declare var NgxPivotTableComponent: any;
 declare var google: any;
 declare global {
-  interface Window { that: any; }
+  interface Window { NgxPivotTableComponent: any; }
 }
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngx-pivot-table',
-  template: '<button (click)="download();">Descargar</button><div id="pivot-ngx-talbe" #ngxpivottable></div>',
-  styles: ['::ng-deep .pvtFilterBox {position: absolute !important; left: 100px !important; top: 150px !important} .pvtAxisContainer li{padding: 4px 6px !important;}']
+  template: '<button (click)="download();">Descargar</button><div id="pivot-ngx-talbe" class="scroll" #ngxpivottable></div>',
+  styles: ['#pivot-ngx-talbe{width: 100%; position: relative; height: auto}']
 })
 export class NgxPivotTableComponent implements OnInit, OnChanges {
   @Input() public data: any;
@@ -21,7 +21,7 @@ export class NgxPivotTableComponent implements OnInit, OnChanges {
   @Input() public ngModel: any;
   // @Input() public download: boolean;
   @Output() public pivotConfigOut = new EventEmitter<string>();
-  that: any;
+  NgxPivotTableComponent: any;
   prevModel: any;
   today: Date = new Date();
 
@@ -31,7 +31,7 @@ export class NgxPivotTableComponent implements OnInit, OnChanges {
   private isPivotInit: boolean;
 
   ngOnInit(): void {
-    window.that = this;
+    window.NgxPivotTableComponent = this;
     this.ngModel = !this.ngModel ? "" : this.ngModel;
     this.isPivotInit = true;
     this.pivotConfig = this.pivotConfig ? JSON.parse(this.pivotConfig) : {};
@@ -65,7 +65,7 @@ export class NgxPivotTableComponent implements OnInit, OnChanges {
   }
 
   private render() {
-    google.load("visualization", "1", {packages:["corechart", "charteditor"]});
+    google.load("visualization", "1", { packages: ["corechart", "charteditor"] });
     if (this.isPivotInit) {
       var derivers = $.pivotUtilities.derivers;
       var renderers = $.extend(
@@ -82,11 +82,12 @@ export class NgxPivotTableComponent implements OnInit, OnChanges {
       this.pivotConfig.renderers = renderers;
       this.pivotConfig.rendererOptions = { gchart: { width: 1200, height: 1000 } }
       this.pivotConfig.localeStrings = {
-        "renderError": "Ocurrió un error al mostrar los resultados de la tabla.", "computeError": "Ocurrió un error al computar los resultados de la tabla.", "uiRenderError": "Ocurrió un error en la UI de la tabla.", "selectAll": "Seleccionar todos", "selectNone": "Des-selecionar", "tooMany": "(demasiados datos para listar)", "filterResults": "Filtrar datos", "apply": "Aplicar", "cancel": "Cancelar", "Totals": "Totales", "totals": "Totales", "vs": "vs", "by": "por"
+        "renderError": "Ocurrió un error al mostrar los resultados de la tabla.", "computeError": "Ocurrió un error al computar los resultados de la tabla.", "uiRenderError": "Ocurrió un error en la UI de la tabla.", "selectAll": "Seleccionar todos", "selectNone": "Deselecionar", "tooMany": "(demasiados datos para listar)", "filterResults": "Filtrar datos", "apply": "Aplicar", "cancel": "Cancelar", "Totals": "Totales", "totals": "Totales", "vs": "vs", "by": "por"
       }
+      this.pivotConfig.rendererOptions.localeStrings = this.pivotConfig.localeStrings;
       this.pivotConfig.onRefresh = function (config) {
-        if (window.that.data.length > 0) {
-          window.that.getPivotOptions();
+        if (window.NgxPivotTableComponent.data.length > 0) {
+          window.NgxPivotTableComponent.getPivotOptions();
         }
       }
       $(this.ngxpivottable.nativeElement).pivotUI(data, this.pivotConfig, true, this.useLocale);

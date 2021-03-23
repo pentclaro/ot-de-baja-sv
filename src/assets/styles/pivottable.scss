@@ -1,0 +1,247 @@
+.pvtUi {
+  color: #333333;
+
+  table {
+    &.pvtTable {
+      font-family: "Montserrat", sans-serif;
+      font-size: 10pt;
+      text-align: left;
+      border-collapse: collapse;
+
+      tbody tr th,
+      thead tr th {
+        font-family: "Montserrat", sans-serif;
+        background-color: #d2d2d2;
+        border: 1px solid #ffffff;
+        font-size: 10pt;
+        padding: 5px;
+        color: #3e3e3e;
+        font-weight: 500;
+
+        &.pvtRowLabel {
+          background-color: #d2d2d2 !important;
+          border-width: 1px 1px thin !important;
+          vertical-align: middle !important;
+        }
+      }
+
+      .pvtColLabel {
+        text-align: center;
+      }
+
+      .pvtTotalLabel {
+        text-align: right;
+      }
+
+      tbody tr td {
+        font-family: "Montserrat", sans-serif;
+        color: #3d3d3d;
+        padding: 5px;
+        background-color: #ffffff;
+        border: 1px solid #cdcdcd;
+        vertical-align: top;
+        text-align: center;
+      }
+    }
+  }
+
+  .pvtGrandTotal,
+  .pvtTotal {
+    font-weight: 700;
+  }
+
+  .pvtVals {
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pvtColOrder,
+  .pvtRowOrder {
+    cursor: pointer;
+    width: 15px;
+    margin-left: 5px;
+    display: inline-block;
+  }
+
+  .pvtAggregator {
+    margin-bottom: 5px;
+  }
+
+  .pvtAxisContainer,
+  .pvtVals {
+    // border: 0.25px solid rgb(204, 204, 204);
+    background: #eeeeee;
+    padding: 5px;
+    min-width: 20px;
+    min-height: 20px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+
+    li {
+      padding: 4px;
+      list-style-type: none;
+      cursor: move;
+
+      &.pvtPlaceholder {
+        -webkit-border-radius: 5px;
+        padding: 3px 15px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        border: 1px dashed #aaaaaa;
+      }
+
+      span.pvtAttr {
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        -webkit-text-size-adjust: 100%;
+        background: #ffffff;
+        border: 1px solid #dedede;
+        padding: 2px 5px;
+        white-space: nowrap;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .pvtCheckContainer {
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow-y: scroll;
+    width: 100%;
+    max-height: 250px;
+    border-top: 1px solid #d3d3d3;
+    border-bottom: 1px solid #d3d3d3;
+
+    p {
+      margin: 5px;
+    }
+  }
+
+  .pvtRendererArea {
+    padding: 5px;
+  }
+
+  .pvtRenderer,
+  .pvtAggregator,
+  .pvtAttrDropdown {
+    font-family: "Montserrat", sans-serif;
+    padding: 5px;
+    border: none;
+    box-shadow: 0 0 3px #cccccc;
+    outline: none;
+    margin: 4px;
+    border-radius: 4px;
+  }
+
+  .pvtTriangle {
+    cursor: pointer;
+    color: #808080;
+  }
+
+  .pvtHorizList li {
+    display: inline;
+  }
+
+  .pvtVertList {
+    vertical-align: top;
+  }
+
+  .pvtFilteredAttribute {
+    font-style: italic;
+  }
+
+  .pvtFilterBox {
+    font-family: "Montserrat", sans-serif;
+    z-index: 100;
+    width: 300px;
+    box-shadow: 0px 0px 7px #ccc;
+    background-color: #ffffff;
+    position: absolute;
+    text-align: center;
+
+    h4 {
+      margin: 15px;
+    }
+
+    p {
+      margin: 10px auto;
+    }
+
+    label {
+      font-weight: 400;
+    }
+
+    button {
+      margin: 0 10px;
+      border: none;
+      padding: 10px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        box-shadow: 0px 0px 3px #aaaaaa;
+      }
+    }
+
+    input[type=checkbox] {
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+
+    input[type=text] {
+      width: 230px;
+    }
+
+    .count {
+      color: #808080;
+      font-weight: 400;
+      margin-left: 3px;
+    }
+  }
+}
+
+ngx-pivot-table {
+
+  #pivot-ngx-talbe {
+    position: relative;
+  }
+
+  button {
+    margin: 0 10px;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      box-shadow: 0px 0px 3px #aaaaaa;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #dddddd;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #999999;
+    border-radius: 20px;
+
+    &:hover {
+      background: #818181;
+    }
+  }
+}

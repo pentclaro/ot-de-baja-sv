@@ -24,11 +24,11 @@ const routes: Routes = [
     }
   },
   {
-    path: 'company',
-    loadChildren: () => import('./company/company.module').then(m => m.CompanyModule),
+    path: 'ola',
+    loadChildren: () => import('./ola/ola.module').then(m => m.OlaModule),
     // canActivate: [AuthGuard],
     data: {
-      key: 'company'
+      key: 'ola'
     }
   },
 ];

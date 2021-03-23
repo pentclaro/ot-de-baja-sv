@@ -14,7 +14,6 @@ $general-typography: mat-typography-config($font-family: 'Lato, "Helvetica Neue"
   $body-1: mat-typography-level(14px, 30px, 400),
   $caption: mat-typography-level(12px, 20px, 400),
   $button: mat-typography-level(14px, 14px, 500),
-  // Line-height must be unit-less fraction of the font-size.
   $input: mat-typography-level(inherit, 1.125, 400));
 
 $secondary-typography: mat-typography-config($font-family: 'Lato');

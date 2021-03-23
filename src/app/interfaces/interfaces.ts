@@ -20,31 +20,49 @@ export interface Profile {
   config: string,
   users?: string
 }
-
 // w2ui
-export interface Columns {
+
+type Render = (record: Record, recordIndex?: number, columnIndex?: number) => string;
+type Event = (event: any) => any;
+
+export interface Column {
   field: string,
-  caption: string,
+  text: string,
   size: string,
   sortable?: boolean,
   attr?: string,
   resizable?: boolean,
   frozen?: boolean,
-  render?: string,
-  editable?: any,
+  render?: Render | string,
+  editable?: Editable,
   style?: string,
-  type?: string
+  type?: string,
+  min?: number,
+  max?: number,
+  gridMinWidth?: any,
+  sizeCorrected?: any,
+  sizeCalculated?: any,
+  hidden?: boolean,
+  info?: boolean | {
+    [key: string]: any,
+  },
+  searchable?: boolean,
+  title?: Event | string,
+  sortMode?: Event,
+  autoResize?: boolean,
+  hideable?: boolean,
 }
 
-export interface Searches {
+export interface Search {
   field: string,
-  caption: string,
-  type: string,
+  label: string,
+  type: 'text' | 'int' | 'float' | 'hex' | 'money' | 'currency' | 'percent' | 'alphanumeric' | 'date' | 'time' | 'list' | 'combo' | 'enum',
   hidden?: boolean,
   inTag?: string,
   outTag?: string,
   options?: {
-    items: any
+    items: any,
+    [key: string]: any,
   }
 }
 
@@ -70,10 +88,10 @@ export interface Show {
 
 export interface Item {
   id: string | number,
-  type: 'button' | 'check' | 'radio' | 'drop' | 'menu' | 'break' | 'spacer' | 'html',
+  type: 'button' | 'check' | 'radio' | 'drop' | 'menu' | 'menu-check' | 'menu-radio' | 'break' | 'spacer' | 'html' | 'color' | 'text-color',
   text: string,
   html?: string,
-  tooltip?: any,
+  tooltip?: Event | string,
   count?: any,
   hidden?: boolean,
   disabled?: boolean,
@@ -89,32 +107,49 @@ export interface Item {
   items?: Item[],
   selected?: any,
   overlay?: {},
-  onClick?(event: any): any,
-  onRefresh?(event: any): any
+  onClick?: Event,
+  onRefresh?: Event
 }
 
 export interface Toolbar {
-  items: Item[]
+  items: Item[],
+  onClick?: Event
 }
 
 export interface ColumnGroups {
   span: number,
-  caption: string,
+  text: string,
   master?: boolean
 }
 
-export interface Recid {
+export interface Record {
   recid: number,
-  [x: string]: any,
+  [key: string]: any,
   style?: string,
   summary?: boolean,
   editable?: boolean,
   expanded?: boolean | 'none' | 'spinner',
-  changes?: any
+  changes?: any,
+  info?: boolean
 }
 
 export interface Menu {
   id: number,
   text: string,
   icon: string
+}
+
+export interface Editable {
+  type: 'text' | 'int' | 'float' | 'hex' | 'money' | 'currency' | 'percent' | 'alphanumeric' | 'date' | 'time' | 'datetime' | 'color' | 'list' | 'combo' | 'check' | 'checkbox' | 'select',
+  inTag?: string,
+  style?: string,
+  [key: string]: any
+}
+
+export interface ColumnStyle {
+  id: number,
+  type: 'header' | 'group',
+  style: {
+    [key: string]: string,
+  }
 }

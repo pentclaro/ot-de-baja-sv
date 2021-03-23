@@ -1,0 +1,217 @@
+.pvtUi {
+  color: #333;
+}
+
+table.pvtTable {
+  font-family: "Montserrat", sans-serif;
+  font-size: 8pt;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table.pvtTable tbody tr th,
+table.pvtTable thead tr th {
+  font-family: "Montserrat", sans-serif;
+  background-color: #d2d2d2;
+  border: 1px solid white;
+  font-size: 8pt;
+  padding: 5px;
+  color: #3e3e3e;
+  font-weight: 500;
+}
+
+table.pvtTable .pvtColLabel {
+  text-align: center;
+}
+
+table.pvtTable .pvtTotalLabel {
+  text-align: right;
+}
+
+table.pvtTable tbody tr td {
+  font-family: "Montserrat", sans-serif;
+  color: #3D3D3D;
+  padding: 5px;
+  background-color: #FFF;
+  border: 1px solid #CDCDCD;
+  vertical-align: top;
+  text-align: right;
+}
+
+.pvtGrandTotal,
+.pvtTotal {
+  font-weight: 700;
+}
+
+.pvtVals {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.pvtColOrder,
+.pvtRowOrder {
+  cursor: pointer;
+  width: 15px;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+.pvtAggregator {
+  margin-bottom: 5px;
+}
+
+.pvtAxisContainer,
+.pvtVals {
+  border: 0.25px solid rgb(204, 204, 204);
+  background: #EEE;
+  padding: 5px;
+  min-width: 20px;
+  min-height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+}
+
+.pvtAxisContainer li {
+  padding: 4px;
+  list-style-type: none;
+  cursor: move;
+}
+
+.pvtAxisContainer li.pvtPlaceholder {
+  -webkit-border-radius: 5px;
+  padding: 3px 15px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px dashed #aaa;
+}
+
+.pvtAxisContainer li span.pvtAttr {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+  border: 1px solid #dedede;
+  padding: 2px 5px;
+  white-space: nowrap;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 4px;
+}
+
+.pvtTriangle {
+  cursor: pointer;
+  color: grey;
+}
+
+.pvtHorizList li {
+  display: inline;
+}
+
+.pvtVertList {
+  vertical-align: top;
+}
+
+.pvtFilteredAttribute {
+  font-style: italic;
+}
+
+.pvtFilterBox {
+  font-family: "Montserrat", sans-serif;
+  z-index: 100;
+  width: 300px;
+  box-shadow: 0px 0px 7px #ccc;
+  background-color: #fff;
+  position: absolute;
+  text-align: center;
+}
+
+.pvtFilterBox h4 {
+  margin: 15px;
+}
+
+.pvtFilterBox p {
+  margin: 10px auto;
+}
+
+.pvtFilterBox label {
+  font-weight: 400;
+}
+
+ngx-pivot-table {
+
+  button {
+    margin: 0 10px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover {
+    box-shadow: 0px 0px 3px #aaa;
+  }
+}
+
+.pvtFilterBox button {
+  margin: 0 10px;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pvtFilterBox button:hover {
+  box-shadow: 0px 0px 3px #aaa;
+}
+
+.pvtFilterBox input[type='checkbox'] {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.pvtFilterBox input[type='text'] {
+  width: 230px;
+}
+
+.pvtFilterBox .count {
+  color: gray;
+  font-weight: 400;
+  margin-left: 3px;
+}
+
+.pvtCheckContainer {
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow-y: scroll;
+  width: 100%;
+  max-height: 250px;
+  border-top: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
+
+  p {
+    margin: 5px;
+  }
+}
+
+.pvtRendererArea {
+  padding: 5px;
+}
+
+.pvtRenderer,
+.pvtAggregator,
+.pvtAttrDropdown {
+  font-family: "Montserrat", sans-serif;
+  padding: 5px;
+  border: none;
+  box-shadow: 0 0 3px #ccc;
+  outline: none;
+  margin: 4px;
+  border-radius: 4px;
+}

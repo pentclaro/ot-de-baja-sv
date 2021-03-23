@@ -52,6 +52,11 @@
     display: flex;
     align-items: center;
   }
+
+  &.space {
+    margin: 5px !important;
+    height: 36px !important;
+  }
 }
 
 .input-width {
