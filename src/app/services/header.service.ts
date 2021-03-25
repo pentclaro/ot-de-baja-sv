@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarComponent } from '../components/snack-bar/snack-bar.component';
-// import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,8 @@ export class HeaderService {
   constructor(
     private snackBar: MatSnackBar,) { }
 
-  getQuery(input: any) {
-    let query = "", index = 0;
+  getQuery(input: any): string {
+    let query: string = '', index: number = 0;
     for (const key in input) {
       if (input[key] !== "") {
         const element = input[key];
@@ -46,23 +45,5 @@ export class HeaderService {
       horizontalPosition,
       verticalPosition
     });
-  }
-
-  flowConfig() {
-    // let token = JSON.parse(localStorage.session);
-    // this.flowConfigObject = {
-    //   target: `${environment.apiPublic}/files`,
-    //   singleFile: true,
-    //   testChunks: false,
-    //   permanentErrors: [404, 500, 501],
-    //   maxChunkRetries: 1,
-    //   chunkRetryInterval: 5000,
-    //   simultaneousUploads: 1,
-    //   uploadMethod: 'POST',
-    //   headers: {
-    //     "Authorization": `Bearer ${token.token}`
-    //   },
-    // };
-    return {};
   }
 }

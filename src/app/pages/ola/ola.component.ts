@@ -86,8 +86,8 @@ export class OlaComponent implements OnInit {
 			this.order = data.order;
 			if (Array.isArray(data.info)) {
 				this.columnGroups = [];
-				this.columnGroups.push({ span: 2, master: false, text: "Datos Generales" })
-				this.columnGroups.push({ span: data.info.length - 2, master: false, text: "Datos Generales" })
+				this.columnGroups.push({ span: 3, master: false, text: "Datos Generales" })
+				this.columnGroups.push({ span: data.info.length - 3, master: false, text: "Datos Generales" })
 				this.columnGroups.push({ span: data.weeks.length, master: false, text: "Semanas" });
 			}
 			this.updatedAt = new Date();
@@ -122,14 +122,16 @@ export class OlaComponent implements OnInit {
 		this.columns = [];
 		data.map((key: string) => {
 			let col: Column, fil: Search;
-			if (key == "recid") {
+			if (key === "recid") {
 				col = { field: key, text: "linea", size: "50px", frozen: false, sortable: true, hidden: true };
-			} else if (key == "CLAVE_OLA" || key == "ID_ACUERDO" || key == "DESCRIPCION_KPI" || key == "FORMULA") {
+			} else if (key === "CLAVE_OLA" || key === "ID_ACUERDO" || key === "DESCRIPCION_KPI" || key === "FORMULA") {
 				col = { field: key, text: key, size: "218px", frozen: false, sortable: true };
-			} else if (key == "PROVEEDOR_INTERNO" || key == "TIPO_AFECTACION") {
+			} else if (key === "AÑO_ACUERDO") {
+				col = { field: key, text: key, size: "105px", sortable: true };
+			} else if (key === "PROVEEDOR_INTERNO" || key === "TIPO_AFECTACION" || key === "TIPO_SERVICIO") {
 				col = { field: key, text: key, size: "150px", frozen: true, sortable: true };
-			} else if (key == "METRICA_ESPERADA") {
-				col = { field: key, text: key, size: "70px", sortable: true, render: 'percent:0' }
+			} else if (key === "METRICA_ESPERADA") {
+				col = { field: key, text: key, size: "132px", sortable: true, render: 'percent:0' }
 			} else if (parseInt(key)) {
 				col = {
 					field: key, text: key, size: "55px", sortable: true, render: (record) => {
@@ -138,7 +140,7 @@ export class OlaComponent implements OnInit {
 						return (record[key] === null) ? `` : `<div${style}>${value}%</div>`;
 					}
 				}
-			} else if (key == "CALIFICACION") {
+			} else if (key === "CALIFICACION") {
 				col = {
 					field: key, text: key, size: "115px", sortable: true, render: (record) => {
 						let value = 0, i = 0, average = 0;
@@ -150,7 +152,7 @@ export class OlaComponent implements OnInit {
 						}
 						average = value / i;
 						let style = '';
-						if (average >= 90) { record.CALIFICACION = "Confiable"; style = 'style="background-image: linear-gradient(270deg, #63bd7d, #b1d57e);"'; }
+						if (average >= 90) { record.CALIFICACION = "Confiable"; style = 'style="background-image: linear-gradient(270deg, #63bd7d, #63bd7d);"'; }
 						else if (average >= 80 && average < 90) { record.CALIFICACION = "Necesita mejorar"; style = 'style="background-image: linear-gradient(270deg, #b1d57e, #feeb84);"'; }
 						else if (average < 80 && average > 0) { record.CALIFICACION = "No confiable"; style = 'style="background-image: linear-gradient(270deg, #fb8f73, #fdbead);"'; }
 						else { record.CALIFICACION = "Dado de baja"; style = 'style="background-image: linear-gradient(270deg, #fd3400, #fd3400);"'; }
@@ -162,9 +164,9 @@ export class OlaComponent implements OnInit {
 				col = { field: key, text: key, size: "70px", sortable: true };
 			}
 			this.columns.push(col);
-			if (key == "recid") {
+			if (key === "recid") {
 				fil = { field: key, label: "linea", type: 'int', hidden: true };
-			} else if (key == "CALIFICACION") {
+			} else if (key === "CALIFICACION") {
 				fil = { field: key, label: key, type: 'list', options: { items: ['Confiable', 'Necesita mejorar', 'No confiable', 'Dado de baja'] } };
 			} else if (parseInt(key)) {
 				fil = { field: key, label: key, type: 'float' };
@@ -178,10 +180,10 @@ export class OlaComponent implements OnInit {
 	colors(data: string[], color: string): ColumnStyle[] {
 		let styles: ColumnStyle[] = [];
 		data.map((style: string) => {
-			let tmpStyle: ColumnStyle = { id: (parseInt(style) + 10), type: "header", style: { "background-color": color } }
+			let tmpStyle: ColumnStyle = { id: (parseInt(style) + 11), type: "header", style: { "background-color": color } }
 			styles.push(tmpStyle);
 		})
-		styles.push({ id: 11, type: 'group', style: { "background-color": color } });
+		styles.push({ id: 12, type: 'group', style: { "background-color": color } });
 		return styles;
 	}
 

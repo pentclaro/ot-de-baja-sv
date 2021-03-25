@@ -26,7 +26,7 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    tomorrow() {
+    tomorrowDate() {
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
