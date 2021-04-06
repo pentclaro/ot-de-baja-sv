@@ -9,7 +9,7 @@ import { Component, OnInit, ViewChild, Renderer2, Input, SimpleChanges } from '@
 export class VideoPlayerComponent implements OnInit {
   @ViewChild('video', { static: false }) matVideo: any;
   video: HTMLVideoElement;
-  @Input() public subtitles: any[] = [];
+  @Input() public subtitles: Array<any> = [];
   @Input() public title: string;
   @Input() public src: string;
   @Input() public showTitle: boolean;

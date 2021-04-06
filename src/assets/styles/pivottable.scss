@@ -179,7 +179,7 @@
     }
 
     button {
-      margin: 0 10px;
+      margin: 0 7px;
       border: none;
       padding: 10px 10px;
       border-radius: 3px;
@@ -194,6 +194,11 @@
     input[type=checkbox] {
       margin-right: 10px;
       margin-left: 10px;
+
+      &:checked {
+        background-color: #f3de21 !important;
+
+      }
     }
 
     input[type=text] {
@@ -215,7 +220,7 @@ ngx-pivot-table {
   }
 
   button {
-    margin: 0 10px;
+    margin: 0 7px;
     border: none;
     padding: 10px 10px;
     border-radius: 3px;

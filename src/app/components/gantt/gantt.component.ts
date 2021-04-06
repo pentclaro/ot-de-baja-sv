@@ -10,7 +10,7 @@ import { gantt } from 'dhtmlx-gantt';
 })
 export class GanttComponent implements OnInit {
   // @Input() tasks: any;
-  // @Input() links: any[] = [];
+  // @Input() links: Array<any> = [];
   // @Input() tasks: any;
   @ViewChild("draw_gantt", { static: true }) ganttContainer: ElementRef;
   tasks: any = [

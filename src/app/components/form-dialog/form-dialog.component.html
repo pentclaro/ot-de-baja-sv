@@ -1,23 +1,35 @@
 <div id="wrapper-form">
   <div id="container">
-    <span class="title">
+    <div class="title">
       <span *ngIf="!formData.data.id">Crear</span>
-      <span *ngIf="formData.data.id">Editar</span> {{formData.module}}</span>
-    <form ngNativeValidate #form (ngSubmit)="form.checkValidity() ? send() : null">
-      <div class="item-form" *ngFor="let item of list">
-        <mat-form-field appearance="outline" class="input">
-          <mat-label>{{item}}</mat-label>
-          <input matInput type="text" [(ngModel)]="model[item]" name="{{item}}" required>
-        </mat-form-field>
-      </div>
-      <div id="actions">
-        <button class="button-cancel secundary-color" mat-raised-button mat-dialog-close>
-          <mat-icon aria-label="label">cancel</mat-icon> Cancelar
-        </button>
-        <button class="button-ok primary-color" mat-raised-button type="submit">
-          <mat-icon aria-label="label">save</mat-icon> Guardar {{formData.module}}
-        </button>
-      </div>
-    </form>
+      <span *ngIf="formData.data.id">Editar</span> {{formData.module}}
+    </div>
+
+    <div mat-dialog-content class="scroll dialog-conent-form">
+      <form ngNativeValidate #form="ngForm">
+        <div class="item-form" *ngFor="let item of list">
+          <mat-form-field appearance="outline" class="input">
+            <mat-label>{{item}}</mat-label>
+            <input matInput type="text" [(ngModel)]="model[item]" name="{{item}}" required>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+
+    <div id="actions" mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+      <button class="cancel-button" mat-flat-button (click)="dialogRef.close({type: 'cancel', data: model})">
+        <mat-icon aria-label="label">cancel</mat-icon> Cancelar
+      </button>
+
+      <button *ngIf="!formData.data.recid" [disabled]="!form.form.valid" class="primary-button" mat-flat-button
+        (click)="dialogRef.close({type: 'create', data: model})">
+        <mat-icon aria-label="label">save</mat-icon> Crear {{formData.module}}
+      </button>
+
+      <button *ngIf="formData.data.recid" [disabled]="!form.form.valid" class="primary-button" mat-flat-button
+        (click)="dialogRef.close({type: 'update', data: model})">
+        <mat-icon aria-label="label">save</mat-icon> Guardar {{formData.module}}
+      </button>
+    </div>
   </div>
 </div>

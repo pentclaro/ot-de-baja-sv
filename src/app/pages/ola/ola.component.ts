@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ColumnStyle, Show, Column, Search, Item, Toolbar, ColumnGroups } from 'src/app/interfaces/interfaces';
+import { ColumnStyle, Show, Column, Search, Item, Toolbar, ColumnGroups, Record } from 'src/app/interfaces/interfaces';
 import { FaultService } from 'src/app/services/fault/fault.service';
 import { HeaderService } from 'src/app/services/header.service';
 import { OlasService } from 'src/app/services/olas/olas.service';
@@ -34,7 +34,7 @@ export class OlaComponent implements OnInit {
 	suppliers = [];
 	styles: ColumnStyle[] = []
 	name: string = 'olas';
-	header: string = 'Demo w2ui';
+	header: string = "REPORTE DE OLA'S";
 	show: Show = { toolbar: true, footer: true, header: false };
 	columns: Column[] = [];
 	searches: Search[] = [];
@@ -82,7 +82,7 @@ export class OlaComponent implements OnInit {
 		this.dataSource = [];
 		this.olasService.getAll(this.search).subscribe((data: any) => {
 			this.styles = this.colors(data.weeks, "#a07e85");
-			this.dataSource = data.data;
+			this.dataSource = this.orderKeys(data.data, data.info, data.weeks);
 			this.order = data.order;
 			if (Array.isArray(data.info)) {
 				this.columnGroups = [];
@@ -92,7 +92,7 @@ export class OlaComponent implements OnInit {
 			}
 			this.updatedAt = new Date();
 			this.loading = false;
-			this.pageService.openSnackBar(`success`, `Datos obtenidos de OLA's`);
+			this.pageService.openSnackBar(`success`, `Datos obtenidos de ${this.header}`);
 			this.format();
 		})
 	}
@@ -121,7 +121,7 @@ export class OlaComponent implements OnInit {
 		this.searches = [];
 		this.columns = [];
 		data.map((key: string) => {
-			let col: Column, fil: Search;
+			let col: Column, search: Search;
 			if (key === "recid") {
 				col = { field: key, text: "linea", size: "50px", frozen: false, sortable: true, hidden: true };
 			} else if (key === "CLAVE_OLA" || key === "ID_ACUERDO" || key === "DESCRIPCION_KPI" || key === "FORMULA") {
@@ -134,10 +134,10 @@ export class OlaComponent implements OnInit {
 				col = { field: key, text: key, size: "132px", sortable: true, render: 'percent:0' }
 			} else if (parseInt(key)) {
 				col = {
-					field: key, text: key, size: "55px", sortable: true, render: (record) => {
-						let value = record[key] === null ? '' : parseFloat(record[key].toFixed(2));
+					field: `SEMANA ${key}`, text: key, size: "55px", sortable: true, render: (record) => {
+						let value = record[`SEMANA ${key}`] === null ? '' : parseFloat(record[`SEMANA ${key}`].toFixed(2));
 						let style = (value < record.METRICA_ESPERADA) ? ` style="background: #ff9d9d; color: #000;"` : ``;
-						return (record[key] === null) ? `` : `<div${style}>${value}%</div>`;
+						return (record[`SEMANA ${key}`] === null) ? `` : `<div${style}>${value}%</div>`;
 					}
 				}
 			} else if (key === "CALIFICACION") {
@@ -145,7 +145,7 @@ export class OlaComponent implements OnInit {
 					field: key, text: key, size: "115px", sortable: true, render: (record) => {
 						let value = 0, i = 0, average = 0;
 						for (let prop in record) {
-							if (parseInt(prop) && record[prop] !== null) {
+							if (parseInt(prop.replace('SEMANA ', '')) && record[prop] !== null) {
 								value += record[prop];
 								i++;
 							}
@@ -165,15 +165,15 @@ export class OlaComponent implements OnInit {
 			}
 			this.columns.push(col);
 			if (key === "recid") {
-				fil = { field: key, label: "linea", type: 'int', hidden: true };
+				search = { field: key, label: "linea", type: 'int', hidden: true };
 			} else if (key === "CALIFICACION") {
-				fil = { field: key, label: key, type: 'list', options: { items: ['Confiable', 'Necesita mejorar', 'No confiable', 'Dado de baja'] } };
+				search = { field: key, label: key, type: 'list', options: { items: ['Confiable', 'Necesita mejorar', 'No confiable', 'Dado de baja'] } };
 			} else if (parseInt(key)) {
-				fil = { field: key, label: key, type: 'float' };
+				search = { field: `SEMANA ${key}`, label: key, type: 'float' };
 			} else {
-				fil = { field: key, label: key, type: 'text' };
+				search = { field: key, label: key, type: 'text' };
 			}
-			this.searches.push(fil);
+			this.searches.push(search);
 		})
 	}
 
@@ -193,6 +193,28 @@ export class OlaComponent implements OnInit {
 
 	unselectAll(filter: string) {
 		this.search[filter] = [];
+	}
+
+	orderKeys(data: Record[], info: string[], weeks: string[]): Record[] {
+		let rowsArray = [];
+		info = ["recid", ...info];
+		if (Array.isArray(data)) {
+			data.map(element => {
+				let infoRow = {};
+				let weeksRow = {};
+				info.map(key => {
+					infoRow[key] = element[key];
+				})
+				weeks.map(key => {
+					weeksRow[`SEMANA ${key}`] = element[key];
+				})
+				rowsArray.push({
+					...infoRow,
+					...weeksRow
+				});
+			});
+		}
+		return rowsArray;
 	}
 
 }

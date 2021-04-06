@@ -12,8 +12,8 @@
     <section>
       <div class="config-card" *ngFor="let opt of options" [routerLink]="opt.route">
         <div class="description">
-          <mat-icon class="max-size" aria-label="label">{{opt.icon}}</mat-icon>
-          <div>
+          <mat-icon class="max-size row-of-icons" aria-label="label">{{opt.icon}}</mat-icon>
+          <div class="row-of-icons">
             <h2>{{opt.title}}</h2>
             <p>{{opt.description}}</p>
           </div>

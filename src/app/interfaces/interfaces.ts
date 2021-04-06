@@ -22,8 +22,8 @@ export interface Profile {
 }
 // w2ui
 
-type Render = (record: Record, recordIndex?: number, columnIndex?: number) => string;
-type Event = (event: any) => any;
+type render = (record: Record, recordIndex?: number, columnIndex?: number) => string;
+type event = (event: any) => any;
 
 export interface Column {
   field: string,
@@ -33,7 +33,7 @@ export interface Column {
   attr?: string,
   resizable?: boolean,
   frozen?: boolean,
-  render?: Render | string,
+  render?: string | render,
   editable?: Editable,
   style?: string,
   type?: string,
@@ -47,8 +47,8 @@ export interface Column {
     [key: string]: any,
   },
   searchable?: boolean,
-  title?: Event | string,
-  sortMode?: Event,
+  title?: string | event,
+  sortMode?: event,
   autoResize?: boolean,
   hideable?: boolean,
 }
@@ -68,7 +68,7 @@ export interface Search {
 
 export interface SearchData {
   field: string,
-  value: string | string[],
+  value: string | Array<string>,
   operator: 'is' | 'in' | 'between' | 'begins with' | 'contains' | 'ends with',
   type: 'text' | 'int' | 'float' | 'date'
 }
@@ -91,7 +91,7 @@ export interface Item {
   type: 'button' | 'check' | 'radio' | 'drop' | 'menu' | 'menu-check' | 'menu-radio' | 'break' | 'spacer' | 'html' | 'color' | 'text-color',
   text: string,
   html?: string,
-  tooltip?: Event | string,
+  tooltip?: string | event,
   count?: any,
   hidden?: boolean,
   disabled?: boolean,
@@ -104,16 +104,16 @@ export interface Item {
   color?: any,
   transparent?: any,
   group?: any,
-  items?: Item[],
+  items?: Array<Item>,
   selected?: any,
-  overlay?: {},
-  onClick?: Event,
-  onRefresh?: Event
+  overlay?: any,
+  onClick?: event,
+  onRefresh?: event
 }
 
 export interface Toolbar {
-  items: Item[],
-  onClick?: Event
+  items: Array<Item>,
+  onClick?: event
 }
 
 export interface ColumnGroups {
@@ -150,6 +150,8 @@ export interface ColumnStyle {
   id: number,
   type: 'header' | 'group',
   style: {
-    [key: string]: string,
+    [property: string]: string,
   }
 }
+
+export type action = 'delete' | 'cancel' | 'create' | 'edit';

@@ -6,9 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss']
+	selector: 'app-sidenav',
+	templateUrl: './sidenav.component.html',
+	styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
   shouldRun = false;
@@ -42,51 +42,51 @@ export class SidenavComponent implements OnInit {
     //   icon: 'business'
     // }
   ];
-  dark: boolean = false;
-  flag: any = {
-    "1": "assets/flags/guatemala.svg",
-    "2": "assets/flags/el-salvador.svg",
-    "3": "assets/flags/honduras.svg",
-    "4": "assets/flags/nicaragua.svg",
-    "5": "assets/flags/costa-rica.svg",
-    "6": "assets/flags/panama.svg"
-  };
+	dark: boolean = false;
+	flag: any = {
+		"1": "assets/flags/guatemala.svg",
+		"2": "assets/flags/el-salvador.svg",
+		"3": "assets/flags/honduras.svg",
+		"4": "assets/flags/nicaragua.svg",
+		"5": "assets/flags/costa-rica.svg",
+		"6": "assets/flags/panama.svg"
+	};
 
-  currentTheme = 'default-theme';
+	currentTheme = 'default-theme';
 
-  @HostBinding('class') componentCssClass;
-  constructor(
-    public overlayContainer: OverlayContainer,
-    private authService: AuthenticationService,
-    public router: Router,
-    protected sanitizer: DomSanitizer,
-    public dialog: MatDialog) {
-  }
-  ngOnInit() {
-    this.shouldRun = true;
-  }
+	@HostBinding('class') componentCssClass;
+	constructor(
+		public overlayContainer: OverlayContainer,
+		private authService: AuthenticationService,
+		public router: Router,
+		protected sanitizer: DomSanitizer,
+		public dialog: MatDialog) {
+	}
+	ngOnInit() {
+		this.shouldRun = true;
+	}
 
-  onSetTheme(): void {
-    let theme = !this.dark ? 'ligth-theme' : 'dark-theme';
-    this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
-    this.overlayContainer.getContainerElement().classList.add(theme);
-    this.componentCssClass = theme;
-    this.currentTheme = theme;
-  }
+	onSetTheme(): void {
+		let theme = this.dark ? 'dark-theme' : 'ligth-theme';
+		this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
+		this.overlayContainer.getContainerElement().classList.add(theme);
+		this.componentCssClass = theme;
+		this.currentTheme = theme;
+	}
 
-  ngOnDestroy(): void {
-  }
+	ngOnDestroy(): void {
+	}
 
-  logout() {
-    this.authService.logout();
-  }
+	logout() {
+		this.authService.logout();
+	}
 
-  goToHelpCenter() {
-    window.open('https://help.pentcloud.com', '_blank');
-  }
+	goToHelpCenter() {
+		window.open('https://help.pentcloud.com', '_blank');
+	}
 
-  goToAccount() {
-    this.router.navigate([`/page/account`]);
-  }
+	goToAccount() {
+		this.router.navigate([`/page/account`]);
+	}
 
 }

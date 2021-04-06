@@ -20,8 +20,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -45,8 +46,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     MatRadioModule,
     MatAutocompleteModule,
     MatExpansionModule,
-    MatNativeDateModule, 
+    MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     NgSelectModule
   ],
   exports: [
@@ -70,8 +72,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     MatRadioModule,
     MatAutocompleteModule,
     MatExpansionModule,
-    MatNativeDateModule, 
+    MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     NgSelectModule
   ]
 })

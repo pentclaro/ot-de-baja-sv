@@ -35,13 +35,15 @@ export class HeaderService {
   openSnackBar(
     type: 'success' | 'warning' | 'error',
     message: string,
+    duration?: number,
     horizontalPosition?: 'start' | 'center' | 'end' | 'left' | 'right',
     verticalPosition?: 'top' | 'bottom') {
     horizontalPosition = horizontalPosition || 'center';
     verticalPosition = verticalPosition || 'top';
+    duration = duration || 6000;
     this.snackBar.openFromComponent(SnackBarComponent, {
       data: { type, message },
-      duration: 6000,
+      duration,
       horizontalPosition,
       verticalPosition
     });

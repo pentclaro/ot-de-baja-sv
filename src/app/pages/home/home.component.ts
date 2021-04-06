@@ -2,18 +2,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+	selector: 'app-home',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
-  currentUser: any;
-  profile: any;
-  picture: any;
-  message: any;
-  constructor(
-    protected sanitizer: DomSanitizer) { }
+	currentUser: any;
+	profile: any;
+	picture: any;
+	message: any;
+	constructor(
+		protected sanitizer: DomSanitizer) { }
 
   options: any[] = [
     // {
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
     // }
   ];
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
 }

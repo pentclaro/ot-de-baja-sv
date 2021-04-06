@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "src/assets/styles/variables";
-$ng-select-highlight: #ee0000 !default;
 @import "~@ng-select/ng-select/themes/material.theme.css";
+@import "src/assets/styles/ng-select.scss";
+@import "src/assets/styles/w2ui.scss";
 
 p,
 a,
@@ -37,10 +38,13 @@ html {
   color: $primary-color;
   font-size: 20px;
   font-weight: 600;
+  margin: 16px 0 !important;
 }
 
 #container {
   padding: 0 $global-padding;
+  height: calc(100vh - 48px);
+  overflow: auto;
 }
 
 .row {
@@ -211,160 +215,4 @@ html {
 
 .CambioColor {
   background-color: #7c7b7b !important;
-}
-
-.w2ui-head {
-  border-right: 1px solid #b3adad54 !important;
-  background-image: -webkit-linear-gradient(#606060, #606060) !important;
-  border-bottom: 1px solid #b3adad54 !important;
-  color: white !important;
-
-}
-
-.w2ui-popup-title {
-  background-image: -webkit-linear-gradient(#1F7872, #1F7872) !important;
-  color: white !important;
-}
-
-p {
-  font-weight: 400 !important;
-
-}
-
-.w2ui-grid .w2ui-grid-toolbar {
-  background-color: #606060 !important;
-  border-right: 1px solid #b3adad54 !important;
-  border-bottom: 1px solid #b3adad54 !important;
-}
-
-.w2ui-toolbar table.w2ui-button {
-  color: white !important;
-
-  .w2ui-tb-text {
-    color: white !important;
-  }
-
-  &:hover {
-    color: black !important;
-
-    .w2ui-tb-text {
-      color: black !important;
-    }
-  }
-}
-
-.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-  background-color: $tertiay-color;
-  border-radius: 2px;
-  color: #fff;
-  padding: 2px 5px;
-  margin: 0 0.4375em 0.4375em 0;
-}
-
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected {
-  background: rgba(0, 0, 0, 0.12);
-  color: $primary-color;
-}
-
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-  background: rgba(0, 0, 0, 0.12);
-  color: $primary-color;
-}
-
-.ng-select.ng-select-focused .ng-select-container:after {
-  border-color: $primary-color;
-  border-width: 2px;
-}
-
-.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
-.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
-  border-color: $primary-color;
-  border-width: 2px;
-}
-
-.ng-select.ng-invalid.ng-touched .ng-select-container.ng-appearance-outline:after,
-.ng-select.ng-invalid.ng-touched .ng-select-container.ng-appearance-outline:hover:after {
-  border-color: $secundary-color;
-  border-width: 2px;
-}
-
-.ng-select.ng-select-focused .ng-select-container .ng-value-container .ng-placeholder {
-  transform: translateY(-1.59373em) scale(0.75) !important;
-  color: $primary-color !important;
-}
-
-.ng-select.ng-invalid.ng-touched.ng-select-focused .ng-select-container .ng-value-container .ng-placeholder {
-  transform: translateY(-1.59373em) scale(0.75) !important;
-  color: $secundary-color !important;
-}
-
-.ng-select.ng-invalid.ng-touched .ng-select-container .ng-arrow-wrapper .ng-arrow {
-  color: $secundary-color !important;
-}
-
-.ng-select.ng-invalid.ng-touched.ng-select-focused .ng-select-container .ng-value-container .ng-placeholder {
-  transform: translateY(-1.59373em) scale(0.75) !important;
-  color: $secundary-color !important;
-}
-
-.ng-select.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
-  color: $primary-color;
-}
-
-.ng-select {
-  &.ng-touched {
-    &.ng-invalid {
-      .ng-placeholder {
-        color: $secundary-color !important;
-      }
-    }
-
-    &.ng-select-focused {
-      .ng-placeholder {
-        color: $primary-color !important;
-      }
-    }
-  }
-
-  &.required {
-    &.ng-select-opened {
-      .ng-placeholder {
-        &::after {
-          content: ' *';
-          color: #ffd740 !important;
-        }
-      }
-    }
-
-    .ng-select-container.ng-appearance-outline {
-      .ng-placeholder {
-        &::after {
-          content: ' *';
-        }
-      }
-    }
-  }
-
-  .ng-select-container {
-
-    &.ng-appearance-outline {
-      .ng-value-container {
-        align-items: stretch;
-        padding: 0.6375em 0;
-        border-top: .84375em solid transparent;
-      }
-
-      .ng-placeholder {
-        padding: 0 .25em !important;
-        background-color: #fafafa;
-        z-index: 1;
-      }
-    }
-  }
-
-  .ng-has-value {
-    .ng-placeholder {
-      transform: translateY(-1.59373em) scale(0.75) !important;
-    }
-  }
 }

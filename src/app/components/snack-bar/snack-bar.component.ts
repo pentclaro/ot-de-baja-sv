@@ -11,11 +11,11 @@ export class SnackBarComponent implements OnInit {
   type: string;
   message: string;
   types: any ={
-    "error": "error_outline",
-    "success": "done_outline",
-    "warning": "warning"
+    error: 'error_outline',
+    success: 'done_outline',
+    warning: 'warning'
   };
-  icon: string = "icon";
+  icon: string = 'icon';
 
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: {type: string, message: string}) { }
 

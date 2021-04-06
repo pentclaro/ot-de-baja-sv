@@ -7,18 +7,18 @@
   justify-content: center;
   justify-items: center;
 
+  .dialog-conent-form {
+    height: 400px;
+  }
+
   form {
     padding: 0;
     margin: 25px auto;
     -ms-box-orient: horizontal;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -moz-flex;
-    display: -webkit-flex;
     display: flex;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
+    justify-content: space-between !important;
 
     .item-form {
       margin: 0px auto;
@@ -34,6 +34,7 @@
   }
 
   #container {
+    height: auto;
 
     .title {
       color: $primary-color;
@@ -46,38 +47,6 @@
       justify-content: center;
       margin: 0 auto;
 
-      .button-ok {
-        border-radius: 5px;
-        color: white;
-        height: 40px;
-        width: 150px;
-        padding-left: 5px;
-        font-size: 10px;
-        margin: 3px;
-
-        &:hover {
-          background: $primary-color;
-        }
-
-        background: $primary-color;
-      }
-
-      .button-cancel {
-        border-radius: 5px;
-        color: white;
-        height: 40px;
-        width: 150px;
-        padding-left: 5px;
-        font-size: 10px;
-        border: 1px solid $cancel-color;
-        margin: 3px;
-
-        &:hover {
-          background: $cancel-color;
-        }
-
-        background: $cancel-color;
-      }
     }
 
     header {
@@ -91,7 +60,7 @@
       form {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
         justify-items: center;
 
         mat-form-field {

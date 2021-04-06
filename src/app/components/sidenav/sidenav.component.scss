@@ -6,7 +6,16 @@ mat-sidenav {
 }
 
 mat-sidenav-content {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 48px);
+}
+
+.mat-toolbar-multiple-rows {
+  min-height: 45px;
+
+  .mat-toolbar-row,
+  .mat-toolbar-single-row {
+    height: 48px;
+  }
 }
 
 .menu-items {
@@ -38,7 +47,7 @@ mat-sidenav-content {
   }
 
   .mat-list-item {
-    padding: 16px;
+    padding: 10px;
     margin: 0;
   }
 

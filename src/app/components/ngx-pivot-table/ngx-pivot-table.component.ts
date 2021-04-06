@@ -1,129 +1,118 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { SaveFileService } from 'src/app/services/save/save.service';
 
-declare var $: any;
-// declare var NgxPivotTableComponent: any;
-declare var google: any;
+declare const $: any;
+declare const google: any;
 declare global {
-  interface Window { NgxPivotTableComponent: any; }
+	interface Window { NgxPivotTableComponent: any; }
 }
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'ngx-pivot-table',
-  template: '<button (click)="download();">Descargar</button><div id="pivot-ngx-talbe" class="scroll" #ngxpivottable></div>',
-  styles: ['#pivot-ngx-talbe{width: 100%; position: relative; height: auto}']
+	selector: 'ngx-pivot-table',
+	template: '<button (click)="download();">Descargar</button><div id="pivot-ngx-talbe" class="scroll" #ngxpivottable></div>',
+	styles: ['#pivot-ngx-talbe{width: 100%; height: auto}']
 })
 export class NgxPivotTableComponent implements OnInit, OnChanges {
-  @Input() public data: any;
-  @Input() public useSubtotal: boolean;
-  @Input() public useLocale: string;
-  @Input() public pivotConfig: any;
-  @Input() public ngModel: any;
-  // @Input() public download: boolean;
-  @Output() public pivotConfigOut = new EventEmitter<string>();
-  NgxPivotTableComponent: any;
-  prevModel: any;
-  today: Date = new Date();
+	@Input() public data: Array<any>;
+	@Input() public title: string;
+	@Input() public model: string;
+	@Output() public modelChange: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(
-    private excelService: SaveFileService) { }
-  @ViewChild('ngxpivottable', { static: true }) ngxpivottable: ElementRef;
-  private isPivotInit: boolean;
+	public pivotConfig: any;
+	private isPivotInit: boolean;
 
-  ngOnInit(): void {
-    window.NgxPivotTableComponent = this;
-    this.ngModel = !this.ngModel ? "" : this.ngModel;
-    this.isPivotInit = true;
-    this.pivotConfig = this.pivotConfig ? JSON.parse(this.pivotConfig) : {};
-    this.render();
-  }
+	@ViewChild('ngxpivottable', { static: true }) ngxpivottable: ElementRef;
+	constructor(
+		private excelService: SaveFileService) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data || changes.useSubtotal || changes.useLocale || (this.ngModel !== this.prevModel)) {
-      this.render();
-    }
-  }
+	ngOnInit(): void {
+		window.NgxPivotTableComponent = this;
+		this.model = !this.model ? "" : this.model;
+		this.isPivotInit = true;
+		this.pivotConfig = this.pivotConfig ? JSON.parse(this.pivotConfig) : {};
+		this.render();
+	}
 
-  download() {
-    let table = document.getElementById('pivot-ngx-talbe').getElementsByClassName('pvtTable')[0];
-    let data = this.tableToJson(table);
-    this.excelService.exportAsExcelFile(data, 'Claro_template');
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.data || changes.model) {
+			this.render();
+		}
+	}
 
-  }
+	download() {
+		let doom: HTMLElement = document.getElementById('pivot-ngx-talbe');
+		let table: Element = doom.getElementsByClassName('pvtTable')[0];
+		this.excelService.exportTableAsExcelFile(table, this.title || 'Claro_template');
+	}
 
-  onPropagar(config) {
-    this.prevModel = config;
-    this.pivotConfigOut.emit(config);
-  }
+	onPropagar(config: any) {
+		this.model = JSON.stringify(config);
+		this.modelChange.emit(this.model);
+	}
 
-  getPivotOptions() {
-    var config = $(this.ngxpivottable.nativeElement).data("pivotUIOptions");
-    var config_copy = !config ? {} : JSON.parse(JSON.stringify(config));
-    delete config_copy["aggregators"];
-    delete config_copy["renderers"];
-    this.onPropagar(JSON.stringify(config_copy));
-  }
+	getPivotOptions() {
+		const config = $(this.ngxpivottable.nativeElement).data("pivotUIOptions");
+		let configCopy = !config ? {} : JSON.parse(JSON.stringify(config));
+		delete configCopy["aggregators"];
+		delete configCopy["renderers"];
+		delete configCopy["rendererOptions"];
+		delete configCopy["localeStrings"];
+		this.onPropagar(configCopy);
+	}
 
-  private render() {
-    google.load("visualization", "1", { packages: ["corechart", "charteditor"] });
-    if (this.isPivotInit) {
-      var derivers = $.pivotUtilities.derivers;
-      var renderers = $.extend(
-        $.pivotUtilities.renderers,
-        // $.pivotUtilities.plotly_renderers,
-        $.pivotUtilities.gchart_renderers
-      )
-      debugger
-      const data = this.data ? this.data : [];
-      if (this.ngModel && data.length > 0) {
-        this.pivotConfig = JSON.parse(this.ngModel);
-      }
-      this.pivotConfig.dataClass = this.useSubtotal ? $.pivotUtilities.SubtotalPivotData : undefined;
-      this.pivotConfig.renderers = renderers;
-      this.pivotConfig.rendererOptions = { gchart: { width: 1200, height: 1000 } }
-      this.pivotConfig.localeStrings = {
-        "renderError": "Ocurrió un error al mostrar los resultados de la tabla.", "computeError": "Ocurrió un error al computar los resultados de la tabla.", "uiRenderError": "Ocurrió un error en la UI de la tabla.", "selectAll": "Seleccionar todos", "selectNone": "Deselecionar", "tooMany": "(demasiados datos para listar)", "filterResults": "Filtrar datos", "apply": "Aplicar", "cancel": "Cancelar", "Totals": "Totales", "totals": "Totales", "vs": "vs", "by": "por"
-      }
-      this.pivotConfig.rendererOptions.localeStrings = this.pivotConfig.localeStrings;
-      this.pivotConfig.onRefresh = function (config) {
-        if (window.NgxPivotTableComponent.data.length > 0) {
-          window.NgxPivotTableComponent.getPivotOptions();
-        }
-      }
-      $(this.ngxpivottable.nativeElement).pivotUI(data, this.pivotConfig, true, this.useLocale);
-      // $(this.ngxpivottable.nativeElement).pivotUI(function (injectRecord) {
-      //   data.map(function (mp) {
-      //     injectRecord({ a: mp.Age, b: mp.Name, c: mp.Province });
-      //   });
-      // }, this.pivotConfig, true, this.useLocale);
-    }
-  }
+	private render() {
+		google.load("visualization", "1", { packages: ["corechart", "charteditor"] });
+		if (this.isPivotInit) {
+			const renderers = $.extend(
+				$.pivotUtilities.renderers,
+				$.pivotUtilities.gchart_renderers
+			)
+			const data = this.data ? this.data : [];
+			if (this.model && data.length > 0) {
+				this.pivotConfig = JSON.parse(this.model);
+			}
+			this.pivotConfig.dataClass = undefined;
+			this.pivotConfig.renderers = renderers;
+			this.pivotConfig.rendererOptions = { gchart: { width: 1200, height: 1000 } }
+			this.pivotConfig.localeStrings = {
+				"renderError": "Ocurrió un error al mostrar los resultados de la tabla.", "computeError": "Ocurrió un error al computar los resultados de la tabla.", "uiRenderError": "Ocurrió un error en la UI de la tabla.", "selectAll": "Seleccionar todos", "selectNone": "Deselecionar", "tooMany": "(demasiados datos para listar)", "filterResults": "Filtrar datos", "apply": "Aplicar", "cancel": "Cancelar", "Totals": "Totales", "totals": "Totales", "vs": "vs", "by": "por"
+			}
+			this.pivotConfig.rendererOptions.localeStrings = this.pivotConfig.localeStrings;
+			this.pivotConfig.onRefresh = (config: any) => {
+				if (window.NgxPivotTableComponent.data.length > 0) {
+					window.NgxPivotTableComponent.getPivotOptions();
+				}
+			}
+			$(this.ngxpivottable.nativeElement).pivotUI(data, this.pivotConfig, true);
+			// $(this.ngxpivottable.nativeElement).pivotUI((injectRecord) => {
+			//   data.map((mp) => {
+			//     injectRecord({ a: mp.Age, b: mp.Name, c: mp.Province });
+			//   });
+			// }, this.pivotConfig, true, this.useLocale);
+		}
+	}
 
-  tableToJson(table) {
-    var data = [];
+	tableToJson(table: any): Array<any> {
+		let data: Array<any> = [];
+		let headers: Array<any> = [];
+		for (let i = 0; i < table.rows[0].cells.length; i++) {
+			headers[i] = table.rows[0].cells[i].innerHTML;
+		}
 
-    var headers = [];
-    for (var i = 0; i < table.rows[0].cells.length; i++) {
-      headers[i] = table.rows[0].cells[i].innerHTML;
-    }
+		for (let i = 1; i < table.rows.length; i++) {
+			let tableRow = table.rows[i];
+			let rowData = {};
+			let blanks = headers.length - tableRow.cells.length;
 
-    for (var i = 1; i < table.rows.length; i++) {
+			for (let j = 0; j < blanks; j++) {
+				rowData[headers[j]] = "";
+			}
 
-      var tableRow = table.rows[i];
-      var rowData = {};
-      let blanks = headers.length - tableRow.cells.length;
-      for (var j = 0; j < blanks; j++) {
-        rowData[headers[j]] = "";
-      }
+			for (let j = 0; j < tableRow.cells.length; j++) {
+				rowData[headers[(blanks > 0 ? blanks : 0) + j]] = tableRow.cells[j].innerHTML;
+			}
 
-      for (var j = 0; j < tableRow.cells.length; j++) {
-
-        rowData[headers[(blanks > 0 ? blanks : 0) + j]] = tableRow.cells[j].innerHTML;
-
-      }
-
-      data.push(rowData);
-    }
-    return data;
-  }
+			data.push(rowData);
+		}
+		return data;
+	}
 }

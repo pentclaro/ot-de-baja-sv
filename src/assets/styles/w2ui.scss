@@ -1,0 +1,47 @@
+.w2ui-head {
+  border-right: 1px solid #b3adad54 !important;
+  background-image: -webkit-linear-gradient(#606060, #606060) !important;
+  border-bottom: 1px solid #b3adad54 !important;
+  color: white !important;
+
+}
+
+.w2ui-popup-title {
+  background-image: -webkit-linear-gradient(#1F7872, #1F7872) !important;
+  color: white !important;
+}
+
+p {
+  font-weight: 400 !important;
+
+}
+
+.w2ui-grid .w2ui-grid-toolbar {
+  background-color: #606060 !important;
+  border-right: 1px solid #b3adad54 !important;
+  border-bottom: 1px solid #b3adad54 !important;
+}
+
+.w2ui-toolbar table.w2ui-button {
+  color: white !important;
+
+  .w2ui-tb-text {
+    color: white !important;
+  }
+
+  &:hover {
+    color: black !important;
+
+    .w2ui-tb-text {
+      color: black !important;
+    }
+  }
+
+  &.checked {
+    color: black !important;
+
+    .w2ui-tb-text {
+      color: black !important;
+    }
+  }
+}
