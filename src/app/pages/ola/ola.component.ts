@@ -156,10 +156,12 @@ export class OlaComponent implements OnInit {
 						else if (average >= 80 && average < 90) { record.CALIFICACION = "Necesita mejorar"; style = 'style="background-image: linear-gradient(270deg, #b1d57e, #feeb84);"'; }
 						else if (average < 80 && average > 0) { record.CALIFICACION = "No confiable"; style = 'style="background-image: linear-gradient(270deg, #fb8f73, #fdbead);"'; }
 						else { record.CALIFICACION = "Dado de baja"; style = 'style="background-image: linear-gradient(270deg, #fd3400, #fd3400);"'; }
-						record.PORCENTAJE = `${parseFloat(average.toFixed(2))}%`;
+						record.PORCENTAJE = average;
 						return `<div ${style}>${record.CALIFICACION}</div>`;
 					}
 				}
+			} else if (key === "PORCENTAJE") {
+				col = { field: key, text: key, size: "75px", sortable: true, render: 'percent:2' };
 			} else {
 				col = { field: key, text: key, size: "70px", sortable: true };
 			}

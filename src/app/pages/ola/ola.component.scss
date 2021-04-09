@@ -33,7 +33,7 @@
   }
 
   .search {
-    width: 20%;
+    width: calc((100% - 125px)/4);
   }
 
   ::ng-deep.ng-select {

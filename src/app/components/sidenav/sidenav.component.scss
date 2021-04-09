@@ -10,11 +10,11 @@ mat-sidenav-content {
 }
 
 .mat-toolbar-multiple-rows {
-  min-height: 45px;
+  min-height: 40px;
 
   .mat-toolbar-row,
   .mat-toolbar-single-row {
-    height: 48px;
+    height: 40px;
   }
 }
 
@@ -27,7 +27,7 @@ mat-sidenav-content {
 }
 
 .item-list-menu {
-  margin-left: 15px !important;
+  margin-left: 10px !important;
 }
 
 .divider-top {
@@ -39,7 +39,9 @@ mat-sidenav-content {
   h3 {
     text-align: center;
     margin: 0;
+    font-size: 16px !important;
   }
+// 40px 16px texto 12px inputs
 
   a {
     text-decoration: none;
@@ -47,7 +49,7 @@ mat-sidenav-content {
   }
 
   .mat-list-item {
-    padding: 10px;
+    padding: 5px;
     margin: 0;
   }
 
