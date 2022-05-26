@@ -16,6 +16,13 @@ export class HomeComponent implements OnInit {
 		protected sanitizer: DomSanitizer) { }
 
   options: any[] = [
+    {
+      name: 'Personal CNOC',
+      title: 'Personal CNOC',
+      description: 'Reporte que muestra el listado del personal activo de CNOC',
+      route: '/page/personal-cnoc',
+      icon: 'view_comfortable'
+    },
     // {
     //   name: 'SLA`S',
     //   title: 'SLA`S',
@@ -23,13 +30,13 @@ export class HomeComponent implements OnInit {
     //   route: '/page/company',
     //   icon: 'business'
     // }, 
-    {
-      name: 'OLA`S',
-      title: 'OLA`S',
-      description: 'Lorem ipsum dolor sit amet.',
-      route: '/page/ola',
-      icon: 'business'
-    }, 
+    // {
+    //   name: 'OLA`S',
+    //   title: 'OLA`S',
+    //   description: 'Lorem ipsum dolor sit amet.',
+    //   route: '/page/ola',
+    //   icon: 'business'
+    // }, 
     // {
     //   name: 'Controles de seguridad',
     //   title: 'Controles de seguridad',
