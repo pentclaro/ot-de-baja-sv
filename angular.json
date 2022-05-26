@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "sgi-dashboard": {
+    "personal-cnoc": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/sgi-dashboard",
+            "outputPath": "dist/personal-cnoc",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -84,18 +84,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sgi-dashboard:build"
+            "browserTarget": "personal-cnoc:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sgi-dashboard:build:production"
+              "browserTarget": "personal-cnoc:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sgi-dashboard:build"
+            "browserTarget": "personal-cnoc:build"
           }
         },
         "test": {
@@ -133,16 +133,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "sgi-dashboard:serve"
+            "devServerTarget": "personal-cnoc:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "sgi-dashboard:serve:production"
+              "devServerTarget": "personal-cnoc:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "sgi-dashboard"
+  "defaultProject": "personal-cnoc"
 }

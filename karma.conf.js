@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/sgi-dashboard'),
+      dir: require('path').join(__dirname, './coverage/personal-cnoc'),
       subdir: '.',
       reporters: [
         { type: 'html' },

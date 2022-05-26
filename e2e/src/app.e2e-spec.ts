@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toEqual('sgi-dashboard app is running!');
+    expect(await page.getTitleText()).toEqual('personal-cnoc app is running!');
   });
 
   afterEach(async () => {
