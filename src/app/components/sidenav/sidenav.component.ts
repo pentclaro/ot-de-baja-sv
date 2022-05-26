@@ -41,6 +41,11 @@ export class SidenavComponent implements OnInit {
     //   route: './temp',
     //   icon: 'business'
     // }
+		{
+			name: 'Personal CNOC',
+			route: './personal-cnoc',
+			icon: 'view_comfortable'
+		},
   ];
 	dark: boolean = false;
 	flag: any = {
