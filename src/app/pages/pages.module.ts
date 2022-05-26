@@ -31,6 +31,14 @@ const routes: Routes = [
       key: 'ola'
     }
   },
+  {
+    path: 'personal-cnoc',
+    loadChildren: () => import('./personal-cnoc/personal-cnoc.module').then(m => m.PersonalCnocModule),
+    // canActivate: [AuthGuard],
+    data: {
+      key: 'personal-cnoc'
+    }
+  },
 ];
 @NgModule({
   declarations: [],
