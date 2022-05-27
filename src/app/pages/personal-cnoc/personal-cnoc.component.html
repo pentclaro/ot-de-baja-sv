@@ -1,1 +1,47 @@
-<p>personal-cnoc works!</p>
+<ng-progress></ng-progress>
+<div id="wrapper-personal-cnoc">
+  <div id="container" class="scroll">
+    <div class="row">
+      <div class="col col-12 filters">
+
+        <div id="header">
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12" *ngIf="dataSource.length >= 1">
+        <div class="center" id="tituloPrincipal">
+          <h1>
+            {{header}}
+          </h1>
+          <h3 id="tituloTiempo">
+            Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+          </h3>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-12">
+
+        <app-w2ui-grid 
+          #w2ui 
+            *ngIf="dataSource.length >= 1" 
+            [name]="name" 
+            [header]="header" 
+            [records]="dataSource"
+            [columns]="columns" 
+            [searches]="searches" 
+            [show]="show"
+          >
+        </app-w2ui-grid>
+  
+        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="dataSource.length === 0">
+        </app-placeholder>
+
+      </div>
+    </div>
+  </div>
+</div>
