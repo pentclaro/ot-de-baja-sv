@@ -12,7 +12,7 @@ import { NgProgressModule } from 'ngx-progressbar';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'personal-cnoc',
     pathMatch: 'full'
   },
   {
@@ -21,14 +21,6 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     data: {
       key: 'home'
-    }
-  },
-  {
-    path: 'ola',
-    loadChildren: () => import('./ola/ola.module').then(m => m.OlaModule),
-    // canActivate: [AuthGuard],
-    data: {
-      key: 'ola'
     }
   },
   {
