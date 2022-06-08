@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { PersonalCnocComponent } from './personal-cnoc.component';
+import { GestionDocumentalComponent } from './gestion-documental.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material-design';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -9,14 +9,13 @@ import { NgProgressModule } from 'ngx-progressbar';
 import { ComponentsModule } from 'src/app/components/components.module';
 
 const routes: Routes = [
-	{ path: '', component: PersonalCnocComponent },
-	{ path: '', redirectTo: 'personal-cnoc', pathMatch: 'full' },
+	{ path: '', component: GestionDocumentalComponent },
+	{ path: '', redirectTo: 'gestion-documental', pathMatch: 'full' },
 ];
-
 
 @NgModule({
   declarations: [
-    PersonalCnocComponent
+    GestionDocumentalComponent
   ],
   imports: [
     CommonModule,
@@ -28,4 +27,4 @@ const routes: Routes = [
 		ComponentsModule,
   ]
 })
-export class PersonalCnocModule { }
+export class GestionDocumentalModule { }
