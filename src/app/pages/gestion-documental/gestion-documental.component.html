@@ -45,8 +45,8 @@
         </div>
         <br>
         <br>
-        <app-w2ui-grid 
-          #w2ui2 
+        <app-w2ui-grid-detalle 
+          #w2ui
             *ngIf="dataSourceDetalle.length >= 1" 
             [name]="nameDetalle" 
             [header]="headerDetalle" 
@@ -55,7 +55,7 @@
             [searches]="searchesDetalle" 
             [show]="show"
           >
-        </app-w2ui-grid>
+        </app-w2ui-grid-detalle>
   
 
       </div>

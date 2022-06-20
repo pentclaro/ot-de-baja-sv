@@ -9,14 +9,14 @@ import * as w2ui from '@derekyle/w2ui';
 declare const w2ui: any;
 declare const $: any;
 declare global {
-	interface Window { W2uiGridComponent: any; }
+	interface Window { W2uiGridComponentDetalle: any; }
 }
 @Component({
-	selector: 'app-w2ui-grid',
+	selector: 'app-w2ui-grid-detalle',
 	template: '<div id="grid-{{name}}" class="gird- ng-custom-ui grid-w2ui-claro"></div>',
 	styles: ['.grid-w2ui-claro {width: 100%;height: 100%;}']
 })
-export class W2uiGridComponent implements OnInit {
+export class W2uiGridComponentDetalle implements OnInit {
 	@Input() public name: string;
 	@Input() public header: string;
 	@Input() public show: Show;
@@ -34,7 +34,6 @@ export class W2uiGridComponent implements OnInit {
 	@Input() model: Record;
 	@Output() modelChange: EventEmitter<Record> = new EventEmitter<Record>();
 	private toolbar: Toolbar;
-	public tableSaved: any = [];
 
 	constructor(
 		private excelService: SaveFileService,
@@ -43,7 +42,7 @@ export class W2uiGridComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		window.W2uiGridComponent = this;
+		window.W2uiGridComponentDetalle = this;
 		//this.initActions();
 		this.initTable();
 	}
@@ -78,18 +77,17 @@ export class W2uiGridComponent implements OnInit {
 		if (this.serachData) { tableConfig.serachData = this.serachData }
 		if (this.menu) { tableConfig.menu = this.menu }
 		if (this.styles.length > 0) {
-			tableConfig.onRefresh = function (event: any) { window.W2uiGridComponent.setStyle(event) }
-			tableConfig.onResize = function (event: any) { window.W2uiGridComponent.setStyle(event) }
-			tableConfig.onColumnOnOff = function (event: any) { window.W2uiGridComponent.setStyle(event) }
-			tableConfig.onReload = function (event: any) { window.W2uiGridComponent.setStyle(event) }
-			tableConfig.onSearch = function (event: any) { window.W2uiGridComponent.setStyle(event) }
-			tableConfig.onSort = function (event: any) { window.W2uiGridComponent.setStyle(event) }
+			tableConfig.onRefresh = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onResize = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onColumnOnOff = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onReload = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onSearch = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onSort = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
 		}
 		if (this.edit) {
-			tableConfig.onSelect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponent.emitValue('select') } }
-			tableConfig.onUnselect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponent.emitValue('unselect') } }
+			tableConfig.onSelect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('select') } }
+			tableConfig.onUnselect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('unselect') } }
 		}
-		this.tableSaved.push(tableConfig)
 		setTimeout(() => {
 			$('#grid-' + this.name).w2grid(tableConfig);
 		}, 100);
@@ -99,7 +97,6 @@ export class W2uiGridComponent implements OnInit {
 		w2ui[this.name].selectAll();
 		let data: Array<Record> = [];
 		let selected = w2ui[this.name].getSelection();
-		// console.log(w2ui[])
 		data = w2ui[this.name].get(selected);
 		w2ui[this.name].selectNone();
 		return data;
@@ -139,7 +136,7 @@ export class W2uiGridComponent implements OnInit {
 				text: 'Excel',
 				tooltip: 'Export to Excel',
 				onClick: function (event: any) {
-					window.W2uiGridComponent.saveToExcel()
+					window.W2uiGridComponentDetalle.saveToExcel()
 				}
 			}, {
 				type: 'button',
@@ -147,7 +144,7 @@ export class W2uiGridComponent implements OnInit {
 				text: 'Copy',
 				tooltip: 'Copy to Clipboard',
 				onClick: function (event: any) {
-					window.W2uiGridComponent.copyData();
+					window.W2uiGridComponentDetalle.copyData();
 				}
 			}
 		];
