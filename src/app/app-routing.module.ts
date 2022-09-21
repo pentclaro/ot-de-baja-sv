@@ -10,7 +10,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
     // canActivate: [AuthGuard],
     data: {
-      key: 'home'
+      key: 'tickets-wo'
     }
   },
   // otherwise redirect to home

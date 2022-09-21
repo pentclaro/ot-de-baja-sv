@@ -12,23 +12,15 @@ import { NgProgressModule } from 'ngx-progressbar';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'gestion-documental',
+    redirectTo: 'tickets-wo',
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    path: 'tickets-wo',
+    loadChildren: () => import('./tickets-wo/tickets-wo.module').then(m => m.TicketsWoModule),
     // canActivate: [AuthGuard],
     data: {
-      key: 'home'
-    }
-  },
-  {
-    path: 'gestion-documental',
-    loadChildren: () => import('./gestion-documental/gestion-documental.module').then(m => m.GestionDocumentalModule),
-    // canActivate: [AuthGuard],
-    data: {
-      key: 'gestion-documental'
+      key: 'tickets-wo'
     }
   },
 ];
