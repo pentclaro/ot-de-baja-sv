@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "personal-cnoc": {
+    "ticketsWO_V1": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/personal-cnoc",
+            "outputPath": "dist/ticketsWO_V1",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -84,18 +84,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "personal-cnoc:build"
+            "browserTarget": "ticketsWO_V1:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "personal-cnoc:build:production"
+              "browserTarget": "ticketsWO_V1:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "personal-cnoc:build"
+            "browserTarget": "ticketsWO_V1:build"
           }
         },
         "test": {
@@ -133,16 +133,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "personal-cnoc:serve"
+            "devServerTarget": "ticketsWO_V1:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "personal-cnoc:serve:production"
+              "devServerTarget": "ticketsWO_V1:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "personal-cnoc"
+  "defaultProject": "ticketsWO_V1"
 }
