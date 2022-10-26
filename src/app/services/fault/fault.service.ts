@@ -16,8 +16,8 @@ export class FaultService {
     return this.http.get(`${environment.apiURL}/ticketsWO/getAreas`);
   }
 
-  getCategorias(mes: any, area: any) {
-    return this.http.get(`${environment.apiURL}/ticketsWO/getCategorias/${mes}/${area}`);
+  getCategorias(mes: any) {
+    return this.http.get(`${environment.apiURL}/ticketsWO/getCategorias/${mes}`);
   }
 
   getCodigos(mes: any, area: any, categoria: any) {

@@ -56,7 +56,7 @@ export class TicketsWOComponent implements OnInit {
     } else if (input === 'Categoria' && this.i === 0){
       this.i++
     } else if (input === 'Area' && this.i === 1) {
-      this.getComboCategoria(this.search.mes, this.search.area)
+      this.getComboCategoria(this.search.mes)
       this.i = 0
     } else {
       this.getComboCodigo(this.search.mes, this.search.area, this.search.categoria)
@@ -76,13 +76,13 @@ export class TicketsWOComponent implements OnInit {
         this.search.pais = []
       }
 
-      // this.filtroPais = []
-      // this.search.pais.includes('Guatemala') ? this.filtroPais.push('GT'): '------'
-      // this.search.pais.includes('El Salvador') ? this.filtroPais.push('SV'): '------'
-      // this.search.pais.includes('Honduras') ? this.filtroPais.push('HN'): '------'
-      // this.search.pais.includes('Nicaragua') ? this.filtroPais.push('NI') : '------'
-      // this.search.pais.includes('Costa Rica') ? this.filtroPais.push('CR'): '------'
-      // this.search.pais.includes('Panama') ? this.filtroPais.push('PA'): '------'
+      this.filtroPais = []
+      this.search.pais.includes('Guatemala') ? this.filtroPais.push('GT'): '------'
+      this.search.pais.includes('El Salvador') ? this.filtroPais.push('SV'): '------'
+      this.search.pais.includes('Honduras') ? this.filtroPais.push('HN'): '------'
+      this.search.pais.includes('Nicaragua') ? this.filtroPais.push('NI') : '------'
+      this.search.pais.includes('Costa Rica') ? this.filtroPais.push('CR'): '------'
+      this.search.pais.includes('Panama') ? this.filtroPais.push('PA'): '------'
       // this.createComboArea(this.filtroPais)
       this.areas = []
       this.areas.unshift('Todos')
@@ -212,36 +212,57 @@ export class TicketsWOComponent implements OnInit {
     this.areas.unshift('Todos')
   }
 
-  getComboCategoria(mes, area) {
+  getComboCategoria(mes) {
     this.categorias = []
     this.codigos = []
-    this._faultService.getCategorias(mes, area).subscribe((data: any) => {
-      let response = data
-      if (data.length === 0) {
-      this._pageService.openSnackBar(`warning`, `No contamos con categorías del área seleccionada, elige otra área por favor`);
-      } else {
-        response.map(item => this.categorias.push(item.CATEGORIA_CIERRE))
-        this.categorias.length === 1 ? '' : this.categorias.unshift('Todos')
-      }
-    }, (error: any ) => {
-      this._pageService.openSnackBar(`warning`, `Error al obtener las categorías, intenta de nuevo más tarde.`);
-    })
+    this.categorias = ['Todos', 'FALLA RED DE COBRE', 'FALLA EN EQUIPO', 'FALLA DE ENERGIA', 'FALLA FIBRA OPTICA', 'FALLA DE GESTION',
+      'SEGURIDAD CNOC', 'FALLA SATELITAL', 'CLIENTE', 'WO ADMINISTRACION', 'RADIO ENLACES', 'TERCEROS', '277', '108', '126',
+      '115', 'WO ADMON', '906', '134', '294', '332', '176', '224', '808']
+    // this._faultService.getCategorias(mes).subscribe((data: any) => {
+    //   let response = data
+    //   if (data.length === 0) {
+    //   this._pageService.openSnackBar(`warning`, `No contamos con categorías del área seleccionada, elige otra área por favor`);
+    //   } else {
+    //     response.map(item => {
+    //       if(!this.categorias.includes(item.CATEGORIA_CIERRE) && item.CATEGORIA_CIERRE !== null) {
+    //         this.categorias.push(item.CATEGORIA_CIERRE)
+    //       }
+    //       // this.categorias.push(item.CATEGORIA_CIERRE)
+    //     })
+    //     // this.categorias = this.eliminarDuplicados(this.categorias, item => item.CATEGORIA_CIERRE)
+    //     this.categorias.length === 1 ? '' : this.categorias.unshift('Todos')
+    //   }
+    // }, (error: any ) => {
+    //   this._pageService.openSnackBar(`warning`, `Error al obtener las categorías, intenta de nuevo más tarde.`);
+    // })
   }
 
   getComboCodigo(mes, area, categoria) {
-    this.codigos = []
-    this._faultService.getCodigos(mes, area, categoria).subscribe((data: any) => {
-      let response = data
-      if (data.length === 0) {
-        this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
-      } else {
-        response.map(item => this.filtrarCodigos(item.CODIGO_CIERRE))
-        this.codigos.length === 1 ? '' : this.codigos.unshift('Todos')
-      }
-      this.loading = false
-    }, (error: any ) => {
-      this._pageService.openSnackBar(`warning`, `Error al obtener los códigos, intenta de nuevo más tarde.`);
-    })
+    this.codigos = ['Todos', 'NO SE REALIZO TROUBLESHOOTING', 'SE CONFIGURO EQUIPO EN CLIENTE', 'WO MAL ASIGNADA', 'DANO O MODIFICACION INFRAESTRUCTURA DEL CLIENTE', 'MANIPULACION DE EQUIPOS Y/O CABLEADO', 'PROBLEMA DE ENERGIA EN INSTALACIONES DEL CLIENTE'
+      , 'SE REINICIO EL EQUIPO EN EL CLIENTE', 'SE REQUIERE CAMBIO DE AREA PARA ATENCION', 'FALLA  NAVEGACION', 'LIMPIEZA DE CONECTORES DE FIBRA EN SITIO CLIENTE', 'CAMBIO FUSIBLE EN MDF', 'ALINEACION DE ANTENA EN SITIO CLIENTE'
+      , 'CONFIGURACION EQUIPO NODO', 'SE SUSTITUYO PROTECTOR DE LINEA', 'CAMBIO DE CABLE UTP EN SITIO CLIENTE', 'ALINEACION DE ANTENA EN NODO', 'SE ASEGURO LA RED EN DP', 'TRASLADO PARA REPROGRAMACION', 'SE TRASLADA DE AREA PARA ATENCION'
+      , 'SE CAMBIO EL EQUIPO DE ULTIMA MILLA EN NODO', 'LIMPIEZA DE CONECTORES DE FIBRA EN NODO', 'FALLA ENERGIA COMERCIAL EN NODO O CLIENTE', 'SE ASEGURO LA RED EN CD (SUBREPARTIDOR)', 'NO HAY DATOS DE RED', 'SE REPARO LA RED INTERNA DEL CLIENTE'
+      , 'CAMBIO DE TRAMO DE FO', 'SE ASEGURA LA RED EN CD(SUBREPARTIDOR)', 'ROBO CABLE(RED PRIMARIOA O SECUNDARIA)', 'FALLA ENVIO MAIL', 'SIN INTERVENCION TECNICA', 'CAMBIO DE EQUIPOS POR DANO ATRIBUIBLE AL CLIENTE', 'SE CAMBIO LA ACOMETIDA'
+      , 'SE REPARO EMPALME', 'SE CAMBIO EL EQUIPO DE ULTIMA MILLA CLIENTE', 'AGREGAR PTR', 'SE CAMBIO DE PUERTO EN LA REPISA O DSLAM', 'POR VENTANA DE MANTENIMIENTO MAL EJECUTADA', 'SE ASEGURO LA RED EN CT', 'SE REPARO ODF EN NODO', 'NODO MAL ASIGNADO'
+      , 'PENDIENTE POR LLAVES', 'DESCONECCION EN PROTECTOR DE LINEA', 'PROBLEMAS DE ACCESO TERCEROS', 'MANIPULACION DEL CLIENTE', 'FALLA DE FUENTE DE EQUIPO', 'SE REINICIO EL EQUIPO EN EL NODO', 'EQUIPO NODO DESCONECTADO O APAGADO', 'CAMBIO DE FIBRAS'
+      , 'CABLE DE ENERGIA DESCONECTADOÿ EN NODO', 'CAMBIO DE RADIO EN NODO', 'SE CAMBIO PUERTO EN EL NODO', 'SE CORRIGIO PUENTE O CAMBIO FUSIBLE', 'MAL DIAGNOSTICO', 'CONFIGURACION DE EQUIPO EN CLIENTE', 'POR INTERVENCION TECNICA'
+      , 'SE REPARO ODF EN SITIO CLIENTE', 'TRASLADO DE WO POR CAMBIO DE ESTADO', 'SE CAMBIO PATCHCORD', 'CONEXION MDF', 'CAMBIO DE CABLE UTP EN TORRE', 'INGRESO TECNICO NO AUTORIZADO', 'GESTION NO RESPONDE', 'SE CONFIGURO PUERTO EN EQUIPO NODO'
+      , 'TRASLADO DE WO PARA SEGUIMIENTO', 'CONFIGURACION DE EQUIPO EN NODO', 'SE REPARO FIBRA', 'TRASLADO DE PX PARA SU ATENCION', 'CAMBIO PATCHCORD NODO', 'SE REPARO O SUSTITUYO EL CABLE', 'CAMBIO FUSIBLE EN CT', 'REPROGRAMADO POR CLIENTE'
+      , 'NO SE COORDINO INGRESO DEL TECNICO', 'EQUIPO DESCONECTADO DE LA ENERGIA EN CLIENTE', 'DESENLISTAMIENTO  BLACKLIST', 'SE CAMBIO EL EQUIPO EN EL NODO', 'FALLA ENERGIA DC EN NODO', 'SE REPARO O SUSTITUYO LA RED PRIMARIA'
+      , 'SE CAMBIO EL PATCHCORD EN NODO', 'SE REPARO O SUSTITUYO LA RED SECUNDARIA', 'CAMBIO DE PUERTO EN SPLITTER GPON']
+    // this._faultService.getCodigos(mes, area, categoria).subscribe((data: any) => {
+    //   let response = data
+    //   console.log(data)
+    //   if (data.length === 0) {
+    //     this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
+    //   } else {
+    //     response.map(item => this.filtrarCodigos(item.CODIGO_CIERRE))
+    //     this.codigos.length === 1 ? '' : this.codigos.unshift('Todos')
+    //   }
+    //   this.loading = false
+    // }, (error: any ) => {
+    //   this._pageService.openSnackBar(`warning`, `Error al obtener los códigos, intenta de nuevo más tarde.`);
+    // })
   }
 
   searchData(form): void {
