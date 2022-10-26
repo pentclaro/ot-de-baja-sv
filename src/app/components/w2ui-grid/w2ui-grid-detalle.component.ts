@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, SimpleChanges, EventEmitter } from '@angular/core';
-import { ColumnGroups, Column, Item, Menu, SearchData, Search, Show, Toolbar, Record, ColumnStyle } from 'src/app/interfaces/interfaces';
+import { ColumnGroups, Column, Item, Menu, SearchData, Search, Show, Toolbar, Record, ColumnStyle, SelectType } from 'src/app/interfaces/interfaces';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { HeaderService } from 'src/app/services/header.service';
 import { SaveFileService } from 'src/app/services/save/save.service';
@@ -14,7 +14,7 @@ declare global {
 @Component({
 	selector: 'app-w2ui-grid-detalle',
 	template: '<div id="grid-{{name}}" class="gird- ng-custom-ui grid-w2ui-claro"></div>',
-	styles: ['.grid-w2ui-claro {width: 100%;height: 100%;}']
+	styles: ['.grid-w2ui-claro {width: 1100px;height: 100%; margin: 0 auto;}']
 })
 export class W2uiGridComponentDetalle implements OnInit {
 	@Input() public name: string;
@@ -31,8 +31,11 @@ export class W2uiGridComponentDetalle implements OnInit {
 	@Input() public styles: Array<ColumnStyle> = [];
 	@Input() public edit: boolean;
 	@Input() public multiSelect: boolean = false;
+	@Input() selectType: SelectType = 'row';
 	@Input() model: Record;
+	@Input() modelDbl: Record;
 	@Output() modelChange: EventEmitter<Record> = new EventEmitter<Record>();
+	@Output() modelDblChange: EventEmitter<Record> = new EventEmitter<Record>();
 	private toolbar: Toolbar;
 
 	constructor(
@@ -43,22 +46,22 @@ export class W2uiGridComponentDetalle implements OnInit {
 
 	ngOnInit(): void {
 		window.W2uiGridComponentDetalle = this;
-		//this.initActions();
+		this.initActions();
 		this.initTable();
 	}
 
-	// refresh(): void {
-	// 	if (w2ui.hasOwnProperty(this.name)) {
-	// 		if ($('#grid-' + this.name).length >= 1) {
-	// 			w2ui[this.name].destroy();
-	// 			this.initTable();
-	// 		} else {
-	// 			this.initTable();
-	// 		}
-	// 	} else {
-	// 		this.initTable();
-	// 	}
-	// }
+	refresh(): void {
+		if (w2ui.hasOwnProperty(this.name)) {
+			if ($('#grid-' + this.name).length >= 1) {
+				w2ui[this.name].destroy();
+				this.initTable();
+			} else {
+				this.initTable();
+			}
+		} else {
+			this.initTable();
+		}
+	}
 
 	initTable(): void {
 		this.initActions();
@@ -76,6 +79,7 @@ export class W2uiGridComponentDetalle implements OnInit {
 		if (this.columnGroups) { tableConfig.columnGroups = this.columnGroups }
 		if (this.serachData) { tableConfig.serachData = this.serachData }
 		if (this.menu) { tableConfig.menu = this.menu }
+		if (this.selectType) { tableConfig.selectType = this.selectType }
 		if (this.styles.length > 0) {
 			tableConfig.onRefresh = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
 			tableConfig.onResize = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
@@ -87,6 +91,7 @@ export class W2uiGridComponentDetalle implements OnInit {
 		if (this.edit) {
 			tableConfig.onSelect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('select') } }
 			tableConfig.onUnselect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('unselect') } }
+			tableConfig.onDblClick = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValueDbl() } }
 		}
 		setTimeout(() => {
 			$('#grid-' + this.name).w2grid(tableConfig);
@@ -94,25 +99,43 @@ export class W2uiGridComponentDetalle implements OnInit {
 	}
 
 	getShowedData(): Array<Record> {
-		w2ui[this.name].selectAll();
 		let data: Array<Record> = [];
-		let selected = w2ui[this.name].getSelection();
-		data = w2ui[this.name].get(selected);
-		w2ui[this.name].selectNone();
+    if (this.selectType === 'row') {
+      w2ui[this.name].selectAll();
+      let selected = w2ui[this.name].getSelection();
+      data = w2ui[this.name].get(selected);
+    } else {
+      const recid = []
+      w2ui[this.name].records.map(item => {
+        recid.push(item.recid)
+      })
+      let selected = recid
+      data = w2ui[this.name].get(selected);
+    }
+    w2ui[this.name].selectNone();
 		return data;
 	}
 
 	copyShowedData(): string {
-		w2ui[this.name].selectAll();
 		let copy: string = '';
-		let data: Array<Record> = [];
-		let selected = w2ui[this.name].getSelection();
-		data = w2ui[this.name].get(selected);
-		copy += `${Object.keys(data[0]).join('\t')}\r\n`;
-		data.map(function (mp: any) {
-			let row = Object.values(mp);
-			copy += `${row.join('\t')}\r\n`;
-		});
+    let data: Array<Record> = [];
+    if (this.selectType === 'row') {
+      w2ui[this.name].selectAll();
+      let selected = w2ui[this.name].getSelection();
+      data = w2ui[this.name].get(selected);
+    } else {
+      const recid = []
+      w2ui[this.name].records.map(item => {
+        recid.push(item.recid)
+      })
+      let selected = recid
+      data = w2ui[this.name].get(selected);
+    }
+    copy += `${Object.keys(data[0]).join('\t')}\r\n`;
+    data.map(function (mp: any) {
+      let row = Object.values(mp);
+      copy += `${row.join('\t')}\r\n`;
+    });
 		w2ui[this.name].selectNone();
 		return copy;
 	}
@@ -174,25 +197,52 @@ export class W2uiGridComponentDetalle implements OnInit {
 	}
 
 	emitValue(value: string): void {
-		let row: any = undefined;
-		if (value === 'select') {
-			row = w2ui[this.name].getSelection();
-			this.model = w2ui[this.name].get(row[0]);
-			this.model = JSON.parse(JSON.stringify(this.model))
+		if (this.selectType === 'row') {
+			let row: any = undefined;
+			if (value === 'select') {
+				row = w2ui[this.name].getSelection();
+				console.log(row)
+				this.model = w2ui[this.name].get(row[0]);
+				this.model = JSON.parse(JSON.stringify(this.model))
+			} else {
+				this.model = row;
+			}
 		} else {
-			this.model = row;
+			let cell: any = undefined;
+			if (value === 'select') {
+				cell = w2ui[this.name].getSelection()
+				this.model = w2ui[this.name].getCellValue(cell[0].index, cell[0].column)
+				this.model = JSON.parse(JSON.stringify(this.model))
+			} else {
+				this.model = cell
+			}
 		}
 		this.modelChange.emit(this.model);
 	}
 
-	// ngOnChanges(changes: SimpleChanges): void {
-	// 	if (changes.records || changes.columns || changes.searches || changes.toolbar || changes.columnGroups || changes.styles) {
-	// 		this.refresh();
-	// 	}
-	// }
+	emitValueDbl(): void {
+		if (this.selectType === 'row') {
+			let row: any = undefined;
+			row = w2ui[this.name].getSelection();
+			this.modelDbl = w2ui[this.name].get(row[0]);
+			this.modelDbl = JSON.parse(JSON.stringify(this.modelDbl))
+		} else {
+			let cell: any = undefined;
+			cell = w2ui[this.name].getSelection()
+			this.modelDbl = w2ui[this.name].getCellValue(cell[0].index, cell[0].column)
+			this.modelDbl = JSON.parse(JSON.stringify(this.modelDbl))
+		}
+		this.modelDblChange.emit(this.modelDbl);
+	}
 
-	// ngOnDestroy() {
-	// 	w2ui[this.name].destroy();
-	// }
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.records || changes.columns || changes.searches || changes.toolbar || changes.columnGroups || changes.styles) {
+			this.refresh();
+		}
+	}
+
+	ngOnDestroy() {
+		w2ui[this.name].destroy();
+	}
 
 }

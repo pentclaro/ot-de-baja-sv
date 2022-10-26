@@ -1,1 +1,117 @@
-<p>tickets-wo works!</p>
+<ng-progress></ng-progress>
+<div id="wrapper-tickets-wo">
+  <div id="container" class="scroll">
+    <div class="row">
+      <div class="col col-12 filters">
+
+        <div id="header">
+          <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData(form)">
+            <div class="flex-container">
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Mes</mat-label>
+                <mat-select required placeholder="Selecciona un mes"  [(ngModel)]="search.mes" name="mes" [disabled]="loading">
+                  <mat-option *ngFor="let mes of meses" [value] = "mes">{{mes}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>País</mat-label>
+                <mat-select [(ngModel)]="search.pais" name="pais" multiple required 
+                  (selectionChange)="selectedOpt($event, this.search.pais)" [disabled]="loading" 
+                >
+                  <mat-option *ngFor="let pais of paises" [value]="pais">{{pais}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Área</mat-label>
+                <mat-select [(ngModel)]="search.area" name="area" multiple required (selectionChange)="selectedOpt($event, this.search.area)" 
+                  [disabled]="loading || this.areas.length < 1" (openedChange)="inputOpen('Area')" >
+                  <mat-option *ngFor="let area of areas" [value]="area">{{area}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            <!-- </div> -->
+
+            <!-- <div class="flex-container"> -->
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Categoría de Cierre</mat-label>
+                <mat-select [(ngModel)]="search.categoria" name="categoria" multiple required (selectionChange)="selectedOpt($event, this.search.categoria)" 
+                  [disabled]="loading || this.categorias.length < 1" (openedChange)="inputOpen('Categoria')" 
+                >
+                  <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{categoria}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Código de Cierre</mat-label>
+                <mat-select [(ngModel)]="search.codigo" name="codigo" multiple required (selectionChange)="selectedOpt($event, this.search.codigo)" 
+                  [disabled]="loading || this.codigos.length < 1" >
+                  <mat-option *ngFor="let codigo of codigos" [value]="codigo">{{codigo}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <button mat-flat-button class="primary-button search" type="submit" [disabled]="button || loading">
+                <mat-icon matPrefix>search</mat-icon>BUSCAR
+              </button>
+            </div>
+            
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12" *ngIf="dataSourceResumen.length >= 1">
+        <div class="center" id="tituloPrincipal">
+          <br>
+          <h1>
+            {{headerResumen}}
+          </h1>
+          <h3 id="tituloTiempo">
+            Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+          </h3>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    
+    <div class="row">
+      <div class="col col-12">
+
+        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="dataSourceResumen.length === 0">
+        </app-placeholder>
+
+        <div class="tabla-resumen">
+          <app-w2ui-grid 
+            #w2ui 
+              *ngIf="dataSourceResumen.length >= 1" 
+              [name]="nameResumen" 
+              [header]="headerResumen" 
+              [records]="dataSourceResumen"
+              [columns]="columnsResumen" 
+              [searches]="searchesResumen" 
+              [show]="show"
+            >
+          </app-w2ui-grid>
+        </div>
+        <br>
+        <br>
+        <app-w2ui-grid-detalle 
+          #w2ui
+            *ngIf="dataTablaDetalle.length >= 1" 
+            [name]="nameDetalle" 
+            [header]="headerDetalle" 
+            [records]="dataTablaDetalle"
+            [columns]="columnsDetalle" 
+            [searches]="searchesDetalle" 
+            [show]="show"
+          >
+        </app-w2ui-grid-detalle>
+  
+
+      </div>
+    </div>
+  </div>
+</div>

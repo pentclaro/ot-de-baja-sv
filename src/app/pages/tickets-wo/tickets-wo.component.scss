@@ -1,0 +1,111 @@
+@import "src/assets/styles/variables";
+@import "src/assets/styles/material";
+
+
+#wrapper-tickets-wo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+
+  #container {
+    overflow: auto;
+
+    #header {
+      margin: 20px 0;
+    }
+  }
+
+  #tituloPrincipal {
+    display: block;
+    margin-top: 10px;
+    font-weight: 300 !important;
+
+    #tituloTiempo {
+      margin: 0 10px;
+    }
+  }
+
+  .flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .search {
+    width: calc((100% - 125px)/6);
+  }
+  .graph-container {
+    margin-bottom: 50px;
+    display: flex;
+    // justify-content: space-evenly;
+    flex-direction: row;
+    width: 100%;
+    // align-items: center;
+  }
+  .chart-view {
+    display: flex;
+    width: 40%;
+    height: 300px;
+    margin-left: 8%
+  }
+  .controls{
+    display: flex;
+    justify-content: space-between;
+  
+  }
+
+  .tabla-resumen {
+    margin: 0 auto;
+    height: 400px;
+    width: 700px;
+  }
+
+
+  ::ng-deep.ng-select {
+    .ng-select-container.ng-appearance-outline {
+      min-height: 56px !important;
+    }
+  }
+
+  ::ng-deep.mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+  }
+
+  .ng-select {
+    padding-bottom: 4px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #wrapper-tickets-wo {
+    #container {}
+
+    .flex-container {
+      display: inline-block !important;
+    }
+
+    .search {
+      width: 100% !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  #wrapper-tickets-wo {
+    #container {}
+
+    .search {
+      width: 25%;
+    }
+  }
+}
+
+@media (max-width: 1366px) {
+  #wrapper-tickets-wo {
+    .chart-view {
+      margin-left: 0;
+    }
+  }
+}

@@ -1,27 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { HeaderService } from '../header.service';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class FaultService {
 
-  constructor(private http: HttpClient,
-    private queryService: HeaderService) { }
+  constructor(
+    private http: HttpClient,
+    private queryService: HeaderService
+  ) { }
 
-  getFaultOpen(input: any) {
-    // let queryParams = this.queryService.getQuery(input);${queryParams}
-    return this.http.post(`${environment.apiURL}/fault/open`, input);
+  getAreas() {
+    return this.http.get(`${environment.apiURL}/ticketsWO/getAreas`);
   }
-  getFaultClose(input: any) {
-    return this.http.post(`${environment.apiURL}/fault/close`, input);
+
+  getCategorias(mes: any, area: any) {
+    return this.http.get(`${environment.apiURL}/ticketsWO/getCategorias/${mes}/${area}`);
   }
-  getCountry(input: any) {
-    return this.http.get(`${environment.apiURL}/fault/coutries`, input);
-  }
-  getCategory(input: any) {
-    return this.http.get(`${environment.apiURL}/fault/categories`, input);
+
+  getCodigos(mes: any, area: any, categoria: any) {
+    return this.http.get(`${environment.apiURL}/ticketsWO/getCodigos/${mes}/${area}/${categoria}`);
   }
 }

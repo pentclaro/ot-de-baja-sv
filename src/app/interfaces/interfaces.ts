@@ -155,3 +155,5 @@ export interface ColumnStyle {
 }
 
 export type action = 'delete' | 'cancel' | 'create' | 'edit';
+
+export type SelectType = 'row' | 'cell';
