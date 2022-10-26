@@ -273,11 +273,28 @@ export class TicketsWOComponent implements OnInit {
       this.dataTablaDetalle = []
       this.getTablaResumen(this.filtroPais, this.search);
       this.getTablaDetalle(this.filtroPais, this.search);
+      this.getDataResumen(this.filtroPais, this.search);
       this.loading = false
 		} else {
       this._pageService.openSnackBar(`warning`, `Error selecciona todos los campos.`);
 			this.loading = false
 		}
+  }
+
+  getDataResumen(pais, search) {
+    this._ticketsWOService.getDataResumen(pais, search).subscribe((data: any) => {
+        let response = data
+        console.log(response)
+        // if (data.length === 0) {
+        //   this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
+        // } else {
+        //   response.map(item => this.filtrarCodigos(item.CODIGO_CIERRE))
+        //   this.codigos.length === 1 ? '' : this.codigos.unshift('Todos')
+        // }
+        this.loading = false
+      }, (error: any ) => {
+        this._pageService.openSnackBar(`warning`, `Error al obtener los códigos, intenta de nuevo más tarde.`);
+      })
   }
 
   getTablaResumen(pais, search) {
