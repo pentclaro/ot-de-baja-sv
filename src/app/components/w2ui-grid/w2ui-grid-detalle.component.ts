@@ -14,7 +14,7 @@ declare global {
 @Component({
 	selector: 'app-w2ui-grid-detalle',
 	template: '<div id="grid-{{name}}" class="gird- ng-custom-ui grid-w2ui-claro"></div>',
-	styles: ['.grid-w2ui-claro {width: 1100px;height: 100%; margin: 0 auto;}']
+	styles: ['.grid-w2ui-claro {width: 1350px;height: 100%; margin: 0 auto;} @media (max-width: 1366px) {.grid-w2ui-claro {width: 100%}}']
 })
 export class W2uiGridComponentDetalle implements OnInit {
 	@Input() public name: string;

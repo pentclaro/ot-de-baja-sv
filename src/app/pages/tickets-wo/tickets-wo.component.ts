@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Renderer2, AfterViewInit, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Column, Search, Show, Record } from 'src/app/interfaces/interfaces';
 import { HeaderService } from 'src/app/services/header.service';
@@ -10,7 +10,7 @@ import { TicketsWOService } from 'src/app/services/tickets-wo/tickets-wo.service
   templateUrl: './tickets-wo.component.html',
   styleUrls: ['./tickets-wo.component.scss']
 })
-export class TicketsWOComponent implements OnInit {
+export class TicketsWOComponent implements AfterViewInit {
   search: {mes: string[], pais: string[], area:string[], categoria:string[], codigo:string[]} = {mes: [], pais: [], area: [], categoria: [], codigo: []};
   loading: boolean = false;
   dataSourceDetalle: string[] = [];
@@ -37,17 +37,27 @@ export class TicketsWOComponent implements OnInit {
   dataTablaDetalle: any[] = [];
   button: boolean = true
   i: number = 0;
+  dataResumen: any
+  sumaTicketsConReclamo: number
+  totalTickets: number
+  porcentajeConReclamos: any
+  loadingDetalle: boolean = false
 
   @ViewChild('form', { static: false}) form: NgForm;
+  @ViewChild('tableContainer', { static: false }) table: ElementRef;
 
   constructor(
     private _pageService: HeaderService,
     private _ticketsWOService: TicketsWOService,
-    private _faultService: FaultService
+    private _faultService: FaultService,
+    private renderer: Renderer2
   ) { }
 
-  ngOnInit(): void {
+  // ngOnInit(): void {
 
+  // }
+
+  ngAfterViewInit(): void {
   }
 
   inputOpen(input) {
@@ -65,7 +75,10 @@ export class TicketsWOComponent implements OnInit {
   }
 
   selectedOpt(event, input): void {
-    if(input === this.search.pais) {
+    if (input === this.search.mes) {
+      this.getDataDetalleTotal(['GT', 'SV', 'HN', 'NI', 'CR', 'PA'], {mes: this.search.mes, area: ['Todos'], categoria: ['Todos'], codigo: ['Todos']})
+      this.getDataResumen(this.search.mes)
+    } else if(input === this.search.pais) {
       if (input[0] === 'Todos') {
         this.search.pais = this.paises
         this.cleanChecks = true
@@ -267,24 +280,32 @@ export class TicketsWOComponent implements OnInit {
 
   searchData(form): void {
     this.loading = true;
+    this.loadingDetalle = true
 		this.form.form.markAllAsTouched();
 		if (this.form.valid) {
       this.dataSourceResumen = [];
       this.dataTablaDetalle = []
       this.getTablaResumen(this.filtroPais, this.search);
       this.getTablaDetalle(this.filtroPais, this.search);
-      this.getDataResumen(this.filtroPais, this.search);
       this.loading = false
 		} else {
       this._pageService.openSnackBar(`warning`, `Error selecciona todos los campos.`);
 			this.loading = false
+      this.loadingDetalle = false
 		}
   }
 
-  getDataResumen(pais, search) {
-    this._ticketsWOService.getDataResumen(pais, search).subscribe((data: any) => {
+  getDataResumen(mes) {
+    this._ticketsWOService.getDataResumen(mes).subscribe(({data, message}: any) => {
         let response = data
-        console.log(response)
+        let sumaCodigos = 0
+        response.map(item => {
+          sumaCodigos += item.CONTEO_COD_CIERRE
+        })
+        const newObj = {CODIGO_CIERRE: 'TOTAL GENERAL', CONTEO_COD_CIERRE: sumaCodigos}
+        response.push(newObj)
+        this.sumaTicketsConReclamo = sumaCodigos
+        this.dataResumen = response
         // if (data.length === 0) {
         //   this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
         // } else {
@@ -310,12 +331,25 @@ export class TicketsWOComponent implements OnInit {
     })
   }
 
+  getDataDetalleTotal(pais, search) {
+    this._ticketsWOService.getDataTablaDetalle(pais, search).subscribe(({ data, message}: any) => {
+      this.totalTickets = data.data.length
+      this.porcentajeConReclamos = ((this.sumaTicketsConReclamo * 100) / this.totalTickets).toFixed(0)
+    },
+    (error) => {
+      this._pageService.openSnackBar(`error`, error);
+      this.loading = false;
+    })
+  }
+
   getTablaDetalle(pais, search) {
+    console.log({pais, search})
     this._ticketsWOService.getDataTablaDetalle(pais, search).subscribe(({ data, message}: any) => {
       this.order = data.order
       this.updatedAt = Date();
       this.dataTablaDetalle = this.orderKeys(data.data, data.info);
       this.formatDetalle();
+      this.loadingDetalle = false
     },
     (error) => {
       this._pageService.openSnackBar(`error`, error);
@@ -332,7 +366,7 @@ export class TicketsWOComponent implements OnInit {
 			if (key === "recid") {
 				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
 			} else if(key === "AREA"){
-				col = { field: key, text: key, size: "170px", sortable: true };
+				col = { field: key, text: key, size: "160px", sortable: true };
 			} else if(key === "CATEGORIA_CIERRE"){
 				col = { field: key, text: key, size: "130px", sortable: true };
 			} else if(key === "CODIGO_CIERRE"){
@@ -361,7 +395,7 @@ export class TicketsWOComponent implements OnInit {
 		data.map((key: string) => {
 			let col: Column, search: Search;
 			if (key === "recid") {
-				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: false };
+				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
       } else if(key === "TICKET") {
 				col = { field: key, text: key, size: "80px", sortable: true };
       } else if(key === "AREA") {
@@ -369,7 +403,7 @@ export class TicketsWOComponent implements OnInit {
       } else if(key === "CATEGORIA DE CIERRE") {
 				col = { field: key, text: key, size: "180px", sortable: true };
       } else if(key === "CODIGO DE CIERRE") {
-				col = { field: key, text: key, size: "130px", sortable: true };
+				col = { field: key, text: key, size: "250px", sortable: true };
       } else if(key === "FECHA") {
 				col = { field: key, text: key, size: "110px", sortable: true };
       } else {
