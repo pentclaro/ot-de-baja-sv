@@ -5,7 +5,7 @@
       <div class="col col-12 filters">
 
         <div id="header">
-          <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData(form)">
+          <form #form="ngForm" ngNativeValidate>
             <div class="flex-container">
               <mat-form-field appearance="outline" class="search">
                 <mat-label>Mes</mat-label>
@@ -18,17 +18,31 @@
               <mat-form-field appearance="outline" class="search">
                 <mat-label>País</mat-label>
                 <mat-select [(ngModel)]="search.pais" name="pais" multiple required
-                  (selectionChange)="selectedOpt($event, this.search.pais)" [disabled]="loading"
+                  (selectionChange)="selectedOpt($event, this.search.pais)" [disabled]="loading || this.paises.length < 1"
                 >
-                  <mat-option *ngFor="let pais of paises" [value]="pais">{{pais}}</mat-option>
+                  <mat-option *ngFor="let pais of paises" [value]="pais.Pais">
+                    <p>
+                      {{pais.Pais}}
+                    </p>
+                    <p>
+                      {{pais.Cantidad}}
+                    </p>
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="search">
                 <mat-label>Área</mat-label>
                 <mat-select [(ngModel)]="search.area" name="area" multiple required (selectionChange)="selectedOpt($event, this.search.area)"
-                  [disabled]="loading || this.areas.length < 1" (openedChange)="inputOpen('Area')" >
-                  <mat-option *ngFor="let area of areas" [value]="area">{{area}}</mat-option>
+                  [disabled]="loading || this.areas.length < 1" >
+                  <mat-option *ngFor="let area of areas" [value]="area.Area">
+                    <p>
+                      {{area.Area}}
+                    </p>
+                    <p>
+                      {{area.Cantidad}}
+                    </p>
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             <!-- </div> -->
@@ -37,9 +51,15 @@
               <mat-form-field appearance="outline" class="search">
                 <mat-label>Categoría de Cierre</mat-label>
                 <mat-select [(ngModel)]="search.categoria" name="categoria" multiple required (selectionChange)="selectedOpt($event, this.search.categoria)"
-                  [disabled]="loading || this.categorias.length < 1" (openedChange)="inputOpen('Categoria')"
-                >
-                  <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{categoria}}</mat-option>
+                  [disabled]="loading || this.categorias.length < 1">
+                  <mat-option *ngFor="let categoria of categorias" [value]="categoria.Categoria">
+                    <p>
+                      {{categoria.Categoria}}
+                    </p>
+                    <p>
+                      {{categoria.Cantidad}}
+                    </p>
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
 
@@ -47,13 +67,20 @@
                 <mat-label>Código de Cierre</mat-label>
                 <mat-select [(ngModel)]="search.codigo" name="codigo" multiple required (selectionChange)="selectedOpt($event, this.search.codigo)"
                   [disabled]="loading || this.codigos.length < 1" >
-                  <mat-option *ngFor="let codigo of codigos" [value]="codigo">{{codigo}}</mat-option>
+                  <mat-option *ngFor="let codigo of codigos" [value]="codigo.Codigo">
+                    <p>
+                      {{codigo.Codigo}}
+                    </p>
+                    <p>
+                      {{codigo.Cantidad}}
+                    </p>
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
 
-              <button mat-flat-button class="primary-button search" type="submit" [disabled]="button || loading">
+              <!-- <button mat-flat-button class="primary-button search" type="submit" [disabled]="button || loading">
                 <mat-icon matPrefix>search</mat-icon>BUSCAR
-              </button>
+              </button> -->
             </div>
 
           </form>
@@ -81,7 +108,7 @@
     <div class="row">
       <div class="col col-12">
 
-        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="dataSourceResumen.length === 0">
+        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="dataSourceResumen.length === 0 && dataTablaDetalle.length === 0">
         </app-placeholder>
 
         <div class="tabla-resumen">
@@ -97,12 +124,12 @@
             >
           </app-w2ui-grid>
 
-          <div #table class="table--container" *ngIf="dataSourceResumen.length >= 1">
+          <div class="table--container" *ngIf="dataSourceResumen.length >= 1">
             <div class="table--header" >
               <h3>RESUMEN CODIGO DE GESTION</h3>
             </div>
-            <div *ngFor="let resumen of dataResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : ''}}">
-              <p>{{resumen.CODIGO_CIERRE}}</p>
+            <div *ngFor="let resumen of datosResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : ''}}">
+              <p (click)="getCode(resumen.CODIGO_CIERRE)">{{resumen.CODIGO_CIERRE}}</p>
               <p>{{resumen.CONTEO_COD_CIERRE}}</p>
             </div>
           </div>
@@ -135,7 +162,7 @@
         <br>
         <app-w2ui-grid-detalle
           #w2ui
-            *ngIf="dataSourceResumen.length >= 1"
+            *ngIf="dataTablaDetalle.length >= 1"
             [name]="nameDetalle"
             [header]="headerDetalle"
             [records]="dataTablaDetalle"

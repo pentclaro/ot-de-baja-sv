@@ -215,6 +215,12 @@
   .peach {
     background-color: #f8a65e;
   }
+
+  .mat-option-text {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
 }
 
 @media (max-width: 768px) {

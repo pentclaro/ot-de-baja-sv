@@ -12,6 +12,10 @@ export class FaultService {
     private queryService: HeaderService
   ) { }
 
+  getInfoInputs(mes: string) {
+    return this.http.get(`${environment.apiURL}/ticketsWO/getInfoInputs/${mes}`)
+  }
+
   getAreas() {
     return this.http.get(`${environment.apiURL}/ticketsWO/getAreas`);
   }

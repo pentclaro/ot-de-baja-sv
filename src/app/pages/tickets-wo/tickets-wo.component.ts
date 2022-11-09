@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, Renderer2, AfterViewInit, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Column, Search, Show, Record } from 'src/app/interfaces/interfaces';
 import { HeaderService } from 'src/app/services/header.service';
@@ -26,61 +26,66 @@ export class TicketsWOComponent implements AfterViewInit {
   searchesResumen: Search[] = [];
 	searchesDetalle: Search[] = [];
   meses: string[] = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-  paises: string[] = ['Todos', 'Guatemala', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panama'];
-  areas: string[] = [];
-  categorias: string[] = [];
-  codigos: string[] = [];
+  paises: any[] = [];
+  areas: any[] = [];
+  categorias: any[] = [];
+  codigos: any[] = [];
   cleanChecks: boolean;
   filtroPais: string[];
-  filtroCodigo: string[];
+  filtroArea: any[] = []
+  filtroPaisBK: string[];
+  filtroAreasBK: string[] = []
+  filtroCategoriasBK: string[] = []
   dataSourceResumen: any[] = [];
   dataTablaDetalle: any[] = [];
   button: boolean = true
   i: number = 0;
-  dataResumen: any
   sumaTicketsConReclamo: number
   totalTickets: number
   porcentajeConReclamos: any
   loadingDetalle: boolean = false
+  dataInputs: any = []
+  dataFiltroPais : any = []
+  dataFiltroArea : any = []
+  dataFiltroCategoria: any = []
+  filtroCodigosBK: any[];
+  dataFiltroCodigo: any[];
+  datosMes: any;
+  datosMesResumen: any;
+  datosPais: any;
+  datosArea: any;
+  datosCategoria: any;
+  datosCodigo: any;
+  datosResumen: any;
+  columnasResumen: any
+  columnasDetalle: string[];
+  datosPaisResumen: any[];
+  datosConteo: any;
+  datosAreaResumen: any[];
+  datosCategoriaResumen: any[];
+  datosCodigoResumen: any[];
 
   @ViewChild('form', { static: false}) form: NgForm;
-  @ViewChild('tableContainer', { static: false }) table: ElementRef;
 
   constructor(
     private _pageService: HeaderService,
     private _ticketsWOService: TicketsWOService,
     private _faultService: FaultService,
-    private renderer: Renderer2
   ) { }
-
-  // ngOnInit(): void {
-
-  // }
 
   ngAfterViewInit(): void {
   }
 
-  inputOpen(input) {
-    if (input === 'Area' && this.i === 0){
-      this.i++
-    } else if (input === 'Categoria' && this.i === 0){
-      this.i++
-    } else if (input === 'Area' && this.i === 1) {
-      this.getComboCategoria(this.search.mes)
-      this.i = 0
-    } else {
-      this.getComboCodigo(this.search.mes, this.search.area, this.search.categoria)
-      this.i = 0
-    }
-  }
-
   selectedOpt(event, input): void {
     if (input === this.search.mes) {
-      this.getDataDetalleTotal(['GT', 'SV', 'HN', 'NI', 'CR', 'PA'], {mes: this.search.mes, area: ['Todos'], categoria: ['Todos'], codigo: ['Todos']})
-      this.getDataResumen(this.search.mes)
+      this.dataSourceResumen = []
+      this.dataTablaDetalle = []
+      this.getDataInputs(this.search.mes)
+      this.getDataConteo(this.search.mes)
     } else if(input === this.search.pais) {
-      if (input[0] === 'Todos') {
-        this.search.pais = this.paises
+      this.datosPaisResumen = []
+      if (input[0] === 'TODOS') {
+        this.search.pais = this.filtroPaisBK
         this.cleanChecks = true
       } else {
         this.cleanChecks = false
@@ -88,22 +93,20 @@ export class TicketsWOComponent implements AfterViewInit {
       if (this.cleanChecks === false && input.length === this.paises.length - 1) {
         this.search.pais = []
       }
-
-      this.filtroPais = []
-      this.search.pais.includes('Guatemala') ? this.filtroPais.push('GT'): '------'
-      this.search.pais.includes('El Salvador') ? this.filtroPais.push('SV'): '------'
-      this.search.pais.includes('Honduras') ? this.filtroPais.push('HN'): '------'
-      this.search.pais.includes('Nicaragua') ? this.filtroPais.push('NI') : '------'
-      this.search.pais.includes('Costa Rica') ? this.filtroPais.push('CR'): '------'
-      this.search.pais.includes('Panama') ? this.filtroPais.push('PA'): '------'
-      // this.createComboArea(this.filtroPais)
-      this.areas = []
-      this.areas.unshift('Todos')
-      this.getInfoAreas(this.search.pais)
+      if(input.length === 0) {
+        this.getTablaResumen(this.convertirDatosResumen(this.datosConteo), this.columnasResumen)
+        this.areas = []
+        this.categorias = []
+        this.codigos = []
+      }
+      this.getInputAreas(this.search.pais)
+      this.datosPaisResumen = this.search.pais.length !== 0 ? this.convertirDatosResumen(this.filtrarDatosResumen(this.search.pais, this.datosConteo, 'PAIS')) : null
+      !!this.datosPaisResumen ? this.getTablaResumen(this.datosPaisResumen, this.columnasResumen) : ''
       this.loading = false
     } else if (input === this.search.area){
-      if (input[0] === 'Todos') {
-        this.search.area = this.areas
+      this.datosAreaResumen = []
+      if (input[0] === 'TODOS') {
+        this.search.area = this.filtroAreasBK
         this.cleanChecks = true
       } else {
         this.cleanChecks = false
@@ -111,10 +114,18 @@ export class TicketsWOComponent implements AfterViewInit {
       if (this.cleanChecks === false && input.length === this.areas.length - 1) {
         this.search.area = []
       }
-      // this.search.area.length > 0 ? this.getComboCategoria(this.search.mes, this.search.area) : ''
+      if(input.length === 0) {
+        this.getTablaResumen(this.convertirDatosResumen(this.datosPaisResumen), this.columnasResumen)
+        this.categorias = []
+        this.codigos = []
+      }
+      this.getInputCategorias(this.search.area)
+      this.datosAreaResumen = this.search.area.length !== 0 ? this.convertirDatosResumen(this.filtrarDatosResumen(this.search.area, this.datosPaisResumen, 'AREA')) : null
+      !!this.datosAreaResumen ? this.getTablaResumen(this.datosAreaResumen, this.columnasResumen) : ''
     } else if (input === this.search.categoria) {
-      if (input[0] === 'Todos') {
-        this.search.categoria = this.categorias
+      this.datosCategoriaResumen = []
+      if (input[0] === 'TODOS') {
+        this.search.categoria = this.filtroCategoriasBK
         this.cleanChecks = true
       } else {
         this.cleanChecks = false
@@ -122,10 +133,17 @@ export class TicketsWOComponent implements AfterViewInit {
       if (this.cleanChecks === false && input.length === this.categorias.length - 1) {
         this.search.categoria = []
       }
-      // this.search.categoria.length > 0 ? this.getComboCodigo(this.search.mes, this.search.area, this.search.categoria) : ''
+      if (input.length === 0) {
+        this.getTablaResumen(this.convertirDatosResumen(this.datosAreaResumen), this.columnasResumen)
+        this.codigos = []
+      }
+      this.getInputCodigos(this.search.categoria)
+      this.datosCategoriaResumen = this.search.categoria.length !== 0 ? this.convertirDatosResumen(this.filtrarDatosResumen(this.search.categoria, this.datosAreaResumen, 'CATEGORIA_CIERRE')) : null
+      !!this.datosCategoriaResumen ? this.getTablaResumen(this.datosCategoriaResumen, this.columnasResumen) : ''
     } else if (input === this.search.codigo) {
-      if (input[0] === 'Todos') {
-        this.search.codigo = this.codigos
+      this.datosCodigoResumen = []
+      if (input[0] === 'TODOS') {
+        this.search.codigo = this.filtroCodigosBK
         this.cleanChecks = true
       } else {
         this.cleanChecks = false
@@ -133,228 +151,315 @@ export class TicketsWOComponent implements AfterViewInit {
       if (this.cleanChecks === false && input.length === this.codigos.length - 1) {
         this.search.codigo = []
       }
+      if (input.length === 0) {
+        this.getTablaResumen(this.convertirDatosResumen(this.datosCategoriaResumen), this.columnasResumen)
+      }
       this.button = false
-    }
-
-  }
-
-  getInfoAreas(pais) {
-    let areasArray = []
-    const GT = ['WO - CC_PLANTA EXTERNA_GT' ,'WO - ING OPTIMIZACION_GT' ,'WO - PLANTA EXTERNA GT' ,'WO - NOC GT' ,'WO - OPERACIONES CENTRAL GT'
-      ,'WO - OPERACIONES OCCIDENTE GT' ,'WO - ING RED_GT' ,'WO - B.O CORE GT' ,'WO - DESPACHO_GT' ,'WO - COMERCIAL_GT' ,'WO - LOGISTICA GT'
-      ,'WO - VOC GT' ,'WO - ING MOVIL IMPLEMENTACION_GT' ,'WO - OPERACIONES DATOS METRO GT' ,'WO - ING SVA_GT' ,'WO - INGENIERIA IP_GT' ,'WO - N1_GT'
-      ,'WO - B.O ACCESO GT' ,'WO - B.O CONMUTACION GT' ,'WO - INGENIERIA CLIENTES_GT' ,'WO - BACK OFFICE TX_GT' ,'WO - BACK  OFFICE IP_Tx GT'
-      ,'WO - B.O CLARO_XT GT', 'WO - GT - B.O HEADEND' ,'WO - B.O SVA GT' ,'WO - CCR GT' ,'WO - BO_ITS_SEGURIDAD_GT' ,'WO - B.O SEGURIDAD IP_GT'
-      ,'WO - CNOC_GT' ,'WO - OPERACIONES ORIENTE GT' ,'WO - CONMUTACION METRO GT' ,'WO - BACK OFFICE IP_GT' ,'WO - CC_METRO_GT' ,'WO - ING CORE_GT'
-      ,'WO - FRONT OFFICE' ,'WO - B.O CONMUTACION REG' ,'WO - SVA_XT' ,'WO - ING OPTIMIZACION' ,'WO - CONF CNOC_REG' ,'WO - PLANTA_EX_XT' ,'WO - B.O TX REG'
-      ,'WO - REPUESTOS' ,'WO - CNOC SOC' ,'WO - INGENIERIA' ,'WO - B.O IP REG' ,'WO - SEG_CONTROL_XT' ,'WO - CNOC _ WIMAX']
-    const SV = ['WO - PLANTA_EXTERNA_SV' ,'WO - INSTALACIONES_SV' ,'WO - FIBRA OPTICA_SV' ,'WO - B.O ROAMING_SV' ,'WO - CCR SV' ,'WO - GESTION_DATOS_SV'
-      ,'WO - B.O MASTER HEADEND_SV' ,'WO - N1 SV' ,'WO - B.O CORE_SV' ,'WO - F.O VOC_SV' ,'WO - PI VIDEOHUB_SV' ,'WO - B.O CENTGEST CXINT ERICSSON_SV'
-      ,'WO - INGENIERIA_CLIENTE_SV' ,'WO - PX TRONCALES ORIENTE_SV' ,'WO - B.O GESTION TX_SV' ,'WO - B.O ACCESO SV' ,'WO - PX TRONCALES CENTRO_SV'
-      ,'WO - ING_ACCESO_IP_TV_SV' ,'WO - PX TRONCALES OCCIDENTE_SV' ,'WO - DESPACHO_CC_SV' ,'WO - B.O GESTION DX_SV' ,'WO - B.O CONMUTACION REG'
-      ,'WO - B.O TX REG' ,'WO - REPUESTOS' ,'WO - CNOC SOC' ,'WO - B.O IP REG']
-    const HN = ['WO - B.O DATOS HN' ,'WO - CCR HN' ,'WO - ING OPTIMIZACION_HN' ,'WO - HUB_SATELITAL_HN' ,'WO - ING TRANSMISION_HN' ,'WO - PLANTA EXTERNA_HN'
-      ,'WO - B.O CONMUTACION REG' ,'WO - B.O TX REG' ,'WO - REPUESTOS' ,'WO - CNOC SOC' ,'WO - INGENIERIA' ,'WO - CARSO' ,'WO - B.O IP REG' ,'WO - SEG_CONTROL_XT']
-    const NI = ['WO - B.O TRANSMISION NI' ,'WO - B.O MOVIL NI' ,'WO - ING VAS_NI' ,'WO - ING IP RED CLIENTE_NI' ,'WO - INGENIERIA IP RED_NI' ,'WO - B.O DATOS NI'
-      ,'WO - ADMINISTRACION SITIOS NI' ,'WO - CCR NI' ,'WO - B.O CONMUTACION NI' ,'WO - PLANTA EXTERNA NI' ,'WO - ING OPTIMIZACION_NI', 'WO - CNOC_NICARAGUA'
-      ,'WO - B.O CONMUTACION REG', 'WO - ADMINISTRACION TEMIP', 'WO - B.O TX REG', 'WO - REPUESTOS', 'WO - CNOC SOC', 'WO - B.O IP REG', 'WO - SEG_CONTROL_XT']
-    const CR = ['WO - CCR CR', 'WO - ING OPTIMIZACION CR', 'WO - LOGISTICA CR', 'WO - ING TRANSMISION IP_CR', 'WO - FRONT OFFICE', 'WO - B.O CONMUTACION REG'
-      , 'WO - ADMINISTRACION SM', 'WO - ING OPTIMIZACION', 'WO - B.O TX REG', 'WO - REPUESTOS', 'WO - CNOC SOC', 'WO - B.O IP REG']
-    const PA = ['WO - CCR PA', 'WO - ING_TX_IP_PA', 'WO - PLANTA_EXTERNA_PA', 'WO - B.O TX REG']
-
-    if (this.search.pais.includes('Todos')) {
-      GT.map(area => this.areas.push(area))
-      SV.map(area => this.areas.push(area))
-      HN.map(area => this.areas.push(area))
-      NI.map(area => this.areas.push(area))
-      CR.map(area => this.areas.push(area))
-      PA.map(area => this.areas.push(area))
-    }
-    if (this.search.pais.includes('Guatemala')) {
-      GT.map(area => areasArray.push(area))
-    }
-    if (this.search.pais.includes('El Salvador')) {
-      SV.map(area => areasArray.push(area))
-    }
-    if (this.search.pais.includes('Honduras')) {
-      HN.map(area => areasArray.push(area))
-    }
-    if (this.search.pais.includes('Nicaragua')) {
-      NI.map(area => areasArray.push(area))
-    }
-    if (this.search.pais.includes('Costa Rica')) {
-      CR.map(area => areasArray.push(area))
-    }
-    if (this.search.pais.includes('Panama')) {
-      PA.map(area => areasArray.push(area))
-    }
-
-    areasArray.map(item => this.filtrarAreas(item))
-    // this._faultService.getAreas().subscribe((data: any) => {
-    //   let response = data
-    //   console.log(data)
-    //   response.map(item => {
-    //     this.areas.push(item.ASSIGN_DEPT)
-    //   })
-
-    // }, (error: any) => {
-    //   this._pageService.openSnackBar(`warning`, `Error al obtener las áreas, intenta de nuevo más tarde.`);
-    // })
-  }
-
-  filtrarAreas(area) {
-    if(!this.areas.includes(area)) {
-      this.areas.push(area)
+      this.getDataCodigos(this.dataFiltroCodigo)
+      this.datosCodigoResumen = this.search.codigo.length !== 0 ? this.convertirDatosResumen(this.filtrarDatosResumen(this.search.codigo, this.datosCategoriaResumen, 'CODIGO_CIERRE')) : null
+      !!this.datosCodigoResumen ? this.getTablaResumen(this.datosCodigoResumen, this.columnasResumen) : ''
     }
   }
 
-  filtrarCodigos(codigo) {
-    if(!this.codigos.includes(codigo)) {
-      this.codigos.push(codigo)
-    }
-  }
-
-  createComboArea(paises: string[]) {
-    this.loading = true
-    this.areas = []
-    this.categorias = []
-    this.codigos = []
-    this.filtroPais.map(item => {
-      this.getInfoAreas(item)
-    })
-    this.areas.unshift('Todos')
-  }
-
-  getComboCategoria(mes) {
-    this.categorias = []
-    this.codigos = []
-    this.categorias = ['Todos', 'FALLA RED DE COBRE', 'FALLA EN EQUIPO', 'FALLA DE ENERGIA', 'FALLA FIBRA OPTICA', 'FALLA DE GESTION',
-      'SEGURIDAD CNOC', 'FALLA SATELITAL', 'CLIENTE', 'WO ADMINISTRACION', 'RADIO ENLACES', 'TERCEROS', '277', '108', '126',
-      '115', 'WO ADMON', '906', '134', '294', '332', '176', '224', '808']
-    // this._faultService.getCategorias(mes).subscribe((data: any) => {
-    //   let response = data
-    //   if (data.length === 0) {
-    //   this._pageService.openSnackBar(`warning`, `No contamos con categorías del área seleccionada, elige otra área por favor`);
-    //   } else {
-    //     response.map(item => {
-    //       if(!this.categorias.includes(item.CATEGORIA_CIERRE) && item.CATEGORIA_CIERRE !== null) {
-    //         this.categorias.push(item.CATEGORIA_CIERRE)
-    //       }
-    //       // this.categorias.push(item.CATEGORIA_CIERRE)
-    //     })
-    //     // this.categorias = this.eliminarDuplicados(this.categorias, item => item.CATEGORIA_CIERRE)
-    //     this.categorias.length === 1 ? '' : this.categorias.unshift('Todos')
-    //   }
-    // }, (error: any ) => {
-    //   this._pageService.openSnackBar(`warning`, `Error al obtener las categorías, intenta de nuevo más tarde.`);
-    // })
-  }
-
-  getComboCodigo(mes, area, categoria) {
-    this.codigos = ['Todos', 'NO SE REALIZO TROUBLESHOOTING', 'SE CONFIGURO EQUIPO EN CLIENTE', 'WO MAL ASIGNADA', 'DANO O MODIFICACION INFRAESTRUCTURA DEL CLIENTE', 'MANIPULACION DE EQUIPOS Y/O CABLEADO', 'PROBLEMA DE ENERGIA EN INSTALACIONES DEL CLIENTE'
-      , 'SE REINICIO EL EQUIPO EN EL CLIENTE', 'SE REQUIERE CAMBIO DE AREA PARA ATENCION', 'FALLA  NAVEGACION', 'LIMPIEZA DE CONECTORES DE FIBRA EN SITIO CLIENTE', 'CAMBIO FUSIBLE EN MDF', 'ALINEACION DE ANTENA EN SITIO CLIENTE'
-      , 'CONFIGURACION EQUIPO NODO', 'SE SUSTITUYO PROTECTOR DE LINEA', 'CAMBIO DE CABLE UTP EN SITIO CLIENTE', 'ALINEACION DE ANTENA EN NODO', 'SE ASEGURO LA RED EN DP', 'TRASLADO PARA REPROGRAMACION', 'SE TRASLADA DE AREA PARA ATENCION'
-      , 'SE CAMBIO EL EQUIPO DE ULTIMA MILLA EN NODO', 'LIMPIEZA DE CONECTORES DE FIBRA EN NODO', 'FALLA ENERGIA COMERCIAL EN NODO O CLIENTE', 'SE ASEGURO LA RED EN CD (SUBREPARTIDOR)', 'NO HAY DATOS DE RED', 'SE REPARO LA RED INTERNA DEL CLIENTE'
-      , 'CAMBIO DE TRAMO DE FO', 'SE ASEGURA LA RED EN CD(SUBREPARTIDOR)', 'ROBO CABLE(RED PRIMARIOA O SECUNDARIA)', 'FALLA ENVIO MAIL', 'SIN INTERVENCION TECNICA', 'CAMBIO DE EQUIPOS POR DANO ATRIBUIBLE AL CLIENTE', 'SE CAMBIO LA ACOMETIDA'
-      , 'SE REPARO EMPALME', 'SE CAMBIO EL EQUIPO DE ULTIMA MILLA CLIENTE', 'AGREGAR PTR', 'SE CAMBIO DE PUERTO EN LA REPISA O DSLAM', 'POR VENTANA DE MANTENIMIENTO MAL EJECUTADA', 'SE ASEGURO LA RED EN CT', 'SE REPARO ODF EN NODO', 'NODO MAL ASIGNADO'
-      , 'PENDIENTE POR LLAVES', 'DESCONECCION EN PROTECTOR DE LINEA', 'PROBLEMAS DE ACCESO TERCEROS', 'MANIPULACION DEL CLIENTE', 'FALLA DE FUENTE DE EQUIPO', 'SE REINICIO EL EQUIPO EN EL NODO', 'EQUIPO NODO DESCONECTADO O APAGADO', 'CAMBIO DE FIBRAS'
-      , 'CABLE DE ENERGIA DESCONECTADOÿ EN NODO', 'CAMBIO DE RADIO EN NODO', 'SE CAMBIO PUERTO EN EL NODO', 'SE CORRIGIO PUENTE O CAMBIO FUSIBLE', 'MAL DIAGNOSTICO', 'CONFIGURACION DE EQUIPO EN CLIENTE', 'POR INTERVENCION TECNICA'
-      , 'SE REPARO ODF EN SITIO CLIENTE', 'TRASLADO DE WO POR CAMBIO DE ESTADO', 'SE CAMBIO PATCHCORD', 'CONEXION MDF', 'CAMBIO DE CABLE UTP EN TORRE', 'INGRESO TECNICO NO AUTORIZADO', 'GESTION NO RESPONDE', 'SE CONFIGURO PUERTO EN EQUIPO NODO'
-      , 'TRASLADO DE WO PARA SEGUIMIENTO', 'CONFIGURACION DE EQUIPO EN NODO', 'SE REPARO FIBRA', 'TRASLADO DE PX PARA SU ATENCION', 'CAMBIO PATCHCORD NODO', 'SE REPARO O SUSTITUYO EL CABLE', 'CAMBIO FUSIBLE EN CT', 'REPROGRAMADO POR CLIENTE'
-      , 'NO SE COORDINO INGRESO DEL TECNICO', 'EQUIPO DESCONECTADO DE LA ENERGIA EN CLIENTE', 'DESENLISTAMIENTO  BLACKLIST', 'SE CAMBIO EL EQUIPO EN EL NODO', 'FALLA ENERGIA DC EN NODO', 'SE REPARO O SUSTITUYO LA RED PRIMARIA'
-      , 'SE CAMBIO EL PATCHCORD EN NODO', 'SE REPARO O SUSTITUYO LA RED SECUNDARIA', 'CAMBIO DE PUERTO EN SPLITTER GPON']
-    // this._faultService.getCodigos(mes, area, categoria).subscribe((data: any) => {
-    //   let response = data
-    //   console.log(data)
-    //   if (data.length === 0) {
-    //     this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
-    //   } else {
-    //     response.map(item => this.filtrarCodigos(item.CODIGO_CIERRE))
-    //     this.codigos.length === 1 ? '' : this.codigos.unshift('Todos')
-    //   }
-    //   this.loading = false
-    // }, (error: any ) => {
-    //   this._pageService.openSnackBar(`warning`, `Error al obtener los códigos, intenta de nuevo más tarde.`);
-    // })
-  }
-
-  searchData(form): void {
-    this.loading = true;
+  getDataInputs(mes) {
     this.loadingDetalle = true
-		this.form.form.markAllAsTouched();
-		if (this.form.valid) {
-      this.dataSourceResumen = [];
-      this.dataTablaDetalle = []
-      this.getTablaResumen(this.filtroPais, this.search);
-      this.getTablaDetalle(this.filtroPais, this.search);
-      this.loading = false
-		} else {
-      this._pageService.openSnackBar(`warning`, `Error selecciona todos los campos.`);
-			this.loading = false
-      this.loadingDetalle = false
-		}
-  }
-
-  getDataResumen(mes) {
-    this._ticketsWOService.getDataResumen(mes).subscribe(({data, message}: any) => {
-        let response = data
-        let sumaCodigos = 0
-        response.map(item => {
-          sumaCodigos += item.CONTEO_COD_CIERRE
-        })
-        const newObj = {CODIGO_CIERRE: 'TOTAL GENERAL', CONTEO_COD_CIERRE: sumaCodigos}
-        response.push(newObj)
-        this.sumaTicketsConReclamo = sumaCodigos
-        this.dataResumen = response
-        // if (data.length === 0) {
-        //   this._pageService.openSnackBar(`warning`, `No contamos con códigos de la categoría seleccionada, elige otra categoría por favor`);
-        // } else {
-        //   response.map(item => this.filtrarCodigos(item.CODIGO_CIERRE))
-        //   this.codigos.length === 1 ? '' : this.codigos.unshift('Todos')
-        // }
-        this.loading = false
-      }, (error: any ) => {
-        this._pageService.openSnackBar(`warning`, `Error al obtener los códigos, intenta de nuevo más tarde.`);
+    this._faultService.getInfoInputs(mes).subscribe((data) => {
+      this.dataInputs = data
+      this.datosMes = []
+      let i = 1
+      this.dataInputs.map(obj => {
+        const NewObj = { recid: i, ...obj }
+        i++
+        this.datosMes.push(NewObj)
       })
-  }
-
-  getTablaResumen(pais, search) {
-    this._ticketsWOService.getDataTablaResumen(pais, search).subscribe(({ data, message}: any) => {
-      this.order = data.order
-      this.updatedAt = Date();
-      this.dataSourceResumen = this.orderKeys(data.data, data.info);
-      this.formatResumen();
-    },
-    (error) => {
-      this._pageService.openSnackBar(`error`, error);
-      this.loading = false;
-    })
-  }
-
-  getDataDetalleTotal(pais, search) {
-    this._ticketsWOService.getDataTablaDetalle(pais, search).subscribe(({ data, message}: any) => {
-      this.totalTickets = data.data.length
-      this.porcentajeConReclamos = ((this.sumaTicketsConReclamo * 100) / this.totalTickets).toFixed(0)
-    },
-    (error) => {
-      this._pageService.openSnackBar(`error`, error);
-      this.loading = false;
-    })
-  }
-
-  getTablaDetalle(pais, search) {
-    console.log({pais, search})
-    this._ticketsWOService.getDataTablaDetalle(pais, search).subscribe(({ data, message}: any) => {
-      this.order = data.order
-      this.updatedAt = Date();
-      this.dataTablaDetalle = this.orderKeys(data.data, data.info);
-      this.formatDetalle();
+      this.columnasDetalle = Object.keys(this.datosMes[0])
+      this.getInputPaises(data)
+      this.getTablaDetalle(this.datosMes, this.columnasDetalle)
+      this.getDataDetalleTotal(this.dataInputs)
       this.loadingDetalle = false
+    }, (error) => {
+
+    })
+  }
+
+  getDataConteo(mes) {
+    this._ticketsWOService.getDataTablaResumen(mes).subscribe(({ data, message}: any) => {
+      this.datosConteo = data.data
+      this.columnasResumen = data.info
+      this.updatedAt = Date();
+      this.datosMesResumen = []
+      this.getTablaResumen(this.convertirDatosResumen(this.datosConteo), this.columnasResumen);
     },
     (error) => {
       this._pageService.openSnackBar(`error`, error);
       this.loading = false;
     })
+  }
+
+  getInputPaises(data):void {
+    this.dataFiltroPais = []
+    this.filtroPaisBK = []
+    this.paises = []
+    this.filtroPais = []
+    let tickets = []
+    this.datosPais = []
+    const paises = this.eliminarDuplicados(data, item => item.PAIS)
+    paises.map(pais => this.filtroPais.push(pais.PAIS))
+    this.filtroPais.map(pais => {
+      let cantidad = data.filter(ticket => ticket.PAIS === pais)
+      this.dataFiltroPais.push(cantidad)
+      tickets.push(cantidad.length)
+    })
+    this.dataFiltroPais.map(pais => pais.map(item => this.datosPais.push(item))) //Datos pais
+    let i = 0
+    this.filtroPais.map(pais => {
+      this.paises.push({Pais: pais, Cantidad: tickets[i]})
+      i++
+    })
+    if(tickets) {
+      const totalTickets = tickets.reduce((prev, curr) => prev + curr)
+      this.paises.unshift({Pais: 'TODOS', Cantidad: totalTickets})
+      this.paises.map(pais => this.filtroPaisBK.push(pais.Pais))
+    }
+  }
+
+  getInputAreas(paises):void {
+    this.dataFiltroArea = []
+    this.filtroArea = []
+    this.filtroAreasBK = []
+    this.areas = []
+    let tickets = []
+    let filtradoPais = []
+    let areas = []
+    let filtroAreas = []
+    this.datosPais = []
+    paises.map(pais => {
+      this.dataFiltroPais.map(ticket => {
+        const filtroPais = ticket.filter(item => item.PAIS === pais)
+        areas.push(filtroPais)
+      })
+    })
+    /* LLENADO DE COMBOS E INFO PARA TABLA DETALLE*/
+    areas.map(item => item.length !== 0 ? filtradoPais.push(item): '')
+    filtradoPais.map(ticket => {
+      ticket.map(item => this.dataFiltroArea.push(item)) // data filtrada areas
+    })
+    let j = 1
+    this.dataFiltroArea.map(obj => {
+      const NewObj = { recid: j, ...obj }
+      j++
+      this.datosPais.push(NewObj)
+    })
+    if(this.dataFiltroArea.length === 0) {
+      this.getTablaDetalle(this.datosMes, this.columnasDetalle)
+    } else {
+      this.getTablaDetalle(this.datosPais, this.columnasDetalle)
+    }
+    const areaFiltrada = this.eliminarDuplicados(this.dataFiltroArea, item => item.AREA)
+    areaFiltrada.map(pais => {
+      filtroAreas.push(pais.AREA)
+    })
+    filtroAreas.map(item => this.filtroArea.push(item))
+    filtroAreas = []
+    this.filtroArea.map(area => {
+      let cantidad = this.dataFiltroArea.filter(ticket => ticket.AREA === area)
+      filtroAreas.push(cantidad)
+      tickets.push(cantidad.length)
+    })
+    let i = 0
+    this.filtroArea.map(area => {
+      this.areas.push({Area: area, Cantidad: tickets[i]})
+      i++
+    })
+    if (tickets) {
+      const totalTickets = tickets.reduce((prev, curr) => prev + curr)
+      this.areas.unshift({Area: 'TODOS', Cantidad: totalTickets})
+      this.areas.map(item =>  this.filtroAreasBK.push(item.Area))
+    }
+  }
+
+  getInputCategorias(areas):void {
+    this.filtroCategoriasBK = []
+    this.dataFiltroCategoria = []
+    this.categorias = []
+    let tickets = []
+    let categorias = []
+    let filtroCategorias = []
+    let filtradoAreas = []
+    this.datosArea = []
+    areas.map(area => {
+      let categoria = this.dataFiltroArea.filter(item => item.AREA === area)
+      categorias.push(categoria)
+    })
+    categorias.map(categoria => {
+      categoria.map(item => this.dataFiltroCategoria.push(item))
+    })
+    let j = 1
+    this.dataFiltroCategoria.map(obj => {
+      const NewObj = { recid: j, ...obj }
+      j++
+      this.datosArea.push(NewObj)
+    })
+    if(this.dataFiltroCategoria.length === 0) {
+      this.getTablaDetalle(this.datosPais, this.columnasDetalle)
+    } else if (this.dataFiltroArea.length === 0) {
+      this.getTablaDetalle(this.datosMes, this.columnasDetalle)
+    } else {
+      this.getTablaDetalle(this.datosArea, this.columnasDetalle)
+    }
+    categorias = this.dataFiltroCategoria
+    const categoriasFiltradas = this.eliminarDuplicados(categorias, item => item['CATEGORIA DE CIERRE'])
+    categoriasFiltradas.map(categoria => this.filtroCategoriasBK.push(categoria['CATEGORIA DE CIERRE']))
+    this.filtroCategoriasBK.map(categoria => {
+      let cantidad = this.dataFiltroCategoria.filter(ticket => ticket['CATEGORIA DE CIERRE'] === categoria)
+      filtroCategorias.push(cantidad)
+      tickets.push(cantidad.length)
+    })
+    filtroCategorias.map(categoria => {
+      categoria.map(item => filtradoAreas.push(item))
+    })
+    let i = 0
+    this.filtroCategoriasBK.map(categoria => {
+      this.categorias.push({Categoria: categoria, Cantidad: tickets[i]})
+      i++
+    })
+    if (tickets) {
+      const totalTickets = tickets.reduce((prev, curr) => prev + curr)
+      this.categorias.unshift({Categoria: 'TODOS', Cantidad: totalTickets})
+      this.categorias.map(item => this.filtroCategoriasBK.push(item.Categoria))
+    }
+    this.dataFiltroCategoria = filtradoAreas //dataAreas
+  }
+
+  getInputCodigos(categorias): void {
+    this.filtroCodigosBK = []
+    this.dataFiltroCodigo = []
+    this.codigos = []
+    let tickets = []
+    let codigos = []
+    let filtroCodigos = []
+    let filtradoCategorias = []
+    this.datosCategoria = []
+    categorias.map(categoria => {
+      let codigo = this.dataFiltroCategoria.filter(item => item['CATEGORIA DE CIERRE'] === categoria)
+      codigos.push(codigo)
+    })
+    codigos.map(codigo => codigo.map(item => this.dataFiltroCodigo.push(item)))
+    categorias = this.dataFiltroCodigo
+    this.dataFiltroCodigo = this.eliminarDuplicados(this.dataFiltroCodigo, item => item)
+    let j = 1
+    this.dataFiltroCodigo.map(obj => {
+      const NewObj = { recid: j, ...obj }
+      j++
+      this.datosCategoria.push(NewObj)
+    })
+    if(this.dataFiltroCodigo.length === 0) {
+      this.getTablaDetalle(this.datosArea, this.columnasDetalle)
+    } else if(this.dataFiltroCategoria.length === 0) {
+      this.getTablaDetalle(this.datosPais, this.columnasDetalle)
+    } else if (this.dataFiltroArea.length === 0) {
+      this.getTablaDetalle(this.datosMes, this.columnasDetalle)
+    } else {
+      this.getTablaDetalle(this.datosCategoria, this.columnasDetalle)
+    }
+    const codigosFiltrados = this.eliminarDuplicados(categorias, item => item['CODIGO DE CIERRE'])
+    codigosFiltrados.map(codigo => this.filtroCodigosBK.push(codigo['CODIGO DE CIERRE']))
+    this.filtroCodigosBK.map(codigo => {
+      let cantidad = this.dataFiltroCodigo.filter(ticket => ticket['CODIGO DE CIERRE'] === codigo)
+      filtroCodigos.push(cantidad)
+      tickets.push(cantidad.length)
+    })
+    filtroCodigos.map(codigo => {
+      codigo.map(item => filtradoCategorias.push(item))
+    })
+    let i = 0
+    this.filtroCodigosBK.map(codigo => {
+      this.codigos.push({Codigo: codigo, Cantidad: tickets[i]})
+      i++
+    })
+    if (tickets) {
+      const totalTickets = tickets.reduce((prev, curr) => prev + curr)
+      this.codigos.unshift({Codigo: 'TODOS', Cantidad: totalTickets})
+      this.codigos.map(item => this.filtroCodigosBK.push(item.Codigo))
+    }
+    this.dataFiltroCodigo = filtradoCategorias // dataCategorias
+  }
+
+  getDataCodigos(data) {
+    this.datosCodigo = []
+    let datos = []
+    let datosCodigo = []
+    const opciones = this.eliminarDuplicados(this.search.codigo, item => item)
+    opciones.map(opcion => {
+      const datosFiltrados = data.filter(ticket => ticket['CODIGO DE CIERRE'] === opcion)
+      datosCodigo.push(datosFiltrados)
+    })
+    datosCodigo.map(ticket => ticket.map(item => datos.push(item)))
+    let j = 1
+    datos.map(obj => {
+      const NewObj = { recid: j, ...obj }
+      j++
+      this.datosCodigo.push(NewObj)
+    })
+    if (datos.length === 0) {
+      this.getTablaDetalle(this.datosCategoria, this.columnasDetalle)
+    } else if(this.dataFiltroCodigo.length === 0) {
+      this.getTablaDetalle(this.datosArea, this.columnasDetalle)
+    } else if(this.dataFiltroCategoria.length === 0) {
+      this.getTablaDetalle(this.datosPais, this.columnasDetalle)
+    } else if (this.dataFiltroArea.length === 0) {
+      this.getTablaDetalle(this.datosMes, this.columnasDetalle)
+    } else {
+      this.getTablaDetalle(this.datosCodigo, this.columnasDetalle)
+    }
+  }
+
+  getTablaResumen(data, columnas) {
+    this.updatedAt = Date()
+    columnas = ['recid', ...columnas]
+    this.order = columnas
+    this.dataSourceResumen = this.orderKeys(data, columnas)
+    this.formatResumen()
+    this.loadingDetalle = false
+  }
+
+  getDataDetalleTotal(data) {
+    this.loadingDetalle = true
+    let datosCodigos = []
+    this.datosResumen = []
+    let sumaCodigos = 0
+    let codigos = []
+    let cantidadesCodigos = []
+    let i = 0
+    const categoria = data.filter(item => item['CATEGORIA DE CIERRE'] === 'FALLA DE GESTION')
+    const codigosFiltrados = this.eliminarDuplicados(categoria, item => item['CODIGO DE CIERRE'])
+    codigosFiltrados.map(item => codigos.push(item['CODIGO DE CIERRE']))
+    codigos.sort()
+    codigos.map(codigo => {
+      const filtroCodigo = categoria.filter(item => item['CODIGO DE CIERRE'] === codigo)
+      datosCodigos.push(filtroCodigo)
+    })
+    datosCodigos.map(item => cantidadesCodigos.push(item.length))
+    cantidadesCodigos.map(item => {
+      this.datosResumen.push({CODIGO_CIERRE: codigos[i], CONTEO_COD_CIERRE: item})
+      i++
+    })
+    this.datosResumen.map(item => {
+      sumaCodigos += item.CONTEO_COD_CIERRE
+    })
+    const newObj = {CODIGO_CIERRE: 'TOTAL GENERAL', CONTEO_COD_CIERRE: sumaCodigos}
+    this.datosResumen.push(newObj)
+    this.sumaTicketsConReclamo = sumaCodigos
+    this.totalTickets = data.length
+    this.porcentajeConReclamos = ((this.sumaTicketsConReclamo * 100) / this.totalTickets).toFixed(0)
+  }
+
+  getTablaDetalle(data, columns) {
+    this.order = columns
+    this.updatedAt = Date()
+    this.dataTablaDetalle = this.orderKeys(data, columns)
+    this.formatDetalle()
+    this.loadingDetalle = false
   }
 
   formatResumen(): void {
@@ -398,6 +503,8 @@ export class TicketsWOComponent implements AfterViewInit {
 				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
       } else if(key === "TICKET") {
 				col = { field: key, text: key, size: "80px", sortable: true };
+      } else if(key === "PAIS") {
+				col = { field: key, text: key, size: "80px", sortable: true, hidden: true };
       } else if(key === "AREA") {
 				col = { field: key, text: key, size: "170px", sortable: true };
       } else if(key === "CATEGORIA DE CIERRE") {
@@ -435,4 +542,37 @@ export class TicketsWOComponent implements AfterViewInit {
 		}
 		return rowsArray;
 	}
+
+  eliminarDuplicados(data, key):any[] {//Revisa el array de marcadores y elimina duplicados
+		return [
+			...new Map(data.map(item => [key(item), item])).values()
+		]
+	}
+
+  convertirDatosResumen(data) {
+    let j = 1
+    const datos = []
+    data.map(obj => {
+      const NewObj = { recid: j, ...obj }
+      j++
+      datos.push(NewObj)
+    })
+    return datos
+  }
+
+  filtrarDatosResumen(filtro, data, filterName) {
+    let filtros = []
+    let dataFiltrada = []
+    filtro.map(item => {
+      const datosFiltrados = data.filter(ticket => ticket[filterName] === item)
+      filtros.push(datosFiltrados)
+    })
+    filtros.map(ticket => {ticket.map(item => dataFiltrada.push(item))})
+    dataFiltrada = this.eliminarDuplicados(dataFiltrada, item => item)
+    return dataFiltrada
+  }
+
+  getCode(item) {
+    console.log(item)
+  }
 }

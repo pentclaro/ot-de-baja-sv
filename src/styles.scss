@@ -41,6 +41,17 @@ html {
   margin: 16px 0 !important;
 }
 
+.mat-option-text {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.mat-option-text p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 #container {
   padding: 0 $global-padding;
   height: calc(100vh - 44px);
