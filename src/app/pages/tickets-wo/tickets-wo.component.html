@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col col-12" *ngIf="dataSourceResumen.length >= 1">
+      <div class="col col-12" *ngIf="reporteCargado === true">
         <div class="center" id="tituloPrincipal">
           <br>
           <h1>
@@ -114,7 +114,7 @@
         <div class="tabla-resumen">
           <app-w2ui-grid
             #w2ui
-              *ngIf="dataSourceResumen.length >= 1"
+              *ngIf="reporteCargado === true"
               [name]="nameResumen"
               [header]="headerResumen"
               [records]="dataSourceResumen"
@@ -124,17 +124,17 @@
             >
           </app-w2ui-grid>
 
-          <div class="table--container" *ngIf="dataSourceResumen.length >= 1">
+          <div class="table--container" *ngIf="reporteCargado === true">
             <div class="table--header" >
               <h3>RESUMEN CODIGO DE GESTION</h3>
             </div>
-            <div *ngFor="let resumen of datosResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : ''}}">
+            <div *ngFor="let resumen of datosResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : 'grey'}}">
               <p (click)="getCode(resumen.CODIGO_CIERRE)">{{resumen.CODIGO_CIERRE}}</p>
               <p>{{resumen.CONTEO_COD_CIERRE}}</p>
             </div>
           </div>
 
-          <div class="table--container2" *ngIf="dataSourceResumen.length >= 1">
+          <div class="table--container2" *ngIf="reporteCargado === true">
             <div class="card">
               <div class="cuadro blue"></div>
               <div class="description">
@@ -162,7 +162,7 @@
         <br>
         <app-w2ui-grid-detalle
           #w2ui
-            *ngIf="dataTablaDetalle.length >= 1"
+            *ngIf="reporteCargado === true"
             [name]="nameDetalle"
             [header]="headerDetalle"
             [records]="dataTablaDetalle"

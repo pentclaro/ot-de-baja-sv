@@ -138,17 +138,36 @@
     border-radius: 10px;
   }
 
+  .column1:hover {
+    cursor: pointer;
+  }
+
   .red {
     background-color: #FF0000;
     color: white;
+    &:hover {
+      background-color: #ce0000;
+    }
   }
 
   .orange {
     background-color: #FF8000;
+    &:hover {
+      background-color: #df6f00;
+    }
   }
 
   .yellow {
     background-color: #FFFF00;
+    &:hover {
+      background-color: #e0e000;
+    }
+  }
+
+  .grey {
+    &:hover {
+      background-color: #8080804d;
+    }
   }
 
   /* ============================================================================== */

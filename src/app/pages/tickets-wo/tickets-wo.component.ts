@@ -64,8 +64,9 @@ export class TicketsWOComponent implements AfterViewInit {
   datosAreaResumen: any[];
   datosCategoriaResumen: any[];
   datosCodigoResumen: any[];
+  reporteCargado: boolean = false;
 
-  @ViewChild('form', { static: false}) form: NgForm;
+  @ViewChild('form', { static: false }) form: NgForm;
 
   constructor(
     private _pageService: HeaderService,
@@ -78,6 +79,7 @@ export class TicketsWOComponent implements AfterViewInit {
 
   selectedOpt(event, input): void {
     if (input === this.search.mes) {
+      this.reporteCargado = false
       this.dataSourceResumen = []
       this.dataTablaDetalle = []
       this.getDataInputs(this.search.mes)
@@ -177,8 +179,11 @@ export class TicketsWOComponent implements AfterViewInit {
       this.getTablaDetalle(this.datosMes, this.columnasDetalle)
       this.getDataDetalleTotal(this.dataInputs)
       this.loadingDetalle = false
+      this.dataSourceResumen.length >= 1 && this.dataTablaDetalle.length >= 1 ? this.reporteCargado = true : ''
     }, (error) => {
-
+      this.loadingDetalle = false
+      this.loading = false
+      this._pageService.openSnackBar('error', 'No existen datos disponibles del mes seleccionado')
     })
   }
 
@@ -189,10 +194,12 @@ export class TicketsWOComponent implements AfterViewInit {
       this.updatedAt = Date();
       this.datosMesResumen = []
       this.getTablaResumen(this.convertirDatosResumen(this.datosConteo), this.columnasResumen);
+      this.dataSourceResumen.length >= 1 && this.dataTablaDetalle.length >= 1 ? this.reporteCargado = true : ''
     },
     (error) => {
-      this._pageService.openSnackBar(`error`, error);
+      this._pageService.openSnackBar(`error`, error, 2000);
       this.loading = false;
+      this.loadingDetalle = false
     })
   }
 
@@ -416,7 +423,7 @@ export class TicketsWOComponent implements AfterViewInit {
 
   getTablaResumen(data, columnas) {
     this.updatedAt = Date()
-    columnas = ['recid', ...columnas]
+    columnas[0] === 'recid' ? columnas : columnas = ['recid', ...columnas]
     this.order = columnas
     this.dataSourceResumen = this.orderKeys(data, columnas)
     this.formatResumen()
@@ -572,7 +579,28 @@ export class TicketsWOComponent implements AfterViewInit {
     return dataFiltrada
   }
 
-  getCode(item) {
-    console.log(item)
+  getCode(codigo) {
+    this.search.pais = []
+    this.areas = []
+    this.categorias = []
+    this.codigos = []
+    const datosDetalle = this.dataInputs
+    const datosResumen = this.datosConteo
+
+    if (codigo !== 'TOTAL GENERAL') {
+      const datosFiltradosResumen = datosResumen.filter(item => item['CODIGO_CIERRE'] === codigo)
+      const datosFiltradosDetalle = datosDetalle.filter(item => item['CODIGO DE CIERRE'] === codigo)
+      const dataResumen = this.convertirDatosResumen(datosFiltradosResumen)
+      const dataDetalle = this.convertirDatosResumen(datosFiltradosDetalle)
+      this.getTablaResumen(dataResumen, Object.keys(dataResumen[0]))
+      this.getTablaDetalle(dataDetalle, Object.keys(dataDetalle[0]))
+    } else {
+      const datosFiltradosResumen = datosResumen.filter(item => item['CATEGORIA_CIERRE'] === 'FALLA DE GESTION')
+      const datosFiltradosDetalle = datosDetalle.filter(item => item['CATEGORIA DE CIERRE'] === 'FALLA DE GESTION')
+      const dataResumen = this.convertirDatosResumen(datosFiltradosResumen)
+      const dataDetalle = this.convertirDatosResumen(datosFiltradosDetalle)
+      this.getTablaResumen(dataResumen, Object.keys(dataResumen[0]))
+      this.getTablaDetalle(dataDetalle, Object.keys(dataDetalle[0]))
+    }
   }
 }

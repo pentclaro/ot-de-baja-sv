@@ -15,25 +15,4 @@ export class TicketsWOService {
   getDataTablaResumen(mes: any) {
     return this.http.get(`${environment.apiURL}/ticketsWO/getDataTablaResumen/${mes}`)
   }
-
-  getDataTablaDetalle(pais: any, input: any) {
-    const {mes, area, categoria, codigo} = input
-    let newCodigo = []
-    codigo.map(item => {
-      if(item === 'MANIPULACION DE EQUIPOS Y/O CABLEADO'){
-        item = 'MANIPULACION DE EQUIPOS Y-O CABLEADO'
-        newCodigo.push(item)
-      } else if (item === 'MANIPULACIÓN DE EQUIPOS Y/O CABLEADO'){
-        item = 'MANIPULACIÓN DE EQUIPOS Y-O CABLEADO'
-        newCodigo.push(item)
-      } else {
-        newCodigo.push(item)
-      }
-    })
-    return this.http.get(`${environment.apiURL}/ticketsWO/getDataTablaDetalle/${mes}/${pais}/${area}/${categoria}/${newCodigo}`)
-  }
-
-  getDataResumen(mes: string) {
-    return this.http.get(`${environment.apiURL}/ticketsWO/getResumen/${mes}`)
-  }
 }
