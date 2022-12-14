@@ -1,0 +1,224 @@
+<div id="wrapper-fallas-fibra-optica">
+  <div id="container" class="scroll">
+    <div class="row">
+      <div class="col col-12 filters">
+
+        <div id="header">
+          <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData(form)">
+
+            <div class="flex-container">
+
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>País</mat-label>
+                <mat-select required placeholder="Selecciona un país"  [(ngModel)]="search.pais" name="pais" [disabled]="loading"
+                  (selectionChange)="optionSelected(search.pais)"
+                >
+                  <mat-option *ngFor="let pais of paises" [value]="pais">{{pais}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Región</mat-label>
+                <mat-select [(ngModel)]="search.region" name="region" multiple required
+                (selectionChange)="optionSelected(search.region)" [disabled]="regiones.length === 0"
+                >
+                  <mat-option *ngFor="let region of regiones" [value]="region">{{region}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Rango</mat-label>
+                <mat-select required placeholder="Selecciona un rango"  [(ngModel)]="search.rango" name="rango" [disabled]="loading">
+                  <mat-option *ngFor="let rango of rangos" [value]="rango">{{rango}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-flat-button class="primary-button search" type="submit" [disabled]="!search.pais && !search.region && !search.rango">
+                <mat-icon matPrefix>search</mat-icon>BUSCAR
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-12" *ngIf="reporteCargado === true">
+        <div class="center" id="tituloPrincipal">
+          <br>
+          <h1>
+            {{tituloReporte+' '+search.pais}}
+          </h1>
+          <h3 id="tituloTiempo">
+            Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+          </h3>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col col-12">
+        <div class="first-container">
+          <div class="table-container" *ngIf="dataSourceResumen.length > 0">
+            <div class="encabezado centrar">
+              META
+            </div>
+            <div class="fila2 centrar bold">%</div>
+            <div class="fila2 centrar bold">Rango</div>
+            <div class="fila3 centrar">90%</div>
+            <div class="fila3 centrar">5 Hrs</div>
+            <div class="fila4 centrar">98%</div>
+            <div class="fila4 centrar">12 Hrs</div>
+          </div>
+
+          <div class="tabla-resumen">
+            <app-w2ui-grid
+              #w2ui
+                *ngIf="dataSourceResumen.length > 0"
+                [name]="nameResumen"
+                [header]="headerResumen"
+                [records]="dataSourceResumen"
+                [columnGroups]="groupsResumen"
+                [columns]="columnsResumen"
+                [searches]="searchesResumen"
+                [show]="showResumen"
+              >
+            </app-w2ui-grid>
+          </div>
+
+        </div>
+
+        <div class="graph-container">
+          <div class="chart-view">
+            <canvas id="graficaPorcentajes"></canvas>
+          </div>
+        </div>
+
+        <div class="promedios-container">
+
+          <div class="tabla-promedios">
+            <app-w2ui-grid-detalle
+              #w2ui
+                *ngIf="dataTablaPromedios.length > 0"
+                [name]="namePromedios"
+                [header]="headerPromedios"
+                [records]="dataTablaPromedios"
+                [columns]="columnsPromedios"
+                [searches]="searchesPromedios"
+                [show]="showResumen"
+              >
+            </app-w2ui-grid-detalle>
+
+          </div>
+
+          <div class="graph-container-promedios">
+            <div class="chart-view-promedios">
+              <canvas id="graficaPromedios"></canvas>
+            </div>
+          </div>
+        </div>
+
+<!--
+          <div class="table--container" *ngIf="reporteCargado === true">
+            <div class="table--header" >
+              <h3>RESUMEN CODIGO DE GESTION</h3>
+            </div>
+            <div *ngFor="let resumen of datosResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : 'grey'}}">
+              <p (click)="getCode(resumen.CODIGO_CIERRE)">{{resumen.CODIGO_CIERRE}}</p>
+              <p>{{resumen.CONTEO_COD_CIERRE}}</p>
+            </div>
+-->
+
+        <!-- <div id="divGeneralSA" class="link-container" *ngIf="reporteCargado" (click)="mostrarSinAfectacion()">
+          <p style="color: white;">Sin Afectación</p>
+        </div>
+
+        <div class="table-container" *ngIf="sinAfectacion">
+          <div class="encabezado centrar">
+            META
+          </div>
+            <div class="fila2 centrar bold">%</div>
+            <div class="fila2 centrar bold">Rango</div>
+          <div class="fila3 centrar">90%</div>
+          <div class="fila3 centrar">5 Hrs</div>
+          <div class="fila4 centrar">98%</div>
+          <div class="fila4 centrar">12 Hrs</div>
+
+        </div>
+
+        <app-placeholder [message]="'Sin datos por el momento'" [loading]="loading" *ngIf="sinAfectacion">
+        </app-placeholder> -->
+
+        <!-- <div class="tabla-resumen">
+          <app-w2ui-grid
+            #w2ui
+              *ngIf="reporteCargado === true"
+              [name]="nameResumen"
+              [header]="headerResumen"
+              [records]="dataSourceResumen"
+              [columns]="columnsResumen"
+              [searches]="searchesResumen"
+              [show]="show"
+            >
+          </app-w2ui-grid>
+
+          <div class="table--container" *ngIf="reporteCargado === true">
+            <div class="table--header" >
+              <h3>RESUMEN CODIGO DE GESTION</h3>
+            </div>
+            <div *ngFor="let resumen of datosResumen" class="column1 {{resumen.CODIGO_CIERRE === 'NO SE COORDINO INGRESO DEL TECNICO' ? 'red' : resumen.CODIGO_CIERRE === 'SIN INTERVENCION TECNICA' ? 'orange' : resumen.CODIGO_CIERRE === 'WO MAL ASIGNADA' ? 'yellow' : 'grey'}}">
+              <p (click)="getCode(resumen.CODIGO_CIERRE)">{{resumen.CODIGO_CIERRE}}</p>
+              <p>{{resumen.CONTEO_COD_CIERRE}}</p>
+            </div>
+          </div>
+
+          <div class="table--container2" *ngIf="reporteCargado === true">
+            <div class="card">
+              <div class="cuadro blue"></div>
+              <div class="description">
+                <h2>{{sumaTicketsConReclamo}}</h2>
+                <p>Tickets con reclamo</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="cuadro green"></div>
+              <div class="description">
+                <h2>{{totalTickets}}</h2>
+                <p>Total Tickets WO</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="cuadro peach"></div>
+              <div class="description">
+                <h2>{{porcentajeConReclamos}} %</h2>
+                <p>Con reclamos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
+        <app-w2ui-grid-detalle
+          #w2ui
+            *ngIf="reporteCargado === true"
+            [name]="nameDetalle"
+            [header]="headerDetalle"
+            [records]="dataTablaDetalle"
+            [columns]="columnsDetalle"
+            [searches]="searchesDetalle"
+            [show]="show"
+          >
+        </app-w2ui-grid-detalle> -->
+
+        <div class="HOLA" *ngIf="loadingDetalle">
+          <mat-spinner></mat-spinner>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

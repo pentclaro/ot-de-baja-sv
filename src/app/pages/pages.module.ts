@@ -12,15 +12,15 @@ import { NgProgressModule } from 'ngx-progressbar';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tickets-wo',
+    redirectTo: 'fallas-fibra-optica',
     pathMatch: 'full'
   },
   {
-    path: 'tickets-wo',
-    loadChildren: () => import('./tickets-wo/tickets-wo.module').then(m => m.TicketsWoModule),
+    path: 'fallas-fibra-optica',
+    loadChildren: () => import('./fallas-fibra-optica/fallas-fibra-optica.module').then(m => m.FallasFibraOpticaModule),
     // canActivate: [AuthGuard],
     data: {
-      key: 'tickets-wo'
+      key: 'fallas-fibra-optica'
     }
   },
 ];
