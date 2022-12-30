@@ -7,6 +7,8 @@ import { MaterialModule } from 'src/app/material-design';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgProgressModule } from 'ngx-progressbar';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { PopupTablaComponent } from './popup-tabla/popup-tabla.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: FallasFibraOpticaComponent },
@@ -15,12 +17,14 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    FallasFibraOpticaComponent
+    FallasFibraOpticaComponent,
+    PopupTablaComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
 		FormsModule,
+    ReactiveFormsModule,
 		MaterialModule,
     MatPaginatorModule,
 		NgProgressModule,

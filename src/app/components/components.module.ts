@@ -19,7 +19,7 @@ import { FileViewComponent } from './file-view/file-view.component';
 import { NgxAudioPlayerModule } from 'ngx-audio-player';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { W2uiGridComponent } from './w2ui-grid/w2ui-grid.component';
-import { W2uiGridComponentDetalle } from './w2ui-grid/w2ui-grid-detalle.component';
+import { W2uiGridComponentPopup } from './w2ui-grid/w2ui-grid-popup.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
@@ -37,7 +37,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     FileViewComponent,
     AudioPlayerComponent,
     W2uiGridComponent,
-    W2uiGridComponentDetalle
+    W2uiGridComponentPopup
   ],
   exports: [
     SidenavComponent,
@@ -53,7 +53,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     FileViewComponent,
     AudioPlayerComponent,
     W2uiGridComponent,
-    W2uiGridComponentDetalle
+    W2uiGridComponentPopup
   ],
   imports: [
     CommonModule,

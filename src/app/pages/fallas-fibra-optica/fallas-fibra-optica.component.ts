@@ -3,8 +3,10 @@ import { NgForm } from '@angular/forms';
 import { Column, Search, Show, Record, ColumnGroups, Item } from 'src/app/interfaces/interfaces'
 import { HeaderService } from 'src/app/services/header.service';
 import { FallasFibraOpticaService } from 'src/app/services/fallas-fibra-optica/fallas-fibra-optica.service';
-import { FaultFallasFOService } from 'src/app/services/fallas-fibra-optica/fault-fallas-fo.service';
+import { FaultFallasFOService } from 'src/app/services/fault/fault.service';
 import { Chart } from 'chart.js'
+import { MatDialog } from '@angular/material/dialog';
+import { PopupTablaComponent } from './popup-tabla/popup-tabla.component';
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 @Component({
@@ -16,64 +18,114 @@ export class FallasFibraOpticaComponent implements OnInit {
   paises: string[] = ['Regional', 'Guatemala', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica']
   regiones: string[] = []
   rangos: string[] = ['Diario', 'Semanal', 'Mensual']
-  search: { pais: string, region: string[], rango: string } = { pais: '', region: [], rango: '' }
+  search: { pais: string, region: string, rango: string } = { pais: '', region: 'undefined', rango: '' }
   loading: boolean = false
   loadingDetalle = false
   updatedAt = ''
   reporteCargado = false
   tituloReporte = 'Fallas Fibra Optica'
+  tituloReporteSur = 'Fallas Fibra Optica Metro Sur'
+
+  // w2ui de Cantidades
   dataSourceResumen = []
-  dataTablaPromedios = []
-  conAfectacion = false
-  sinAfectacion = false
   orderResumen: any
-  orderPromedios: any
   nameResumen = 'ResumenFallasFO'
-  namePromedios = 'TablaPromedios'
   headerResumen = 'Resumen Fallas Fibra Optica'
-  headerPromedios = 'Tabla de Promedios'
-  itemsResumen: Item
-  itemsPromedios: Item
   showResumen: Show = { toolbar: true, footer: true, header: false, toolbarColumns: false, toolbarInput: false, toolbarSearch: false, toolbarReload: false }
-  searchesResumen: Search[] = []
-  searchesPromedios: Search[] = []
-  columnsResumen: Column[] = []
-  columnsPromedios: Column[] = []
   groupsResumen: ColumnGroups[] = []
-  // groupsPromedios: ColumnGroups[] = []
+  itemsResumen: Item
+  searchesResumen: Search[] = []
+  columnsResumen: Column[] = []
+
+  // w2ui de Promedios
+  dataTablaPromedios = []
+  orderPromedios: any
+  namePromedios = 'TablaPromedios'
+  headerPromedios = 'Tabla de Promedios'
+  itemsPromedios: Item
+  searchesPromedios: Search[] = []
+  columnsPromedios: Column[] = []
+
+  // w2ui de Cantidades Sur
+  dataSourceCentralSur = []
+  orderCentralSur: any
+  nameCentralSur = 'ResumenFallasFOSur'
+  headerCentralSur = 'Resumen Fallas Fibra Optica Sur'
+  showCentralSur: Show = { toolbar: true, footer: true, header: false, toolbarColumns: false, toolbarInput: false, toolbarSearch: false, toolbarReload: false }
+  groupsCentralSur: ColumnGroups[] = []
+  itemsCentralSur: Item
+  searchesCentralSur: Search[] = []
+  columnsCentralSur: Column[] = []
+
+  // w2ui de Promedios Sur
+  dataTablaPromediosCentralSur = []
+  orderPromediosCentralSur: any
+  namePromediosCentralSur = 'TablaPromediosSur'
+  headerPromediosCentralSur = 'Tabla de Promedios Sur'
+  itemsPromediosCentralSur: Item
+  searchesPromediosCentralSur: Search[] = []
+  columnsPromediosCentralSur: Column[] = []
+
   myChartCantidades: any;
   myChartPromedios: any;
-  cleanChecks: boolean;
+  colorGrafica: string = ''
+  count = 0
+  count2 = 0
+  metroSur = false
 
   @ViewChild('form', { static: false }) form: NgForm;
-
 
   constructor(
     private _pageService: HeaderService,
     private _fallasFibraOpticaService: FallasFibraOpticaService,
     private _faultFallasFOService: FaultFallasFOService,
+    private _dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
   }
 
-  // FUNCION PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT
+  /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
   optionSelected(input): void {
+    this.tituloReporte = 'Fallas Fibra Optica'// Cambiamos el título de las primeras partes del reporte sino es Metro Sur
     if (input === this.search.pais) {// FRAGMENTO ESPECIFICO DEL FILTRO DE PAIS
-      this.getDataRegiones(this.search.pais)
-    } else {// FRAGMENTO PARA FILTRO DE REGION
-      if (input[0] === 'TODAS') {// SI SE SELECCIONA TODOS, SE LLENAN TODAS LAS OPCIONES DEL INPUT
-        this.search.region = this.regiones
-        this.cleanChecks = true
+      this.metroSur = false// Inhabilita la parte de Metro Sur
+      if (this.search.pais !== 'Regional') {
+        this.loading = true
+        this.getDataRegiones(this.search.pais)
       } else {
-        this.cleanChecks = false
+        this.search.region = 'undefined'
+        this.regiones = []
       }
-      if (this.cleanChecks === false && input.length === this.regiones.length - 1) {
-        this.search.region = []
+    } else if (input === this.search.region) {// FRAGMENTO ESPECIFICO DEL FILTRO DE REGIÓN
+      if (this.search.region === 'METROPOLITANA' && this.search.pais === 'Guatemala') {
+        this.metroSur = true// Habilita la parte de Metro Sur
+        this.tituloReporte = 'Fallas Fibra Optica Metro Norte'
+      } else {
+        this.metroSur = false// Inhabilita la parte de Metro Sur
       }
     }
   }
 
+  /* MÉTODO PARA ASIGNAR COLOR EN LAS GRÁFICAS */
+  colorEnGraficas(): void {
+    this.colorGrafica = ''
+    if (this.search.pais === 'Guatemala') {
+      this.colorGrafica = 'rgba(79, 129, 189, 0.4)'
+    } else if (this.search.pais === 'El Salvador') {
+      this.colorGrafica = 'rgba(0, 176, 80, 0.4)'
+    } else if (this.search.pais === 'Honduras') {
+      this.colorGrafica = 'rgba(112, 48, 160, 0.4)'
+    } else if (this.search.pais === 'Nicaragua') {
+      this.colorGrafica = 'rgba(255, 153, 51, 0.4)'
+    } else if (this.search.pais === 'Costa Rica') {
+      this.colorGrafica = 'rgba(250, 0, 0, 0.4)'
+    } else {
+      this.colorGrafica = 'rgba(8, 145, 140, 0.4)'
+    }
+  }
+
+  /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
   searchData(form): void {
     this.loading = true;
     this.loadingDetalle = true;
@@ -81,24 +133,34 @@ export class FallasFibraOpticaComponent implements OnInit {
 		if (this.form.valid) {
       this.updatedAt = Date();
       this.reporteCargado = true
+      this.colorEnGraficas()
       this.getDataTablaResumen(this.search)
-      this.getDataTablaPromedios()
+      this.getDataTablaPromedios(this.search)
 		} else {
       this._pageService.openSnackBar(`warning`, `Error selecciona todos los campos.`);
 			this.loading = false
+      this.reporteCargado = false
+      this.loadingDetalle = false
 		}
   }
 
+  /* MÉTODO QUE CARGA E INSERTA DENTRO DEL INPUT DE REGIONES AL SELECCIONAR UN PAÍS */
   getDataRegiones(pais: string) {
     this.regiones = []
     this._faultFallasFOService.getDataRegiones(pais).subscribe((data: any) => {
       data.map(region => {
-        this.regiones.push(region.REGION)
+        this.regiones.push(region.TG_TIPO_SITIO)
       })
       this.regiones.unshift('TODAS')
+      this.loading = false
+    },
+    (error) => {
+      console.log(error)
+      this._pageService.openSnackBar('error', 'No se obtuvieron regiones del país seleccionado', 1800)
     })
   }
 
+  /* MÉTODO QUE CARGA DATOS DE TABLA DE CANTIDADES Y SE MANEJA LA INFORMACIÓN PARA LA TABLA W2UI */
   getDataTablaResumen(search?) {
     this._fallasFibraOpticaService.getDataTablaResumen(search).subscribe(({ data, message }: any) => {
       let datos = data.data
@@ -237,12 +299,30 @@ export class FallasFibraOpticaComponent implements OnInit {
       let cantidadesTotales = [porcentaje1, porcentaje2, porcentaje3, porcentaje4, porcentaje5, porcentaje6]
 
       this.groupsResumen = gruposCol
+      this.groupsCentralSur = gruposCol
       this.orderResumen = Object.keys(filasTabla[0])
+      this.orderCentralSur = Object.keys(filasTabla[0])
       this.updatedAt = Date();
       this.dataSourceResumen = this.orderKeys(filasTabla, Object.keys(filasTabla[0]));
+      this.dataSourceCentralSur = this.orderKeys(filasTabla, Object.keys(filasTabla[0]));
       this.format();
+      this.formatCentralSur();
       columnaRango.pop()
-      this.graficaBarrasResumen(columnaRango, encabezadosFechas, cantidadesTotales, 'Porcentajes Falla', 'graficaPorcentajes')
+
+      if (this.count === 0) {
+        this.graficaBarrasResumen(columnaRango, encabezadosFechas, cantidadesTotales, 'Porcentajes Falla', 'graficaPorcentajes', this.colorGrafica)
+        this.metroSur ?
+        this.graficaBarrasResumen(columnaRango, encabezadosFechas, cantidadesTotales, 'Porcentajes Falla', 'graficaPorcentajesSur', this.colorGrafica)
+        : ''
+        this.count = 1
+      } else {
+        this.myChartCantidades.destroy()
+        this.graficaBarrasResumen(columnaRango, encabezadosFechas, cantidadesTotales, 'Porcentajes Falla', 'graficaPorcentajes', this.colorGrafica)
+        this.metroSur ?
+        this.graficaBarrasResumen(columnaRango, encabezadosFechas, cantidadesTotales, 'Porcentajes Falla', 'graficaPorcentajesSur', this.colorGrafica)
+        : ''
+      }
+
       this._pageService.openSnackBar(`success`, message);
       this.loadingDetalle = false;
       this.loading = false;
@@ -255,15 +335,18 @@ export class FallasFibraOpticaComponent implements OnInit {
     })
   }
 
+  /* MÉTODO QUE CARGA DATOS DE TABLA DE PROMEDIOS Y SE MANEJA LA INFORMACIÓN PARA LA TABLA W2UI */
   getDataTablaPromedios(search?) {
-    this._fallasFibraOpticaService.getDataTablaPromedios().subscribe(({data, message}: any) => {
-      console.log(data)
+    this._fallasFibraOpticaService.getDataTablaPromedios(search).subscribe(({data, message}: any) => {
       this.orderPromedios = data.order
+      this.orderPromediosCentralSur = data.order
       let datos = data.data
       this.updatedAt = Date()
       datos.map(promedio => promedio.PROM = parseFloat(promedio.PROM).toFixed(2))
       this.dataTablaPromedios = this.orderKeys(datos, data.info)
+      this.dataTablaPromediosCentralSur = this.orderKeys(datos, data.info)
       this.formatPromedios()
+      this.formatPromediosCentralSur()
 
       let fechas = []
       let cantidades = []
@@ -280,19 +363,36 @@ export class FallasFibraOpticaComponent implements OnInit {
         promedios.push(parseFloat(dato.PROM))
       })
 
-      this.graficaBarrasPromedios(fechas, cantidades, promedios, 'graficaPromedios', '#000')
+      if (this.count2 === 0) {// Combrobamos el valor de count2, sino ha hecho render se cargan las gráficas sino, primero las destruye y las carga
+        this.graficaBarrasPromedios(fechas, cantidades, promedios, 'graficaPromedios', this.colorGrafica)
+        this.metroSur ?
+        this.graficaBarrasPromedios(fechas, cantidades, promedios, 'graficaPromediosSur', this.colorGrafica)
+        : ''
+        this.count2 = 1
+      } else {
+        this.myChartPromedios.destroy()
+        this.graficaBarrasPromedios(fechas, cantidades, promedios, 'graficaPromedios', this.colorGrafica)
+        this.metroSur ?
+        this.graficaBarrasPromedios(fechas, cantidades, promedios, 'graficaPromediosSur', this.colorGrafica)
+        : ''
+      }
 
+    },
+    (error) => {
+      this._pageService.openSnackBar('error', error)
+      this.loading = false
+      this.loadingDetalle = false
     })
   }
 
-  graficaBarrasResumen(labels: string[], fechas: string[], cantidades: any[], name: string, idElement: string, colors?: string[]) {
+  graficaBarrasResumen(labels: string[], fechas: string[], cantidades: any[], name: string, idElement: string, colors?: string) {
     let barrasGrafica = []
     let j = 0
     fechas.map(item => {
       barrasGrafica.push({
         type: "bar", // Se le aasigna el valor de tipo de gráfica
         label: item, // Acá se asigna los títulos para la leyenda de cada fecha
-        backgroundColor: '#000', // Acá se asigna el color de la barra
+        backgroundColor: colors, // Acá se asigna el color de la barra
         data: cantidades[j], // Acá asignamos los datos con los que se formará la barra
         stack: j + 1,
       })
@@ -304,11 +404,22 @@ export class FallasFibraOpticaComponent implements OnInit {
       datasets: barrasGrafica
     }
 
+    const legendMargin = {
+      id: 'legendMargin',
+      beforeInit(chart, legend, options) {
+        const fitValue = chart.legend.fit
+        chart.legend.fit = function fit() {
+          fitValue.bind(chart.legend)()
+          return this.height += 30
+        }
+      }
+    }
+
     // const reducer = (accum, curr) => accum + curr
     // const sumaCants = cantidades.reduce(reducer)
     // console.log(sumaCants)
 
-    // this.myChart.destroy()
+    // this.myChartCantidades.destroy()
     let canvas = document.getElementById(idElement) as HTMLCanvasElement | null;
     canvas.getContext('2d')
     this.myChartCantidades = new Chart(canvas, {
@@ -349,26 +460,60 @@ export class FallasFibraOpticaComponent implements OnInit {
         },
         plugins: {
           datalabels: {// Acá se coloca la información de la barra en la parte superior de cada una
-            anchor: "end",
-            align: "end"
+            align: 'top',
+            anchor: 'end',
+            clamp: true
           },
           tooltip: {},
           legend: {
             labels: {
               padding: 20
-            }
+            },
           },
         },
       },
+      plugins: [
+        ChartDataLabels,
+        legendMargin
+      ]
     })
 
     canvas.onclick = (e) => {
       const event = this.myChartCantidades.getElementAtEvent(e)[0]
+      console.log(event)
       if (event) {
         const label = this.myChartCantidades.data.labels[event._index]
-        const value = this.myChartCantidades.data.datasets[event._datasetIndex].data[event._index]
+        const value = this.myChartCantidades.data.datasets[event._datasetIndex].label
 
-        // this.getFallasReiniciosEquiposIP(label, this.initDate, this.endDate, undefined)
+        const { pais, region, rango } = this.search
+
+        let rangoDesde, rangoHasta
+
+        if (label === '0 <= 5 hrs' || label === '0 ⩽ 5 hrs') {
+          rangoDesde = 0
+          rangoHasta = 5
+        } else if (label === '>5 <= 12 hrs' || label === '＞5 ⩽ 12 hrs') {
+          rangoDesde = 5
+          rangoHasta = 12
+        } else if (label === '>12 <= 24 hrs' || label === '＞12 ⩽ 24 hrs') {
+          rangoDesde = 12
+          rangoHasta = 24
+        } else {
+          rangoDesde = 24
+          rangoHasta = undefined
+        }
+
+        const filters = {
+          pais,
+          region,
+          rango,
+          fecha: value,
+          desde: rangoDesde,
+          hasta: rangoHasta,
+          tipo: 'barras'
+        }
+
+        this.openPopup(filters)
       }
     }
   }
@@ -456,12 +601,25 @@ export class FallasFibraOpticaComponent implements OnInit {
     })
 
     canvas.onclick = (e) => {
-      const event = this.myChartCantidades.getElementAtEvent(e)[0]
+      const event = this.myChartPromedios.getElementAtEvent(e)[0]
       if (event) {
-        const label = this.myChartCantidades.data.labels[event._index]
-        const value = this.myChartCantidades.data.datasets[event._datasetIndex].data[event._index]
+        const label = this.myChartPromedios.data.labels[event._index]
+        const value = this.myChartPromedios.data.datasets[event._datasetIndex].label
+        const { pais, region, rango } = this.search
 
-        // this.getFallasReiniciosEquiposIP(label, this.initDate, this.endDate, undefined)
+        let rangoDesde, rangoHasta
+
+        const filters = {
+          pais,
+          region,
+          rango,
+          fecha: label,
+          desde: rangoDesde,
+          hasta: rangoHasta,
+          tipo: 'puntos'
+        }
+
+        this.openPopup(filters)
       }
     }
   }
@@ -475,11 +633,11 @@ export class FallasFibraOpticaComponent implements OnInit {
 			if (key === "recid") {
 				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
 			} else if (key === "Rango") {
-				col = { field: key, text: "<div style='text-align: center;'>Rango</div>", size: "100px", sortable: true };
+				col = { field: key, text: "<div style='text-align: center;'>Rango</div>", size: "100px", style: "text-align: center;", sortable: true, attr: "align=center" };
 			} else if (key === "%1" || key === "%2" || key === "%3" || key === "%4" || key === "%5" || key === "%6") {
-        col = { field: key, text: "<div style='text-align: center;'>%</div>", size: "70px", sortable: true };
+        col = { field: key, text: "<div style='text-align: center;'>%</div>", size: "70px", style: "text-align: center;", sortable: true, attr: "align=center" };
       } else if (key === "#1" || key ==="#2" || key === "#3" || key === "#4" || key === "#5" || key === "#6") {
-        col = { field: key, text: "<div style='text-align: center;'>#</div>", size: "70px", sortable: true };
+        col = { field: key, text: "<div style='text-align: center;'>#</div>", size: "70px", style: "text-align: center;", sortable: true, attr: "align=center" };
       } else if (key === "Hide") {
         col = { field: key, text: key, size: "70px", sortable: true, hidden: true };
 			} else {
@@ -495,6 +653,35 @@ export class FallasFibraOpticaComponent implements OnInit {
 		})
   }
 
+  formatCentralSur(): void {
+    let data = this.orderCentralSur || [];
+		this.searchesCentralSur = [];
+		this.columnsCentralSur = [];
+		data.map((key: string) => {
+			let col: Column, search: Search;
+			if (key === "recid") {
+				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
+			} else if (key === "Rango") {
+				col = { field: key, text: "<div style='text-align: center;'>Rango</div>", size: "100px", style: "text-align: center;", sortable: true, attr: "align=center" };
+			} else if (key === "%1" || key === "%2" || key === "%3" || key === "%4" || key === "%5" || key === "%6") {
+        col = { field: key, text: "<div style='text-align: center;'>%</div>", size: "70px", style: "text-align: center;", sortable: true, attr: "align=center" };
+      } else if (key === "#1" || key ==="#2" || key === "#3" || key === "#4" || key === "#5" || key === "#6") {
+        col = { field: key, text: "<div style='text-align: center;'>#</div>", size: "70px", style: "text-align: center;", sortable: true, attr: "align=center" };
+      } else if (key === "Hide") {
+        col = { field: key, text: key, size: "70px", sortable: true, hidden: true };
+			} else {
+				col = { field: key, text: key, size: "80px", sortable: true };
+			}
+			this.columnsCentralSur.push(col);
+			if (key === "recid") {
+				search = { field: key, label: key, type: 'int', hidden: true };
+			} else {
+				search = { field: key, label: key, type: 'text' };
+			}
+			this.searchesCentralSur.push(search);
+		})
+  }
+
   formatPromedios(): void {
     let data = this.orderPromedios || [];
 		this.searchesPromedios = [];
@@ -504,11 +691,17 @@ export class FallasFibraOpticaComponent implements OnInit {
 			if (key === "recid") {
 				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
 			} else if(key === "ANIO") {
-				col = { field: key, text: 'AÑO', size: "80px", sortable: true };
+				col = { field: key, text: 'AÑO', size: "80px", sortable: true, hidden: true };
+			} else if(key === "NUMERO") {
+				col = { field: key, text: 'AÑO', size: "80px", sortable: true, hidden: true };
 			} else if(key === "PROM") {
-				col = { field: key, text: 'PROMEDIO', size: "80px", sortable: true };
+				col = { field: key, text: "<div style='text-align: center;'>PROMEDIO</div>", size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
+			} else if(key === "FECHA") {
+				col = { field: key,
+          text: `<div style='text-align: center;'>${this.search.rango === 'Semanal' ? 'SEMANA' : this.search.rango === 'Diario' ? 'DÍA' : 'MES'}</div>`,
+          size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
 			} else {
-				col = { field: key, text: key, size: "80px", sortable: true };
+				col = { field: key, text: `<div style='text-align: center;'>${key}</div>`, size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
 			}
 			this.columnsPromedios.push(col);
 			if (key === "recid") {
@@ -518,6 +711,51 @@ export class FallasFibraOpticaComponent implements OnInit {
 			}
 			this.searchesPromedios.push(search);
 		})
+  }
+
+  formatPromediosCentralSur(): void {
+    let data = this.orderPromediosCentralSur || [];
+		this.searchesPromediosCentralSur = [];
+		this.columnsPromediosCentralSur = [];
+		data.map((key: string) => {
+			let col: Column, search: Search;
+			if (key === "recid") {
+				col = { field: key, text: key, size: "41px", frozen: false, sortable: true, hidden: true };
+			} else if(key === "ANIO") {
+				col = { field: key, text: 'AÑO', size: "80px", sortable: true, hidden: true };
+			} else if(key === "NUMERO") {
+				col = { field: key, text: 'AÑO', size: "80px", sortable: true, hidden: true };
+			} else if(key === "PROM") {
+				col = { field: key, text: "<div style='text-align: center;'>PROMEDIO</div>", size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
+			} else if(key === "FECHA") {
+				col = { field: key,
+          text: `<div style='text-align: center;'>${this.search.rango === 'Semanal' ? 'SEMANA' : this.search.rango === 'Diario' ? 'DÍA' : 'MES'}</div>`,
+          size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
+			} else {
+				col = { field: key, text: `<div style='text-align: center;'>${key}</div>`, size: "80px", style: "text-align: center;", sortable: true, attr: "align=center" };
+			}
+			this.columnsPromediosCentralSur.push(col);
+			if (key === "recid") {
+				search = { field: key, label: key, type: 'int', hidden: true };
+			} else {
+				search = { field: key, label: key, type: 'text' };
+			}
+			this.searchesPromediosCentralSur.push(search);
+		})
+  }
+
+  openPopup(data: any) { // Método que abre el modal
+    const dialogRef = this._dialog.open(PopupTablaComponent, {
+			width: '60%',
+      height: '500px',
+			data: data,
+		});
+
+    dialogRef.afterClosed().subscribe((result: { data: any }) => {
+			if (result.data) {
+				// console.log(result.data)
+			}
+		});
   }
 
   orderKeys(data: Record[], info: string[]): Record[] {

@@ -5,35 +5,34 @@ import { HeaderService } from 'src/app/services/header.service';
 import { SaveFileService } from 'src/app/services/save/save.service';
 import * as $ from 'jquery';
 import * as w2ui from '@derekyle/w2ui';
+import { ThisReceiver } from '@angular/compiler';
 
 declare const w2ui: any;
 declare const $: any;
 declare global {
-	interface Window { W2uiGridComponentDetalle: any; }
+	interface Window { W2uiGridComponentPopup: any; }
 }
 @Component({
-	selector: 'app-w2ui-grid-detalle',
+	selector: 'app-w2ui-grid-popup',
 	template: '<div id="grid-{{name}}" class="gird- ng-custom-ui grid-w2ui-claro"></div>',
-	styles: [`.grid-w2ui-claro {width: 100%;height: 300px;}
-    /* @media (max-width: 1366px) {.grid-w2ui-claro {width: 100%}} */
-  `]
+	styles: ['.grid-w2ui-claro {width: 100%;height: 300px;}']
 })
-export class W2uiGridComponentDetalle implements OnInit {
-	@Input() public name: string;
-	@Input() public header: string;
-	@Input() public show: Show;
-	@Input() public columns: Array<Column>;
-	@Input() public searches: Array<Search>;
-	@Input() public sortData: Array<any>;
-	@Input() public records: Array<Record>;
-	@Input() public columnGroups: Array<ColumnGroups>;
-	@Input() public serachData: Array<SearchData>;
-	@Input() public menu: Array<Menu>;
-	@Input() public items: Array<Item> = [];
-	@Input() public styles: Array<ColumnStyle> = [];
-	@Input() public edit: boolean;
-	@Input() public multiSelect: boolean = false;
-	@Input() selectType: SelectType = 'row';
+export class W2uiGridComponentPopup implements OnInit {
+	@Input() name: string;
+	@Input() header: string;
+	@Input() show: Show;
+	@Input() columns: Array<Column>;
+	@Input() searches: Array<Search>;
+	@Input() sortData: Array<any>;
+	@Input() records: Array<Record>;
+	@Input() columnGroups: Array<ColumnGroups>;
+	@Input() serachData: Array<SearchData>;
+	@Input() menu: Array<Menu>;
+	@Input() items: Array<Item> = [];
+	@Input() styles: Array<ColumnStyle> = [];
+	@Input() edit: boolean;
+	@Input() multiSelect: boolean = false;
+	@Input() selectType: SelectType = 'row'
 	@Input() model: Record;
 	@Input() modelDbl: Record;
 	@Output() modelChange: EventEmitter<Record> = new EventEmitter<Record>();
@@ -47,7 +46,7 @@ export class W2uiGridComponentDetalle implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		window.W2uiGridComponentDetalle = this;
+		window.W2uiGridComponentPopup = this;
 		this.initActions();
 		this.initTable();
 	}
@@ -83,17 +82,18 @@ export class W2uiGridComponentDetalle implements OnInit {
 		if (this.menu) { tableConfig.menu = this.menu }
 		if (this.selectType) { tableConfig.selectType = this.selectType }
 		if (this.styles.length > 0) {
-			tableConfig.onRefresh = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
-			tableConfig.onResize = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
-			tableConfig.onColumnOnOff = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
-			tableConfig.onReload = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
-			tableConfig.onSearch = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
-			tableConfig.onSort = function (event: any) { window.W2uiGridComponentDetalle.setStyle(event) }
+			tableConfig.onRefresh = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
+			tableConfig.onResize = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
+			tableConfig.onColumnOnOff = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
+			tableConfig.onReload = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
+			tableConfig.onSearch = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
+			tableConfig.onSort = function (event: any) { window.W2uiGridComponentPopup.setStyle(event) }
 		}
 		if (this.edit) {
-			tableConfig.onSelect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('select') } }
-			tableConfig.onUnselect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValue('unselect') } }
-			tableConfig.onDblClick = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentDetalle.emitValueDbl() } }
+			tableConfig.onSelect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentPopup.emitValue('select') } }
+			tableConfig.onUnselect = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentPopup.emitValue('unselect') } }
+			tableConfig.onDblClick = (event: any) => { event.onComplete = (event: any) => { window.W2uiGridComponentPopup.emitValueDbl()}}
+			// tableConfig.onDblClick = (event: any) => { window.W2uiGridComponentPopup.emitValueDbl()	}
 		}
 		setTimeout(() => {
 			$('#grid-' + this.name).w2grid(tableConfig);
@@ -101,7 +101,7 @@ export class W2uiGridComponentDetalle implements OnInit {
 	}
 
 	getShowedData(): Array<Record> {
-		let data: Array<Record> = [];
+    let data: Array<Record> = [];
     if (this.selectType === 'row') {
       w2ui[this.name].selectAll();
       let selected = w2ui[this.name].getSelection();
@@ -119,7 +119,7 @@ export class W2uiGridComponentDetalle implements OnInit {
 	}
 
 	copyShowedData(): string {
-		let copy: string = '';
+    let copy: string = '';
     let data: Array<Record> = [];
     if (this.selectType === 'row') {
       w2ui[this.name].selectAll();
@@ -161,7 +161,9 @@ export class W2uiGridComponentDetalle implements OnInit {
 				text: 'Excel',
 				tooltip: 'Export to Excel',
 				onClick: function (event: any) {
-					window.W2uiGridComponentDetalle.saveToExcel()
+          console.log('clic en boton')
+          this.selectType = 'row'
+					window.W2uiGridComponentPopup.saveToExcel()
 				}
 			}, {
 				type: 'button',
@@ -169,9 +171,9 @@ export class W2uiGridComponentDetalle implements OnInit {
 				text: 'Copy',
 				tooltip: 'Copy to Clipboard',
 				onClick: function (event: any) {
-					window.W2uiGridComponentDetalle.copyData();
+					window.W2uiGridComponentPopup.copyData();
 				}
-			}
+			},
 		];
 		this.toolbar = { items: [...actions, ...crud, ...this.items] };
 	};
@@ -179,7 +181,6 @@ export class W2uiGridComponentDetalle implements OnInit {
 	saveToExcel(): void {
 		w2ui[this.name].multiSelect = true;
 		let data: Array<Record> = this.getShowedData();
-		// console.log(data)
 		this.excelService.exportAsExcelFile(data, this.header || 'Claro_template');
 		w2ui[this.name].multiSelect = this.multiSelect;
 	}

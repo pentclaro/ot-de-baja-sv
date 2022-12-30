@@ -17,20 +17,20 @@ declare global {
 	styles: ['.grid-w2ui-claro {width: 100%; height: 240px;}']
 })
 export class W2uiGridComponent implements OnInit {
-	@Input() public name: string;
-	@Input() public header: string;
-	@Input() public show: Show;
-	@Input() public columns: Array<Column>;
-	@Input() public searches: Array<Search>;
-	@Input() public sortData: Array<any>;
-	@Input() public records: Array<Record>;
-	@Input() public columnGroups: Array<ColumnGroups>;
-	@Input() public serachData: Array<SearchData>;
-	@Input() public menu: Array<Menu>;
-	@Input() public items: Array<Item> = [];
-	@Input() public styles: Array<ColumnStyle> = [];
-	@Input() public edit: boolean;
-	@Input() public multiSelect: boolean = false;
+	@Input() name: string;
+	@Input() header: string;
+	@Input() show: Show;
+	@Input() columns: Array<Column>;
+	@Input() searches: Array<Search>;
+	@Input() sortData: Array<any>;
+	@Input() records: Array<Record>;
+	@Input() columnGroups: Array<ColumnGroups>;
+	@Input() serachData: Array<SearchData>;
+	@Input() menu: Array<Menu>;
+	@Input() items: Array<Item> = [];
+	@Input() styles: Array<ColumnStyle> = [];
+	@Input() edit: boolean;
+	@Input() multiSelect: boolean = false;
 	@Input() selectType: SelectType = 'row'
 	@Input() model: Record;
 	@Input() modelDbl: Record;
@@ -99,45 +99,47 @@ export class W2uiGridComponent implements OnInit {
 		}, 100);
 	}
 
-	getShowedData(): Array<Record> {
+  /* MÉTODO PARA OBTENER DATOS DE TABLA, DEVUELVE ARRAY DE DATOS */
+	getShowedData(table): Array<Record> {// Se espera como parámetro el nombre de la tabla para seleccionarla
 		let data: Array<Record> = [];
-    if (this.selectType === 'row') {
-      w2ui[this.name].selectAll();
-      let selected = w2ui[this.name].getSelection();
-      data = w2ui[this.name].get(selected);
-    } else {
+    if (table.selectType === 'row') {// Revisa si el método de selección de la tabla es por fila
+      table.selectAll();
+      let selected = table.getSelection();
+      data = table.get(selected);
+    } else {// Si el método de selección es por celda se ejecuta esta parte para obtener los datos
       const recid = []
-      w2ui[this.name].records.map(item => {
+      table.records.map(item => {
         recid.push(item.recid)
       })
       let selected = recid
-      data = w2ui[this.name].get(selected);
+      data = table.get(selected);
     }
-    w2ui[this.name].selectNone();
+    table.selectNone();// Al finalizar el método de de selección, se deselecciona todo y retorna los datos
 		return data;
 	}
 
-	copyShowedData(): string {
+  /* MÉTODO QUE SELECCIONA LOS DATOS Y LOS COPIA EN EL PORTAPAPELES */
+	copyShowedData(table): string {// Se espera como parámetro el nombre de la tabla para seleccionarla
 		let copy: string = '';
     let data: Array<Record> = [];
-    if (this.selectType === 'row') {
-      w2ui[this.name].selectAll();
-      let selected = w2ui[this.name].getSelection();
-      data = w2ui[this.name].get(selected);
-    } else {
+    if (table.selectType === 'row') {// Revisa si el método de selección de la tabla es por fila
+      table.selectAll();
+      let selected = table.getSelection();
+      data = table.get(selected);
+    } else {// Si el método de selección es por celda se ejecuta esta parte para obtener los datos
       const recid = []
-      w2ui[this.name].records.map(item => {
+      table.records.map(item => {
         recid.push(item.recid)
       })
       let selected = recid
-      data = w2ui[this.name].get(selected);
+      data = table.get(selected);
     }
-    copy += `${Object.keys(data[0]).join('\t')}\r\n`;
-    data.map(function (mp: any) {
+    copy += `${Object.keys(data[0]).join('\t')}\r\n`;// Inserta en la variable copy los títulos de la data
+    data.map(function (mp: any) {// Iteración para insertar las filas de la data en el portapapeles
       let row = Object.values(mp);
       copy += `${row.join('\t')}\r\n`;
     });
-		w2ui[this.name].selectNone();
+		table.selectNone();// Se deselecciona la data y retornamos la variable copy
 		return copy;
 	}
 
@@ -149,26 +151,26 @@ export class W2uiGridComponent implements OnInit {
 
 	initActions(): void {
 		let crud: Array<Item> = [];
-		let actions: Array<Item> = [
+		let actions: Array<Item> = [// Botones de toolbar
 			{
 				type: 'break',
 				id: "default-action",
 				text: ""
-			}, {
+			}, {// Botón de descarga de Excel
 				type: 'button',
 				id: 'default-excel',
 				text: 'Excel',
 				tooltip: 'Export to Excel',
-				onClick: function (event: any) {
-					window.W2uiGridComponent.saveToExcel()
+				onClick: function (event: any) {// Función de disparador de clic en botón
+					window.W2uiGridComponent.saveToExcel(w2ui[this.name].owner)// Se ejecuta la función saveToExcel enviando como parámetro el nombre de tabla
 				}
-			}, {
+			}, {// Botón de copiado de contenido al portapapeles
 				type: 'button',
 				id: 'default-copy',
 				text: 'Copy',
 				tooltip: 'Copy to Clipboard',
-				onClick: function (event: any) {
-					window.W2uiGridComponent.copyData();
+				onClick: function (event: any) {// Función de disparador de clic en botón
+					window.W2uiGridComponent.copyData(w2ui[this.name].owner);// Se ejecuta el método copyData y se envía como parámetro el nombre de tabla
 				}
 			},
 			// {
@@ -181,22 +183,24 @@ export class W2uiGridComponent implements OnInit {
 			// 	}
 			// }
 		];
-		this.toolbar = { items: [...actions, ...crud, ...this.items] };
+		this.toolbar = { items: [...actions, ...crud, ...this.items] };// Se inserta todos los items al toolbar de la tabla
 	};
 
-	saveToExcel(): void {
-		w2ui[this.name].multiSelect = true;
-		let data: Array<Record> = this.getShowedData();
-		this.excelService.exportAsExcelFile(data, this.header || 'Claro_template');
-		w2ui[this.name].multiSelect = this.multiSelect;
+  /* MÉTODO DE DESCARGA DE ARCHIVO EXCEL CON CONTENIDO DE TABLA */
+	saveToExcel(table): void {// Recibe como parámetro el nombre de una tabla
+		table.multiSelect = true;// Le activa el multiselect a la tabla seleccionada
+		let data: Array<Record> = this.getShowedData(table);// Guardamos los datos que contiene la tabla en la variable data
+		this.excelService.exportAsExcelFile(data, table.header || 'Claro_template');// Se ejecuta el método exportAsExcelFile para crear archivo excel
+		table.multiSelect = table.multiSelect;
 	}
 
-	copyData(): void {
-		w2ui[this.name].multiSelect = true;
-		let data: string = this.copyShowedData();
+  /* MÉTODO DE COPIADO DE CONTENIDO DE TABLA AL PORTAPAPELES */
+	copyData(table): void {// Recibe como parámetro el nombre de una tabla
+		table.multiSelect = true;// Le activa el multiselect a la tabla seleccionada
+		let data: string = this.copyShowedData(table);
 		this.clipboard.copy(data);
 		this.pageService.openSnackBar(`success`, `Datos copiados al porta papeles`);
-		w2ui[this.name].multiSelect = this.multiSelect;
+		table.multiSelect = table.multiSelect;
 	}
 
 	setStyle(event: any): void {
@@ -206,6 +210,7 @@ export class W2uiGridComponent implements OnInit {
 	}
 
 	emitValue(value: string): void {
+    // console.log(w2ui)
 		if (this.selectType === 'row') {
 			let row: any = undefined;
 			if (value === 'select') {

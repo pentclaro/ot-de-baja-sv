@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ticketsWO_V1": {
+    "kPIFO_V1": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ticketsWO_V3",
+            "outputPath": "dist/kPIFO_V1",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -84,18 +84,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ticketsWO_V1:build"
+            "browserTarget": "kPIFO_V1:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ticketsWO_V1:build:production"
+              "browserTarget": "kPIFO_V1:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ticketsWO_V1:build"
+            "browserTarget": "kPIFO_V1:build"
           }
         },
         "test": {
@@ -133,16 +133,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ticketsWO_V1:serve"
+            "devServerTarget": "kPIFO_V1:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ticketsWO_V1:serve:production"
+              "devServerTarget": "kPIFO_V1:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "ticketsWO_V1"
+  "defaultProject": "kPIFO_V1"
 }
