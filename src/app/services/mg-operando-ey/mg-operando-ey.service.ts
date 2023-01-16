@@ -6,14 +6,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class FaultMgOperandoService {
+export class MgOperandoEyService {
 
   constructor(
     private http: HttpClient,
     private queryService: HeaderService
   ) { }
-
-  getDataRegiones(input? : any) {
-    return this.http.get(`${environment.apiURL}/fallasFibraOptica/fault/getRegiones/${input}`)
+  getTableDetalle(input? : any) {
+    const { pais, region } = input
+    return this.http.get(`${environment.apiURL}/mgOperandoEy/getTableDetalle/${pais}/${region}`)
   }
 }

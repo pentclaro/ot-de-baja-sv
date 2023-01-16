@@ -1,0 +1,76 @@
+<div id="wrapper-reporte">
+    <div id="container" class="scroll">
+      <div class="row">
+        <div class="col col-12 filters">
+  
+          <div id="header">
+            <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData(form)">
+  
+              <div class="flex-container">
+  
+                <mat-form-field appearance="outline" class="search">
+                  <mat-label>País</mat-label>
+                  <mat-select required placeholder="Selecciona un país"  [(ngModel)]="search.pais" name="pais" [disabled]="loading"
+                    (selectionChange)="optionSelected(search.pais)"
+                  >
+                    <mat-option *ngFor="let pais of paises" [value]="pais">{{pais}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+  
+                <mat-form-field appearance="outline" class="search">
+                  <mat-label>Región</mat-label>
+                  <mat-select multiple [(ngModel)]="search.region" name="region" required
+                  (selectionChange)="optionSelected(search.region)" [disabled]="regiones.length === 0 || search.pais === 'Regional'"
+                  >
+                    <mat-option *ngFor="let region of regiones" [value]="region">{{region}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+  
+                
+                <button mat-flat-button class="primary-button search" type="submit" [disabled]="loading || search.pais.length === 0">
+                  <mat-icon matPrefix>search</mat-icon>BUSCAR
+                </button>
+              </div>
+  
+            </form>
+          </div>
+  
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col col-12" *ngIf="reporteCargado === true">
+          <div class="center" id="tituloPrincipal">
+            <br>
+            <h1>
+              {{tituloReporte+' '+search.pais}}
+            </h1>
+            <h3 id="tituloTiempo">
+              Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+            </h3>
+            <br>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabla-Detalle">
+        <app-w2ui-grid
+          #w2ui
+            *ngIf="dataSourceDetalle.length > 0"
+            [name]="nameDetalle"
+            [header]="headerDetalle"
+            [records]="dataSourceDetalle"
+            [columnGroups]="groupsDetalle"
+            [columns]="columnsDetalle"
+            [searches]="searchesDetalle"
+            [show]="showDetalle"
+          >
+        </app-w2ui-grid>
+        <div class="HOLA" *ngIf="loadingDetalle">
+            <mat-spinner></mat-spinner>
+          </div>
+      </div>
+  
+    </div>
+  </div>
+  

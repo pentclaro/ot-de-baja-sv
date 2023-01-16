@@ -12,15 +12,15 @@ import { NgProgressModule } from 'ngx-progressbar';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'fallas-fibra-optica',
+    redirectTo: 'mg-operando-ey',
     pathMatch: 'full'
   },
   {
-    path: 'fallas-fibra-optica',
-    loadChildren: () => import('./fallas-fibra-optica/fallas-fibra-optica.module').then(m => m.FallasFibraOpticaModule),
+    path: 'mg-operando-ey',
+    loadChildren: () => import('./mg-operando-ey/mg-operando-ey.module').then(m => m.MgOperandoEyModule),
     // canActivate: [AuthGuard],
     data: {
-      key: 'fallas-fibra-optica'
+      key: 'mg-operando-ey'
     }
   },
 ];

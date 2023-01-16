@@ -14,7 +14,7 @@
   justify-content: center;
 }
 
-#wrapper-fallas-fibra-optica {
+#wrapper-reporte {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -82,13 +82,10 @@
 
   }
 
-  .tabla-resumen {
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // margin: 0 auto;
-    // height: 400px;
-    width: 950px;
+  .tabla-Detalle {
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .promedios-container {
@@ -334,7 +331,7 @@
 }
 
 @media (max-width: 768px) {
-  #wrapper-tickets-wo {
+  #wrapper-reporte {
     #container {}
 
     .flex-container {
@@ -348,7 +345,7 @@
 }
 
 @media (max-width: 768px) {
-  #wrapper-tickets-wo {
+  #wrapper-reporte {
     #container {}
 
     .search {
@@ -358,7 +355,7 @@
 }
 
 @media (max-width: 1366px) {
-  #wrapper-tickets-wo {
+  #wrapper-reporte {
     .chart-view {
       margin-left: 0;
     }
