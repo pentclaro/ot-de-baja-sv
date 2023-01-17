@@ -61,12 +61,7 @@ export class MgOperandoEyComponent implements OnInit {
   itemsDetalle: Item;
   searchesDetalle: Search[] = [];
   columnsDetalle: Column[] = [];
-  // start: Date = new Date();
-  // end: Date = new Date();
-  // dateRange = new FormGroup({
-  //   start: new FormControl(new Date()),
-  //   end: new FormControl(new Date()),
-  // });
+
   areAllRegionsSelected: boolean = false;
   @ViewChild('form', { static: false }) form: NgForm;
 
@@ -109,7 +104,7 @@ export class MgOperandoEyComponent implements OnInit {
         }
       }
     }
-    console.log('se envian', this.search.region);
+    console.log('regions selected', this.search.region);
   }
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
@@ -117,6 +112,13 @@ export class MgOperandoEyComponent implements OnInit {
     // console.log('start date', this.search.dateRange.start.toLocaleDateString());
     // console.log('end date', this.search.dateRange.end.toLocaleDateString());
 
+    if (!this.search.dateRange.start || !this.search.dateRange.end){
+      this._pageService.openSnackBar(
+        `warning`,
+        `Error selecciona todos los campos.`
+      );
+      return
+    }
     this.loading = true;
     this.loadingDetalle = true;
     this.form.form.markAllAsTouched();
@@ -124,7 +126,6 @@ export class MgOperandoEyComponent implements OnInit {
       this.loadingDetalle = true;
       this.updatedAt = Date();
       this.reporteCargado = true;
-      console.log('form valis');
       this.getTableDetalle(this.search);
     } else {
       this._pageService.openSnackBar(
