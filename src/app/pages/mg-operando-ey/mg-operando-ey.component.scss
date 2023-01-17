@@ -46,7 +46,8 @@
   }
 
   .search {
-    width: calc((100% - 125px)/6);
+    // width: calc((100% - 125px)/6);
+    width: calc((100% - 125px)/4);
   }
   .graph-container {
     margin: 50px 0;
