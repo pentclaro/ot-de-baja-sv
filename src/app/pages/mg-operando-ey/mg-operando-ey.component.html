@@ -27,9 +27,10 @@
 
               <mat-form-field appearance="outline" class="search" id="fechas">
                 <mat-label>Ingresa un rango de fecha</mat-label>
-                <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
-                  <input matStartDate formControlName="start" placeholder="Start Date">
-                  <input matEndDate formControlName="end" placeholder="End Date"></mat-date-range-input>
+                <mat-date-range-input [rangePicker]="picker" required>
+                  <input matStartDate [(ngModel)]="search.dateRange.start" placeholder="Start Date" name="start">
+                  <input matEndDate [(ngModel)]="search.dateRange.end" placeholder="End Date"
+                    name="end"></mat-date-range-input>
 
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker [disabled]="false"></mat-date-range-picker>

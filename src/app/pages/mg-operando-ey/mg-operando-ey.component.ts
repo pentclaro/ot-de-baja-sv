@@ -28,7 +28,15 @@ export class MgOperandoEyComponent implements OnInit {
     'Costa Rica',
   ];
   regiones: string[] = [];
-  search: { pais: string; region: [] } = { pais: '', region: [] };
+  search: {
+    pais: string;
+    region: string[];
+    dateRange: { start: Date; end: Date };
+  } = {
+    pais: '',
+    region: [],
+    dateRange: { start: new Date(), end: new Date() },
+  };
   loading: boolean = false;
   loadingDetalle = false;
   updatedAt = '';
@@ -53,12 +61,13 @@ export class MgOperandoEyComponent implements OnInit {
   itemsDetalle: Item;
   searchesDetalle: Search[] = [];
   columnsDetalle: Column[] = [];
-  start: Date = new Date();
-  end: Date = new Date();
-  dateRange = new FormGroup({
-    start: new FormControl(new Date()),
-    end: new FormControl(new Date()),
-  });
+  // start: Date = new Date();
+  // end: Date = new Date();
+  // dateRange = new FormGroup({
+  //   start: new FormControl(new Date()),
+  //   end: new FormControl(new Date()),
+  // });
+  areAllRegionsSelected: boolean = false;
   @ViewChild('form', { static: false }) form: NgForm;
 
   constructor(
@@ -71,7 +80,6 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
   optionSelected(input): void {
-    //console.log('seleccion')
     this.tituloReporte = 'MG Operando'; // Cambiamos el título de las primeras partes del reporte sino es Metro Sur
     if (input === this.search.pais) {
       // FRAGMENTO ESPECIFICO DEL FILTRO DE PAIS
@@ -79,17 +87,35 @@ export class MgOperandoEyComponent implements OnInit {
         this.loadingDetalle = true;
         this.getDataRegiones(this.search.pais);
         this.loadingDetalle = false;
+        this.regiones.push('Region1');
+        this.regiones.push('Region2');
+        this.regiones.push('Region3');
+        this.regiones.push('Region4');
+        this.regiones.push('Region5');
+        this.regiones.push('Region6');
+        this.regiones.unshift('Todas');
       } else {
         this.search.region = [];
         this.regiones = [];
       }
+    } else {
+      if (this.areAllRegionsSelected) {
+        this.search.region = [];
+        this.areAllRegionsSelected = false;
+      } else {
+        if (input.includes('Todas')) {
+          this.search.region = this.regiones;
+          this.areAllRegionsSelected = true;
+        }
+      }
     }
+    console.log('se envian', this.search.region);
   }
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
   searchData(form): void {
-    console.log('execute...', this.dateRange.value.start.toLocaleDateString('en-us'));
-    console.log('execute...', this.dateRange.value.end.toLocaleDateString('en-us'));
+    // console.log('start date', this.search.dateRange.start.toLocaleDateString());
+    // console.log('end date', this.search.dateRange.end.toLocaleDateString());
 
     this.loading = true;
     this.loadingDetalle = true;
@@ -98,7 +124,7 @@ export class MgOperandoEyComponent implements OnInit {
       this.loadingDetalle = true;
       this.updatedAt = Date();
       this.reporteCargado = true;
-
+      console.log('form valis');
       this.getTableDetalle(this.search);
     } else {
       this._pageService.openSnackBar(
