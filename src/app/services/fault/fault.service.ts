@@ -14,6 +14,9 @@ export class FaultMgOperandoService {
   ) { }
 
   getDataRegiones(input? : any) {
-    return this.http.get(`${environment.apiURL}/fallasFibraOptica/fault/getRegiones/${input}`)
+
+    return this.http.get(
+      `${environment.apiURL}/mgOperandoEy/fault/getRegiones/${input}`
+    );
   }
 }

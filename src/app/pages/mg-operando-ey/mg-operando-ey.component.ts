@@ -82,13 +82,6 @@ export class MgOperandoEyComponent implements OnInit {
         this.loadingDetalle = true;
         this.getDataRegiones(this.search.pais);
         this.loadingDetalle = false;
-        this.regiones.push('Region1');
-        this.regiones.push('Region2');
-        this.regiones.push('Region3');
-        this.regiones.push('Region4');
-        this.regiones.push('Region5');
-        this.regiones.push('Region6');
-        this.regiones.unshift('Todas');
       } else {
         this.search.region = [];
         this.regiones = [];
@@ -98,13 +91,13 @@ export class MgOperandoEyComponent implements OnInit {
         this.search.region = [];
         this.areAllRegionsSelected = false;
       } else {
-        if (input.includes('Todas')) {
+        if (input.includes('TODAS')) {
+          console.log('regiones todas', this.regiones);
           this.search.region = this.regiones;
           this.areAllRegionsSelected = true;
         }
       }
     }
-    console.log('regions selected', this.search.region);
   }
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
@@ -112,12 +105,12 @@ export class MgOperandoEyComponent implements OnInit {
     // console.log('start date', this.search.dateRange.start.toLocaleDateString());
     // console.log('end date', this.search.dateRange.end.toLocaleDateString());
 
-    if (!this.search.dateRange.start || !this.search.dateRange.end){
+    if (!this.search.dateRange.start || !this.search.dateRange.end) {
       this._pageService.openSnackBar(
         `warning`,
         `Error selecciona todos los campos.`
       );
-      return
+      return;
     }
     this.loading = true;
     this.loadingDetalle = true;
@@ -132,25 +125,28 @@ export class MgOperandoEyComponent implements OnInit {
         `warning`,
         `Error selecciona todos los campos.`
       );
-      this.loading = false;
       this.reporteCargado = false;
       this.loadingDetalle = false;
+      this.loading = false;
     }
   }
 
   /* MÉTODO QUE CARGA E INSERTA DENTRO DEL INPUT DE REGIONES AL SELECCIONAR UN PAÍS */
   getDataRegiones(pais: string) {
-    //console.log('regiones')
+    this.loading = true
     this.regiones = [];
     this._faultMgOperando.getDataRegiones(pais).subscribe(
       (data: any) => {
         data.map((region) => {
-          this.regiones.push(region.TG_TIPO_SITIO);
+          // this.regiones.push(region.TG_TIPO_SITIO);
+          this.regiones.push(region.REGION);
         });
         this.regiones.unshift('TODAS');
         this.loading = false;
       },
       (error) => {
+        this.loading = false
+        console.log('error regiones');
         console.log(error);
         this._pageService.openSnackBar(
           'error',
