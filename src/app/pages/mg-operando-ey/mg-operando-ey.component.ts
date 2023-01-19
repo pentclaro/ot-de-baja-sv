@@ -77,15 +77,18 @@ export class MgOperandoEyComponent implements OnInit {
   optionSelected(input): void {
     this.tituloReporte = 'MG Operando'; // Cambiamos el título de las primeras partes del reporte sino es Metro Sur
     if (input === this.search.pais) {
+      this.search.region = [];
+      this.regiones = [];
       // FRAGMENTO ESPECIFICO DEL FILTRO DE PAIS
       if (this.search.pais !== 'Regional') {
         this.loadingDetalle = true;
         this.getDataRegiones(this.search.pais);
         this.loadingDetalle = false;
-      } else {
-        this.search.region = [];
-        this.regiones = [];
       }
+      //  else {
+      //   this.search.region = [];
+      //   this.regiones = [];
+      // }
     } else {
       if (this.areAllRegionsSelected) {
         this.search.region = [];
@@ -102,8 +105,8 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
   searchData(form): void {
-    // console.log('start date', this.search.dateRange.start.toLocaleDateString());
-    // console.log('end date', this.search.dateRange.end.toLocaleDateString());
+    console.log('start date', this.search.dateRange.start.toLocaleDateString());
+    console.log('end date', this.search.dateRange.end.toLocaleDateString());
 
     if (!this.search.dateRange.start || !this.search.dateRange.end) {
       this._pageService.openSnackBar(
@@ -133,7 +136,7 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO QUE CARGA E INSERTA DENTRO DEL INPUT DE REGIONES AL SELECCIONAR UN PAÍS */
   getDataRegiones(pais: string) {
-    this.loading = true
+    this.loading = true;
     this.regiones = [];
     this._faultMgOperando.getDataRegiones(pais).subscribe(
       (data: any) => {
@@ -145,7 +148,7 @@ export class MgOperandoEyComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        this.loading = false
+        this.loading = false;
         console.log('error regiones');
         console.log(error);
         this._pageService.openSnackBar(
@@ -170,6 +173,7 @@ export class MgOperandoEyComponent implements OnInit {
         let fechas = [];
         let cantidades = [];
         let promedios = [];
+        this.loading = false;
       },
       (error) => {
         this._pageService.openSnackBar('error', error);
