@@ -282,3 +282,4 @@ export class MgOperandoEyComponent implements OnInit {
     return rowsArray;
   }
 }
+
