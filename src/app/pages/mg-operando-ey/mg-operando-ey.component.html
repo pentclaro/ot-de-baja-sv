@@ -25,6 +25,22 @@
                 </mat-select>
               </mat-form-field>
 
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Tipo Alarma</mat-label>
+                <mat-select required placeholder="Selecciona un tipo de alarma" [(ngModel)]="search.tipoAlarma"
+                  name="tipoAlarma" [disabled]="loading">
+                  <mat-option *ngFor="let tipoAlarma of tiposAlarma" [value]="tipoAlarma">{{tipoAlarma}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="search">
+                <mat-label>Afectación</mat-label>
+                <mat-select required placeholder="Selecciona una afectación" [(ngModel)]="search.afectacion" name="afectacion"
+                  [disabled]="loading || search.tipoAlarma==='MG OPERANDO'">
+                  <mat-option *ngFor="let afectacion of afectaciones" [value]="afectacion">{{afectacion}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
               <mat-form-field appearance="outline" class="search" id="fechas">
                 <mat-label>Ingresa un rango de fecha</mat-label>
                 <mat-date-range-input [rangePicker]="picker" required>

@@ -27,14 +27,20 @@ export class MgOperandoEyComponent implements OnInit {
     'Nicaragua',
     'Costa Rica',
   ];
+  tiposAlarma: string[] = ['MG OPERANDO', 'Corte de Energía Comercial'];
+  afectaciones: string[] = ['Ambas', 'Con Afectación', 'Sin afectación'];
   regiones: string[] = [];
   search: {
     pais: string;
     region: string[];
+    tipoAlarma: string;
+    afectacion: string;
     dateRange: { start: Date; end: Date };
   } = {
     pais: '',
     region: [],
+    tipoAlarma: '',
+    afectacion: 'NA',
     dateRange: { start: new Date(), end: new Date() },
   };
   loading: boolean = false;
@@ -105,9 +111,6 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
   searchData(form): void {
-    console.log('start date', this.search.dateRange.start.toLocaleDateString());
-    console.log('end date', this.search.dateRange.end.toLocaleDateString());
-
     if (!this.search.dateRange.start || !this.search.dateRange.end) {
       this._pageService.openSnackBar(
         `warning`,
