@@ -118,11 +118,11 @@ export class MgOperandoEyComponent implements OnInit {
       );
       return;
     }
-    this.loading = true;
-    this.loadingDetalle = true;
+    // this.loading = true;
+    // this.loadingDetalle = true;
     this.form.form.markAllAsTouched();
     if (this.form.valid) {
-      this.loadingDetalle = true;
+      // this.loadingDetalle = true;
       this.updatedAt = Date();
       this.reporteCargado = true;
       this.getTableDetalle(this.search);
@@ -165,25 +165,52 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO QUE CARGA DATOS DE TABLA DE PROMEDIOS Y SE MANEJA LA INFORMACIÓN PARA LA TABLA W2UI */
   getTableDetalle(search?) {
-    this._mgOperandoEyService.getTableDetalle(search).subscribe(
-      ({ data, message }: any) => {
-        this.orderDetalle = data.order;
-        let datos = data.data;
-        this.updatedAt = Date();
-        this.dataSourceDetalle = this.orderKeys(datos, data.info);
-        this.format();
+    this.loadingDetalle = true;
+    this.loading = true;
+    console.log('alarm', search.tipoAlarma);
+    // return;
+    if (search.tipoAlarma === 'MG OPERANDO') {
+      this._mgOperandoEyService.getMgOperando(search).subscribe(
+        ({ data, message }: any) => {
+          this.orderDetalle = data.order;
+          let datos = data.data;
+          this.updatedAt = Date();
+          this.dataSourceDetalle = this.orderKeys(datos, data.info);
+          this.format();
 
-        let fechas = [];
-        let cantidades = [];
-        let promedios = [];
-        this.loading = false;
-      },
-      (error) => {
-        this._pageService.openSnackBar('error', error);
-        this.loading = false;
-        this.loadingDetalle = false;
-      }
-    );
+          // let fechas = [];
+          // let cantidades = [];
+          // let promedios = [];
+          this.loading = false;
+        },
+        (error) => {
+          this._pageService.openSnackBar('error', error);
+          this.loading = false;
+          this.loadingDetalle = false;
+        }
+      );
+    } else {
+      this._mgOperandoEyService.getCorteEnergia(search).subscribe(
+        ({ data, message }: any) => {
+          this.orderDetalle = data.order;
+          let datos = data.data;
+          this.updatedAt = Date();
+          this.dataSourceDetalle = this.orderKeys(datos, data.info);
+          this.format();
+
+          // let fechas = [];
+          // let cantidades = [];
+          // let promedios = [];
+          this.loading = false;
+          this.loadingDetalle = false;
+        },
+        (error) => {
+          this._pageService.openSnackBar('error', error);
+          this.loading = false;
+          this.loadingDetalle = false;
+        }
+      );
+    }
   }
 
   format(): void {
@@ -282,4 +309,3 @@ export class MgOperandoEyComponent implements OnInit {
     return rowsArray;
   }
 }
-
