@@ -12,7 +12,7 @@ export class MgOperandoEyService {
   getMgOperando(input?: any) {
     let { pais, region, dateRange } = input;
     // console.log('tipo alarma', tipoAlarma, 'afectacion', afectacion);
-    if (region.includes('TODAS')) {
+    if (region.includes('TODAS') || pais === 'Regional') {
       region = 'TODAS';
     }
     let { start, end } = dateRange;
