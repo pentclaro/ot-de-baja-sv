@@ -28,7 +28,7 @@ export class MgOperandoEyComponent implements OnInit {
     'Costa Rica',
   ];
   tiposAlarma: string[] = ['MG OPERANDO', 'Corte de Energía Comercial'];
-  afectaciones: string[] = ['Ambas', 'Con Afectación', 'Sin afectación'];
+  afectaciones: string[] = ['Ambas', 'CON AFECTACION', 'SIN AFECTACION'];
   regiones: string[] = [];
   search: {
     pais: string;
@@ -40,7 +40,7 @@ export class MgOperandoEyComponent implements OnInit {
     pais: '',
     region: [],
     tipoAlarma: '',
-    afectacion: 'NA',
+    afectacion: 'Ambas',
     dateRange: { start: new Date(), end: new Date() },
   };
   loading: boolean = false;
@@ -101,7 +101,7 @@ export class MgOperandoEyComponent implements OnInit {
         this.areAllRegionsSelected = false;
       } else {
         if (input.includes('TODAS')) {
-          console.log('regiones todas', this.regiones);
+          // console.log('regiones todas', this.regiones);
           this.search.region = this.regiones;
           this.areAllRegionsSelected = true;
         }
@@ -122,6 +122,7 @@ export class MgOperandoEyComponent implements OnInit {
     // this.loadingDetalle = true;
     this.form.form.markAllAsTouched();
     if (this.form.valid) {
+      this.tituloReporte = this.search.tipoAlarma;
       // this.loadingDetalle = true;
       this.updatedAt = Date();
       this.reporteCargado = true;
@@ -152,7 +153,7 @@ export class MgOperandoEyComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        console.log('error regiones');
+        // console.log('error regiones');
         console.log(error);
         this._pageService.openSnackBar(
           'error',
@@ -165,15 +166,22 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO QUE CARGA DATOS DE TABLA DE PROMEDIOS Y SE MANEJA LA INFORMACIÓN PARA LA TABLA W2UI */
   getTableDetalle(search?) {
+    // this.orderDetalle = [];
+    // this.searchesDetalle = [];
+    // this.columnsDetalle = [];
+    // this.dataSourceDetalle = [];
+
     this.loadingDetalle = true;
     this.loading = true;
-    console.log('alarm', search.tipoAlarma);
+
+    // console.log('alarm', search.tipoAlarma);
     // return;
     if (search.tipoAlarma === 'MG OPERANDO') {
       this._mgOperandoEyService.getMgOperando(search).subscribe(
         ({ data, message }: any) => {
           this.orderDetalle = data.order;
           let datos = data.data;
+
           this.updatedAt = Date();
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
@@ -194,6 +202,7 @@ export class MgOperandoEyComponent implements OnInit {
         ({ data, message }: any) => {
           this.orderDetalle = data.order;
           let datos = data.data;
+          // console.log('datos', datos);
           this.updatedAt = Date();
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
@@ -218,67 +227,174 @@ export class MgOperandoEyComponent implements OnInit {
     let data = this.orderDetalle || [];
     this.searchesDetalle = [];
     this.columnsDetalle = [];
+    // console.log('keys', data);
     data.map((key: string) => {
       let col: Column, search: Search;
       if (key === 'recid') {
         col = {
           field: key,
           text: key,
-          size: '41px',
+          size: '2px',
           frozen: false,
           sortable: true,
           hidden: true,
         };
-      } else if (key === 'Rango') {
-        col = {
-          field: key,
-          text: "<div style='text-align: center;'>Rango</div>",
-          size: '100px',
-          style: 'text-align: center;',
-          sortable: true,
-          attr: 'align=center',
-        };
-      } else if (
-        key === '%1' ||
-        key === '%2' ||
-        key === '%3' ||
-        key === '%4' ||
-        key === '%5' ||
-        key === '%6'
-      ) {
-        col = {
-          field: key,
-          text: "<div style='text-align: center;'>%</div>",
-          size: '70px',
-          style: 'text-align: center;',
-          sortable: true,
-          attr: 'align=center',
-        };
-      } else if (
-        key === '#1' ||
-        key === '#2' ||
-        key === '#3' ||
-        key === '#4' ||
-        key === '#5' ||
-        key === '#6'
-      ) {
-        col = {
-          field: key,
-          text: "<div style='text-align: center;'>#</div>",
-          size: '70px',
-          style: 'text-align: center;',
-          sortable: true,
-          attr: 'align=center',
-        };
-      } else if (key === 'Hide') {
+      } else if (key === 'ORIGINAL_EVENT_TIME') {
         col = {
           field: key,
           text: key,
-          size: '70px',
+          size: '180px',
+          // style: '',
           sortable: true,
-          hidden: true,
+          // attr: 'align=center',
         };
-      } else {
+      } else if (key === 'SITIO') {
+        col = {
+          field: key,
+          text: key,
+          size: '200px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'MANAGED_OBJECT') {
+        col = {
+          field: key,
+          text: key,
+          size: '300px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'EVENT_TIME') {
+        col = {
+          field: key,
+          text: key,
+          size: '200px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'CREATION_TIMESTAMP') {
+        col = {
+          field: key,
+          text: key,
+          size: '180px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (
+        key === 'TERMINATION_TIME_STAMP' ||
+        key === 'TRMT_TIME_STAMP'
+      ) {
+        col = {
+          field: key,
+          text: key,
+          size: '180px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'DOCUMENTO_REFERENCIA') {
+        col = {
+          field: key,
+          text: key,
+          size: '200px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'OC_NAME') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'ALARM_OBJECT_OPERATOR_NOTE') {
+        col = {
+          field: key,
+          text: key,
+          size: '200px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'ADDITIONAL_TEXT') {
+        col = {
+          field: key,
+          text: key,
+          size: '300px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'REGION') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'AFECTACION') {
+        col = {
+          field: key,
+          text: key,
+          size: '130px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      }
+      // else if (
+      //   key === '%1' ||
+      //   key === '%2' ||
+      //   key === '%3' ||
+      //   key === '%4' ||
+      //   key === '%5' ||
+      //   key === '%6'
+      // ) {
+      //   col = {
+      //     field: key,
+      //     text: "<div style='text-align: center;'>%</div>",
+      //     size: '70px',
+      //     style: 'text-align: center;',
+      //     sortable: true,
+      //     attr: 'align=center',
+      //   };
+      // }
+      //  else if (
+      //   key === '#1' ||
+      //   key === '#2' ||
+      //   key === '#3' ||
+      //   key === '#4' ||
+      //   key === '#5' ||
+      //   key === '#6'
+      // ) {
+      //   col = {
+      //     field: key,
+      //     text: "<div style='text-align: center;'>#</div>",
+      //     size: '70px',
+      //     style: 'text-align: center;',
+      //     sortable: true,
+      //     attr: 'align=center',
+      //   };
+      // }
+      // else if (key === 'Hide') {
+      //   col = {
+      //     field: key,
+      //     text: key,
+      //     size: '70px',
+      //     sortable: true,
+      //     hidden: true,
+      //   };
+      // }
+      else {
         col = { field: key, text: key, size: '80px', sortable: true };
       }
       this.columnsDetalle.push(col);

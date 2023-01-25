@@ -1,11 +1,11 @@
 @import "src/assets/styles/variables";
 @import "src/assets/styles/material";
 
-.HOLA{
+.HOLA {
   width: 100%;
   height: 100%;
   background-color: rgba(91, 91, 91, 0.24);
-  position:absolute;
+  position: absolute;
   z-index: 1;
   top: 0;
   left: 0;
@@ -46,8 +46,11 @@
   }
 
   .search {
-    // width: calc((100% - 125px)/6);
-    width: calc((100% - 125px)/6);
+    // width: calc((100% - 125px)/5);
+    width: calc((100% - 125px) / 6);
+  }
+  .searchSinInputAfectacion {
+    width: calc((100% - 125px) / 5);
   }
   .graph-container {
     margin: 50px 0;
@@ -77,10 +80,9 @@
     height: 300px;
     // margin-left: 8%
   }
-  .controls{
+  .controls {
     display: flex;
     justify-content: space-between;
-
   }
 
   .tabla-Detalle {
@@ -129,8 +131,8 @@
     grid-template-columns: 10% 80% 10%;
     grid-auto-rows: auto;
     border-radius: 25px;
-    -webkit-box-shadow: 1px 1px 15px 5px rgba(0,0,0,0.28);
-    box-shadow: 1px 1px 15px 5px rgba(0,0,0,0.28);
+    -webkit-box-shadow: 1px 1px 15px 5px rgba(0, 0, 0, 0.28);
+    box-shadow: 1px 1px 15px 5px rgba(0, 0, 0, 0.28);
     & div {
       text-align: center;
       padding: 0 10px;
@@ -166,7 +168,7 @@
   }
 
   .red {
-    background-color: #FF0000;
+    background-color: #ff0000;
     color: white;
     &:hover {
       background-color: #ce0000;
@@ -174,14 +176,14 @@
   }
 
   .orange {
-    background-color: #FF8000;
+    background-color: #ff8000;
     &:hover {
       background-color: #df6f00;
     }
   }
 
   .yellow {
-    background-color: #FFFF00;
+    background-color: #ffff00;
     &:hover {
       background-color: #e0e000;
     }
@@ -215,7 +217,7 @@
   }
 
   .card {
-    grid-column: 1 ;
+    grid-column: 1;
     border-radius: 10px;
     display: flex;
     flex-direction: row;
@@ -235,13 +237,13 @@
 
   .description p {
     margin: 0;
-    font-family: 'Poppins', sans-serif !important;
+    font-family: "Poppins", sans-serif !important;
     font-weight: 400 !important;
     font-size: 0.8rem;
   }
 
   .description h2 {
-    font-family: 'Poppins', sans-serif !important;
+    font-family: "Poppins", sans-serif !important;
     font-weight: 900 !important;
     margin: 0;
   }
@@ -275,7 +277,7 @@
     margin: 20px auto;
     border-radius: 10px;
     &:hover {
-    background-color: #a70101;
+      background-color: #a70101;
     }
     & p {
       color: white;
@@ -299,8 +301,7 @@
     grid-template-rows: repeat(4, 1fr);
     gap: 5px;
     background: white;
-    box-shadow:  20px 20px 60px #bebebe,
-               -20px -20px 60px #ffffff;
+    box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
   }
   .encabezado {
     width: 100%;
@@ -333,7 +334,8 @@
 
 @media (max-width: 768px) {
   #wrapper-reporte {
-    #container {}
+    #container {
+    }
 
     .flex-container {
       display: inline-block !important;
@@ -347,7 +349,8 @@
 
 @media (max-width: 768px) {
   #wrapper-reporte {
-    #container {}
+    #container {
+    }
 
     .search {
       width: 25%;

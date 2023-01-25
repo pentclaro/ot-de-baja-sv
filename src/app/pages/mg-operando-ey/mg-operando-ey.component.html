@@ -8,7 +8,9 @@
 
             <div class="flex-container">
 
-              <mat-form-field appearance="outline" class="search">
+              <mat-form-field appearance="outline"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>País</mat-label>
                 <mat-select required placeholder="Selecciona un país" [(ngModel)]="search.pais" name="pais"
                   [disabled]="loading" (selectionChange)="optionSelected(search.pais)">
@@ -16,7 +18,9 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="search">
+              <mat-form-field appearance="outline"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>Región</mat-label>
                 <mat-select multiple [(ngModel)]="search.region" name="region" required
                   (selectionChange)="optionSelected(search.region)"
@@ -25,7 +29,9 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="search">
+              <mat-form-field appearance="outline"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>Tipo Alarma</mat-label>
                 <mat-select required placeholder="Selecciona un tipo de alarma" [(ngModel)]="search.tipoAlarma"
                   name="tipoAlarma" [disabled]="loading">
@@ -33,15 +39,20 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="search">
+              <mat-form-field appearance="outline"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'"
+                *ngIf="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>Afectación</mat-label>
-                <mat-select required placeholder="Selecciona una afectación" [(ngModel)]="search.afectacion" name="afectacion"
-                  [disabled]="loading || search.tipoAlarma==='MG OPERANDO'">
+                <mat-select required placeholder=" Selecciona una afectación" [(ngModel)]="search.afectacion"
+                  name="afectacion" [disabled]="loading">
                   <mat-option *ngFor="let afectacion of afectaciones" [value]="afectacion">{{afectacion}}</mat-option>
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="search" id="fechas">
+              <mat-form-field appearance="outline"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'" id="fechas">
                 <mat-label>Ingresa un rango de fecha</mat-label>
                 <mat-date-range-input [rangePicker]="picker" required>
                   <input matStartDate [(ngModel)]="search.dateRange.start" placeholder="Start Date" name="start">
@@ -52,7 +63,9 @@
                 <mat-date-range-picker #picker [disabled]="false"></mat-date-range-picker>
               </mat-form-field>
 
-              <button mat-flat-button class="primary-button search" type="submit"
+              <button mat-flat-button class="primary-button" type="submit"
+                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
+                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'"
                 [disabled]="loading || search.pais.length === 0">
                 <mat-icon matPrefix>search</mat-icon>BUSCAR
               </button>
