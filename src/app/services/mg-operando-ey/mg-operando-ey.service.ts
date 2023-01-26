@@ -30,7 +30,7 @@ export class MgOperandoEyService {
 
   getCorteEnergia(input?: any) {
     let { pais, region, dateRange, afectacion } = input;
-    console.log('afectacion', afectacion);
+    // console.log('afectacion', afectacion);
     if (region.includes('TODAS') || pais === 'Regional') {
       region = 'TODAS';
     }

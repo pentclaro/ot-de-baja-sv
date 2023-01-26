@@ -81,7 +81,7 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
   optionSelected(input): void {
-    this.tituloReporte = 'MG Operando'; // Cambiamos el título de las primeras partes del reporte sino es Metro Sur
+    // this.tituloReporte = 'MG Operando'; // Cambiamos el título de las primeras partes del reporte sino es Metro Sur
     if (input === this.search.pais) {
       this.search.region = [];
       this.regiones = [];
@@ -89,7 +89,7 @@ export class MgOperandoEyComponent implements OnInit {
       if (this.search.pais !== 'Regional') {
         this.loadingDetalle = true;
         this.getDataRegiones(this.search.pais);
-        this.loadingDetalle = false;
+        // this.loadingDetalle = false;
       }
       //  else {
       //   this.search.region = [];
@@ -150,9 +150,12 @@ export class MgOperandoEyComponent implements OnInit {
         });
         this.regiones.unshift('TODAS');
         this.loading = false;
+        this.loadingDetalle = false;
       },
       (error) => {
         this.loading = false;
+        this.loadingDetalle = false;
+
         // console.log('error regiones');
         console.log(error);
         this._pageService.openSnackBar(
@@ -181,7 +184,6 @@ export class MgOperandoEyComponent implements OnInit {
         ({ data, message }: any) => {
           this.orderDetalle = data.order;
           let datos = data.data;
-
           this.updatedAt = Date();
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
@@ -202,7 +204,6 @@ export class MgOperandoEyComponent implements OnInit {
         ({ data, message }: any) => {
           this.orderDetalle = data.order;
           let datos = data.data;
-          // console.log('datos', datos);
           this.updatedAt = Date();
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
@@ -234,7 +235,7 @@ export class MgOperandoEyComponent implements OnInit {
         col = {
           field: key,
           text: key,
-          size: '2px',
+          size: '1px',
           frozen: false,
           sortable: true,
           hidden: true,

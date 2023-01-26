@@ -341,7 +341,8 @@
       display: inline-block !important;
     }
 
-    .search {
+    .search,
+    .searchSinInputAfectacion {
       width: 100% !important;
     }
   }
@@ -352,7 +353,8 @@
     #container {
     }
 
-    .search {
+    .search,
+    .searchSinInputAfectacion {
       width: 25%;
     }
   }
