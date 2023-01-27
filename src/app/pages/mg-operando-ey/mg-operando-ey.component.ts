@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import {
   Column,
   Search,
@@ -9,7 +9,7 @@ import {
   Item,
 } from 'src/app/interfaces/interfaces';
 import { HeaderService } from 'src/app/services/header.service';
-import { MatDialog } from '@angular/material/dialog';
+// import { MatDialog } from '@angular/material/dialog';
 import { MgOperandoEyService } from 'src/app/services/mg-operando-ey/mg-operando-ey.service';
 import { FaultMgOperandoService } from 'src/app/services/fault/fault.service';
 
@@ -81,7 +81,7 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
   optionSelected(input): void {
-    // this.tituloReporte = 'MG Operando'; // Cambiamos el título de las primeras partes del reporte sino es Metro Sur
+    
     if (input === this.search.pais) {
       this.search.region = [];
       this.regiones = [];
@@ -89,19 +89,13 @@ export class MgOperandoEyComponent implements OnInit {
       if (this.search.pais !== 'Regional') {
         this.loadingDetalle = true;
         this.getDataRegiones(this.search.pais);
-        // this.loadingDetalle = false;
       }
-      //  else {
-      //   this.search.region = [];
-      //   this.regiones = [];
-      // }
     } else {
       if (this.areAllRegionsSelected) {
         this.search.region = [];
         this.areAllRegionsSelected = false;
       } else {
         if (input.includes('TODAS')) {
-          // console.log('regiones todas', this.regiones);
           this.search.region = this.regiones;
           this.areAllRegionsSelected = true;
         }
@@ -110,7 +104,7 @@ export class MgOperandoEyComponent implements OnInit {
   }
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
-  searchData(form): void {
+  searchData(): void {
     if (!this.search.dateRange.start || !this.search.dateRange.end) {
       this._pageService.openSnackBar(
         `warning`,
@@ -118,12 +112,10 @@ export class MgOperandoEyComponent implements OnInit {
       );
       return;
     }
-    // this.loading = true;
-    // this.loadingDetalle = true;
+    
     this.form.form.markAllAsTouched();
     if (this.form.valid) {
       this.tituloReporte = this.search.tipoAlarma;
-      // this.loadingDetalle = true;
       this.updatedAt = Date();
       this.reporteCargado = true;
       this.getTableDetalle(this.search);
@@ -145,7 +137,6 @@ export class MgOperandoEyComponent implements OnInit {
     this._faultMgOperando.getDataRegiones(pais).subscribe(
       (data: any) => {
         data.map((region) => {
-          // this.regiones.push(region.TG_TIPO_SITIO);
           this.regiones.push(region.REGION);
         });
         this.regiones.unshift('TODAS');
@@ -156,7 +147,6 @@ export class MgOperandoEyComponent implements OnInit {
         this.loading = false;
         this.loadingDetalle = false;
 
-        // console.log('error regiones');
         console.log(error);
         this._pageService.openSnackBar(
           'error',
@@ -177,8 +167,6 @@ export class MgOperandoEyComponent implements OnInit {
     this.loadingDetalle = true;
     this.loading = true;
 
-    // console.log('alarm', search.tipoAlarma);
-    // return;
     if (search.tipoAlarma === 'MG OPERANDO') {
       this._mgOperandoEyService.getMgOperando(search).subscribe(
         ({ data, message }: any) => {
@@ -187,10 +175,6 @@ export class MgOperandoEyComponent implements OnInit {
           this.updatedAt = Date();
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
-
-          // let fechas = [];
-          // let cantidades = [];
-          // let promedios = [];
           this.loading = false;
         },
         (error) => {
@@ -208,9 +192,6 @@ export class MgOperandoEyComponent implements OnInit {
           this.dataSourceDetalle = this.orderKeys(datos, data.info);
           this.format();
 
-          // let fechas = [];
-          // let cantidades = [];
-          // let promedios = [];
           this.loading = false;
           this.loadingDetalle = false;
         },
@@ -228,7 +209,6 @@ export class MgOperandoEyComponent implements OnInit {
     let data = this.orderDetalle || [];
     this.searchesDetalle = [];
     this.columnsDetalle = [];
-    // console.log('keys', data);
     data.map((key: string) => {
       let col: Column, search: Search;
       if (key === 'recid') {
@@ -351,50 +331,25 @@ export class MgOperandoEyComponent implements OnInit {
           sortable: true,
           // attr: 'align=center',
         };
+      } else if (key === 'TIEMPO_SIN_EC_HRS') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'TIEMPO_FUERA_HRS') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
       }
-      // else if (
-      //   key === '%1' ||
-      //   key === '%2' ||
-      //   key === '%3' ||
-      //   key === '%4' ||
-      //   key === '%5' ||
-      //   key === '%6'
-      // ) {
-      //   col = {
-      //     field: key,
-      //     text: "<div style='text-align: center;'>%</div>",
-      //     size: '70px',
-      //     style: 'text-align: center;',
-      //     sortable: true,
-      //     attr: 'align=center',
-      //   };
-      // }
-      //  else if (
-      //   key === '#1' ||
-      //   key === '#2' ||
-      //   key === '#3' ||
-      //   key === '#4' ||
-      //   key === '#5' ||
-      //   key === '#6'
-      // ) {
-      //   col = {
-      //     field: key,
-      //     text: "<div style='text-align: center;'>#</div>",
-      //     size: '70px',
-      //     style: 'text-align: center;',
-      //     sortable: true,
-      //     attr: 'align=center',
-      //   };
-      // }
-      // else if (key === 'Hide') {
-      //   col = {
-      //     field: key,
-      //     text: key,
-      //     size: '70px',
-      //     sortable: true,
-      //     hidden: true,
-      //   };
-      // }
       else {
         col = { field: key, text: key, size: '80px', sortable: true };
       }
