@@ -81,7 +81,6 @@ export class MgOperandoEyComponent implements OnInit {
 
   /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
   optionSelected(input): void {
-    
     if (input === this.search.pais) {
       this.search.region = [];
       this.regiones = [];
@@ -112,7 +111,7 @@ export class MgOperandoEyComponent implements OnInit {
       );
       return;
     }
-    
+
     this.form.form.markAllAsTouched();
     if (this.form.valid) {
       this.tituloReporte = this.search.tipoAlarma;
@@ -349,8 +348,16 @@ export class MgOperandoEyComponent implements OnInit {
           sortable: true,
           // attr: 'align=center',
         };
-      }
-      else {
+      } else if (key === 'DURACION_HRS') {
+        col = {
+          field: key,
+          text: key,
+          size: '130px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else {
         col = { field: key, text: key, size: '80px', sortable: true };
       }
       this.columnsDetalle.push(col);
