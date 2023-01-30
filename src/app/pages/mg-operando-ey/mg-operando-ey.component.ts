@@ -19,6 +19,7 @@ import { FaultMgOperandoService } from 'src/app/services/fault/fault.service';
   styleUrls: ['./mg-operando-ey.component.scss'],
 })
 export class MgOperandoEyComponent implements OnInit {
+  tituloPais = '';
   paises: string[] = [
     'Regional',
     'Guatemala',
@@ -114,6 +115,7 @@ export class MgOperandoEyComponent implements OnInit {
 
     this.form.form.markAllAsTouched();
     if (this.form.valid) {
+      this.tituloPais = this.search.pais;
       this.tituloReporte = this.search.tipoAlarma;
       this.updatedAt = Date();
       this.reporteCargado = true;
@@ -145,8 +147,6 @@ export class MgOperandoEyComponent implements OnInit {
       (error) => {
         this.loading = false;
         this.loadingDetalle = false;
-
-        console.log(error);
         this._pageService.openSnackBar(
           'error',
           'No se obtuvieron regiones del país seleccionado',
@@ -165,7 +165,7 @@ export class MgOperandoEyComponent implements OnInit {
 
     this.loadingDetalle = true;
     this.loading = true;
-
+    // this.dataSourceDetalle = [];
     if (search.tipoAlarma === 'MG OPERANDO') {
       this._mgOperandoEyService.getMgOperando(search).subscribe(
         ({ data, message }: any) => {
@@ -180,6 +180,8 @@ export class MgOperandoEyComponent implements OnInit {
           this._pageService.openSnackBar('error', error);
           this.loading = false;
           this.loadingDetalle = false;
+          this.dataSourceDetalle = [];
+          this.format(true);
         }
       );
     } else {
@@ -198,14 +200,56 @@ export class MgOperandoEyComponent implements OnInit {
           this._pageService.openSnackBar('error', error);
           this.loading = false;
           this.loadingDetalle = false;
+          this.dataSourceDetalle = [];
+          this.format(false);
         }
       );
     }
   }
 
-  format(): void {
+  format(isMgOperando?: boolean): void {
+    let data = [];
+    //* el parámetro isMgOperando se pasa cuándo el backend responde con un error, generalmente que no hay datos en la consulta. Y este condicional evalúa el tipo de alarma que se está buscando para llenar los encabezados de la tabla
+    if (isMgOperando !== undefined) {
+      if (isMgOperando) {
+        data = [
+          'ID_SITIO',
+          'SITIO',
+          'PAIS',
+          'REGION',
+          'ORIGINAL_EVENT_TIME',
+          'MANAGED_OBJECT',
+          'EVENT_TIME',
+          'CREATION_TIMESTAMP',
+          'TERMINATION_TIME_STAMP',
+          'DURACION_HRS',
+          'OC_NAME',
+          'FECHA',
+        ];
+      } else {
+        data = [
+          'IDENTIFIER',
+          'PAIS',
+          'REGION',
+          'TIPO_SITIO',
+          'AFECTACION',
+          'ORIGINAL_EVENT_TIME',
+          'EVENT_TIME',
+          'TRMT_TIME_STAMP',
+        ];
+        const tiempoAMostrar =
+          this.search.afectacion === 'CON AFECTACION'
+            ? ['TIEMPO_FUERA_HRS']
+            : this.search.afectacion === 'SIN AFECTACION'
+            ? ['TIEMPO_SIN_EC_HRS']
+            : ['TIEMPO_FUERA_HRS', 'TIEMPO_SIN_EC_HRS'];
+        data = [...data, ...tiempoAMostrar, 'MANAGED_OBJECT'];
+      }
+    } else {
+      data = this.orderDetalle;
+    }
     this.loadingDetalle = true;
-    let data = this.orderDetalle || [];
+    // data = this.orderDetalle || [];
     this.searchesDetalle = [];
     this.columnsDetalle = [];
     data.map((key: string) => {

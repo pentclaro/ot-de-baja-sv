@@ -82,10 +82,13 @@
         <div class="center" id="tituloPrincipal">
           <br>
           <h1>
-            {{tituloReporte+' '+search.pais}}
+            {{tituloReporte+' '+tituloPais}}
           </h1>
           <h3 id="tituloTiempo">
             Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+          </h3>
+          <h3 *ngIf="dataSourceDetalle.length <= 0 && !loadingDetalle">
+            No se encontraron registros
           </h3>
           <br>
         </div>
@@ -93,7 +96,7 @@
     </div>
 
     <div class="tabla-Detalle">
-      <app-w2ui-grid #w2ui *ngIf="dataSourceDetalle.length > 0" [name]="nameDetalle" [header]="headerDetalle"
+      <app-w2ui-grid #w2ui *ngIf="columnsDetalle.length > 0" [name]="nameDetalle" [header]="headerDetalle"
         [records]="dataSourceDetalle" [columnGroups]="groupsDetalle" [columns]="columnsDetalle"
         [searches]="searchesDetalle" [show]="showDetalle">
       </app-w2ui-grid>
