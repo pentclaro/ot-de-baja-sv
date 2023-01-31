@@ -105,9 +105,15 @@ export class OtDeBajaSvComponent implements OnInit {
         'FECHA_APERTURA',
         'FECHA_CIERRE',
         'TIPO',
+        'ND',
         'TIPO EJECUCION',
         'TITULO',
+        'ID_SM',
         'ESTADO',
+        'TIPO DE SERVICIO',
+        'FECHA PROGRAMADA',
+        'AREA PROGRAMADA',
+        'DESCRIPCION',
       ];
     }
     this.loadingDetalle = true;
@@ -174,6 +180,60 @@ export class OtDeBajaSvComponent implements OnInit {
           field: key,
           text: key,
           size: '500px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'ND') {
+        col = {
+          field: key,
+          text: key,
+          size: '100px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'ID_SM') {
+        col = {
+          field: key,
+          text: key,
+          size: '110px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'TIPO DE SERVICIO') {
+        col = {
+          field: key,
+          text: key,
+          size: '160px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'FECHA PROGRAMADA') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'AREA PROGRAMADA') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'DESCRIPCION') {
+        col = {
+          field: key,
+          text: key,
+          size: '150px',
           // style: '',
           sortable: true,
           // attr: 'align=center',
