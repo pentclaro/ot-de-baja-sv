@@ -1,0 +1,62 @@
+<div id="wrapper-reporte">
+  <div id="container" class="scroll">
+    <div class="row">
+      <div class="col col-12 filters">
+
+        <div id="header">
+          <form #form="ngForm" ngNativeValidate (ngSubmit)="searchData()">
+
+            <div class="flex-container">
+
+              <mat-form-field appearance="outline" class="search" id="fechas">
+                <mat-label>Ingresa un rango de fecha</mat-label>
+                <mat-date-range-input [rangePicker]="picker" required>
+                  <input matStartDate [(ngModel)]="search.dateRange.start" placeholder="Start Date" name="start">
+                  <input matEndDate [(ngModel)]="search.dateRange.end" placeholder="End Date"
+                    name="end"></mat-date-range-input>
+
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker [disabled]="false"></mat-date-range-picker>
+              </mat-form-field>
+
+              <button mat-flat-button class="primary-button search" type="submit" [disabled]="loading">
+                <mat-icon matPrefix>search</mat-icon>BUSCAR
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-12" *ngIf="reporteCargado === true">
+        <div class="center" id="tituloPrincipal">
+          <br>
+          <h1>
+            Reporte OT de Baja SV
+          </h1>
+          <h3 id="tituloTiempo">
+            Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}
+          </h3>
+          <h3 *ngIf="dataSourceDetalle.length <= 0 && !loadingDetalle">
+            No se encontraron registros
+          </h3>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabla-Detalle">
+      <app-w2ui-grid #w2ui *ngIf="columnsDetalle.length > 0" [name]="nameDetalle" [header]="headerDetalle"
+        [records]="dataSourceDetalle" [columnGroups]="groupsDetalle" [columns]="columnsDetalle"
+        [searches]="searchesDetalle" [show]="showDetalle">
+      </app-w2ui-grid>
+      <div class="HOLA" *ngIf="loadingDetalle">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -12,16 +12,19 @@ import { NgProgressModule } from 'ngx-progressbar';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'mg-operando-ey',
-    pathMatch: 'full'
+    redirectTo: 'ot-de-baja-sv',
+    pathMatch: 'full',
   },
   {
-    path: 'mg-operando-ey',
-    loadChildren: () => import('./mg-operando-ey/mg-operando-ey.module').then(m => m.MgOperandoEyModule),
+    path: 'ot-de-baja-sv',
+    loadChildren: () =>
+      import('./ot-de-baja-sv/ot-de-baja-sv.module').then(
+        (m) => m.OtDeBajaSvCModule
+      ),
     // canActivate: [AuthGuard],
     data: {
-      key: 'mg-operando-ey'
-    }
+      key: 'ot-de-baja-sv',
+    },
   },
 ];
 @NgModule({
@@ -34,7 +37,7 @@ const routes: Routes = [
     HttpClientModule,
     NgProgressModule,
     MatPaginatorModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
 })
-export class PagesModule { }
+export class PagesModule {}

@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import {
   Column,
   Search,
@@ -10,15 +9,14 @@ import {
 } from 'src/app/interfaces/interfaces';
 import { HeaderService } from 'src/app/services/header.service';
 // import { MatDialog } from '@angular/material/dialog';
-import { MgOperandoEyService } from 'src/app/services/mg-operando-ey/mg-operando-ey.service';
-import { FaultMgOperandoService } from 'src/app/services/fault/fault.service';
+import { OtDeBajaSvService } from 'src/app/services/ot-de-baja-sv/ot-de-baja-sv.service';
 
 @Component({
-  selector: 'app-mg-operando-ey',
-  templateUrl: './mg-operando-ey.component.html',
-  styleUrls: ['./mg-operando-ey.component.scss'],
+  selector: 'app-ot-de-baja-sv',
+  templateUrl: './ot-de-baja-sv.component.html',
+  styleUrls: ['./ot-de-baja-sv.component.scss'],
 })
-export class MgOperandoEyComponent implements OnInit {
+export class OtDeBajaSvComponent implements OnInit {
   search: {
     dateRange: { start: Date; end: Date };
   } = {
@@ -50,7 +48,7 @@ export class MgOperandoEyComponent implements OnInit {
 
   constructor(
     private _pageService: HeaderService,
-    private _mgOperandoEyService: MgOperandoEyService
+    private _otDeBajaSvService: OtDeBajaSvService
   ) {}
 
   ngOnInit(): void {}
@@ -74,7 +72,7 @@ export class MgOperandoEyComponent implements OnInit {
     this.loadingDetalle = true;
     this.loading = true;
     // this.dataSourceDetalle = [];
-    this._mgOperandoEyService.getOtDeBajaSv(search).subscribe(
+    this._otDeBajaSvService.getOtDeBajaSv(search).subscribe(
       ({ data, message }: any) => {
         this.orderDetalle = data.order;
         let datos = data.data;
