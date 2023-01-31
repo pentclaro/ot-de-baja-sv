@@ -13,49 +13,27 @@ import { HeaderService } from 'src/app/services/header.service';
 import { MgOperandoEyService } from 'src/app/services/mg-operando-ey/mg-operando-ey.service';
 import { FaultMgOperandoService } from 'src/app/services/fault/fault.service';
 
-
 @Component({
   selector: 'app-mg-operando-ey',
   templateUrl: './mg-operando-ey.component.html',
   styleUrls: ['./mg-operando-ey.component.scss'],
 })
 export class MgOperandoEyComponent implements OnInit {
-  tituloPais = '';
-  paises: string[] = [
-    'Regional',
-    'Guatemala',
-    'El Salvador',
-    'Honduras',
-    'Nicaragua',
-    'Costa Rica',
-  ];
-  tiposAlarma: string[] = ['MG OPERANDO', 'Corte de Energía Comercial'];
-  afectaciones: string[] = ['Ambas', 'CON AFECTACION', 'SIN AFECTACION'];
-  regiones: string[] = [];
   search: {
-    pais: string;
-    region: string[];
-    tipoAlarma: string;
-    afectacion: string;
     dateRange: { start: Date; end: Date };
   } = {
-    pais: '',
-    region: [],
-    tipoAlarma: '',
-    afectacion: 'Ambas',
     dateRange: { start: new Date(), end: new Date() },
   };
   loading: boolean = false;
   loadingDetalle = false;
   updatedAt = '';
   reporteCargado = false;
-  tituloReporte = 'Reporte MG Operando';
 
   // w2ui de Cantidades
   dataSourceDetalle = [];
   orderDetalle: any;
-  nameDetalle = 'ReporteMgOperando';
-  headerDetalle = 'Resumen mg operando';
+  nameDetalle = 'ReporteOtdeBajasSv';
+  headerDetalle = 'Resumen ot de bajas sv';
   showDetalle: Show = {
     toolbar: true,
     footer: true,
@@ -70,187 +48,71 @@ export class MgOperandoEyComponent implements OnInit {
   searchesDetalle: Search[] = [];
   columnsDetalle: Column[] = [];
 
-  areAllRegionsSelected: boolean = false;
-  @ViewChild('form', { static: false }) form: NgForm;
-
   constructor(
     private _pageService: HeaderService,
-    private _mgOperandoEyService: MgOperandoEyService,
-    private _faultMgOperando: FaultMgOperandoService
+    private _mgOperandoEyService: MgOperandoEyService
   ) {}
 
   ngOnInit(): void {}
-
-  /* MÉTODO PARA DETECTAR SELECCION DEL USUARIO EN CUALQUIER INPUT */
-  optionSelected(input): void {
-    if (input === this.search.pais) {
-      this.search.region = [];
-      this.regiones = [];
-      // FRAGMENTO ESPECIFICO DEL FILTRO DE PAIS
-      if (this.search.pais !== 'Regional') {
-        this.loadingDetalle = true;
-        this.getDataRegiones(this.search.pais);
-      }
-    } else {
-      if (this.areAllRegionsSelected) {
-        this.search.region = [];
-        this.areAllRegionsSelected = false;
-      } else {
-        if (input.includes('TODAS')) {
-          this.search.region = this.regiones;
-          this.areAllRegionsSelected = true;
-        }
-      }
-    }
-  }
 
   /* MÉTODO QUE SE EJECUTA CUANDO SE LE DA CLIC AL BOTÓN DE BUSCAR */
   searchData(): void {
     if (!this.search.dateRange.start || !this.search.dateRange.end) {
       this._pageService.openSnackBar(
         `warning`,
-        `Error selecciona todos los campos.`
+        `Error selecciona un rango de fecha.`
       );
       return;
     }
-
-    this.form.form.markAllAsTouched();
-    if (this.form.valid) {
-      this.tituloPais = this.search.pais;
-      this.tituloReporte = this.search.tipoAlarma;
-      this.updatedAt = Date();
-      this.reporteCargado = true;
-      this.getTableDetalle(this.search);
-    } else {
-      this._pageService.openSnackBar(
-        `warning`,
-        `Error selecciona todos los campos.`
-      );
-      this.reporteCargado = false;
-      this.loadingDetalle = false;
-      this.loading = false;
-    }
-  }
-
-  /* MÉTODO QUE CARGA E INSERTA DENTRO DEL INPUT DE REGIONES AL SELECCIONAR UN PAÍS */
-  getDataRegiones(pais: string) {
-    this.loading = true;
-    this.regiones = [];
-    this._faultMgOperando.getDataRegiones(pais).subscribe(
-      (data: any) => {
-        data.map((region) => {
-          this.regiones.push(region.REGION);
-        });
-        this.regiones.unshift('TODAS');
-        this.loading = false;
-        this.loadingDetalle = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.loadingDetalle = false;
-        this._pageService.openSnackBar(
-          'error',
-          'No se obtuvieron regiones del país seleccionado',
-          1800
-        );
-      }
-    );
+    this.updatedAt = Date();
+    this.reporteCargado = true;
+    this.getTableDetalle(this.search);
   }
 
   /* MÉTODO QUE CARGA DATOS DE TABLA DE PROMEDIOS Y SE MANEJA LA INFORMACIÓN PARA LA TABLA W2UI */
   getTableDetalle(search?) {
-    // this.orderDetalle = [];
-    // this.searchesDetalle = [];
-    // this.columnsDetalle = [];
-    // this.dataSourceDetalle = [];
-
     this.loadingDetalle = true;
     this.loading = true;
     // this.dataSourceDetalle = [];
-    if (search.tipoAlarma === 'MG OPERANDO') {
-      this._mgOperandoEyService.getMgOperando(search).subscribe(
-        ({ data, message }: any) => {
-          this.orderDetalle = data.order;
-          let datos = data.data;
-          this.updatedAt = Date();
-          this.dataSourceDetalle = this.orderKeys(datos, data.info);
-          this.format();
-          this.loading = false;
-        },
-        (error) => {
-          this._pageService.openSnackBar('error', error);
-          this.loading = false;
-          this.loadingDetalle = false;
-          this.dataSourceDetalle = [];
-          this.format(true);
-        }
-      );
-    } else {
-      this._mgOperandoEyService.getCorteEnergia(search).subscribe(
-        ({ data, message }: any) => {
-          this.orderDetalle = data.order;
-          let datos = data.data;
-          this.updatedAt = Date();
-          this.dataSourceDetalle = this.orderKeys(datos, data.info);
-          this.format();
-
-          this.loading = false;
-          this.loadingDetalle = false;
-        },
-        (error) => {
-          this._pageService.openSnackBar('error', error);
-          this.loading = false;
-          this.loadingDetalle = false;
-          this.dataSourceDetalle = [];
-          this.format(false);
-        }
-      );
-    }
+    this._mgOperandoEyService.getOtDeBajaSv(search).subscribe(
+      ({ data, message }: any) => {
+        this.orderDetalle = data.order;
+        let datos = data.data;
+        console.log({ datos });
+        this.updatedAt = Date();
+        this.dataSourceDetalle = this.orderKeys(datos, data.info);
+        this.format();
+        this.loading = false;
+      },
+      (error) => {
+        this._pageService.openSnackBar('error', error);
+        this.loading = false;
+        this.loadingDetalle = false;
+        this.dataSourceDetalle = [];
+        this.format(true);
+      }
+    );
   }
 
-  format(isMgOperando?: boolean): void {
+  format(noData: boolean = false): void {
     let data = [];
-    //* el parámetro isMgOperando se pasa cuándo el backend responde con un error, generalmente que no hay datos en la consulta. Y este condicional evalúa el tipo de alarma que se está buscando para llenar los encabezados de la tabla
-    if (isMgOperando !== undefined) {
-      if (isMgOperando) {
-        data = [
-          'ID_SITIO',
-          'SITIO',
-          'PAIS',
-          'REGION',
-          'ORIGINAL_EVENT_TIME',
-          'MANAGED_OBJECT',
-          'EVENT_TIME',
-          'CREATION_TIMESTAMP',
-          'TERMINATION_TIME_STAMP',
-          'DURACION_HRS',
-          'OC_NAME',
-          'FECHA',
-        ];
-      } else {
-        data = [
-          'IDENTIFIER',
-          'PAIS',
-          'REGION',
-          'TIPO_SITIO',
-          'AFECTACION',
-          'ORIGINAL_EVENT_TIME',
-          'EVENT_TIME',
-          'TRMT_TIME_STAMP',
-        ];
-        const tiempoAMostrar =
-          this.search.afectacion === 'CON AFECTACION'
-            ? ['TIEMPO_FUERA_HRS']
-            : this.search.afectacion === 'SIN AFECTACION'
-            ? ['TIEMPO_SIN_EC_HRS']
-            : ['TIEMPO_FUERA_HRS', 'TIEMPO_SIN_EC_HRS'];
-        data = [...data, ...tiempoAMostrar, 'MANAGED_OBJECT'];
-      }
-    } else {
+    //* el parametro no data se pasa como true cuando no hay registros en la consulta y se llenan unicamente los encabezados de la tabla
+    if (!noData) {
       data = this.orderDetalle;
+    } else {
+      data = [
+        'CATEGORY',
+        'OT',
+        'AREA_CIERRE',
+        'FECHA_APERTURA',
+        'FECHA_CIERRE',
+        'TIPO',
+        'TIPO EJECUCION',
+        'TITULO',
+        'ESTADO',
+      ];
     }
     this.loadingDetalle = true;
-    // data = this.orderDetalle || [];
     this.searchesDetalle = [];
     this.columnsDetalle = [];
     data.map((key: string) => {
@@ -259,114 +121,12 @@ export class MgOperandoEyComponent implements OnInit {
         col = {
           field: key,
           text: key,
-          size: '1px',
+          size: '50px',
           frozen: false,
           sortable: true,
-          hidden: true,
+          // hidden: true,
         };
-      } else if (key === 'ORIGINAL_EVENT_TIME') {
-        col = {
-          field: key,
-          text: key,
-          size: '180px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'SITIO') {
-        col = {
-          field: key,
-          text: key,
-          size: '200px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'MANAGED_OBJECT') {
-        col = {
-          field: key,
-          text: key,
-          size: '300px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'EVENT_TIME') {
-        col = {
-          field: key,
-          text: key,
-          size: '200px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'CREATION_TIMESTAMP') {
-        col = {
-          field: key,
-          text: key,
-          size: '180px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (
-        key === 'TERMINATION_TIME_STAMP' ||
-        key === 'TRMT_TIME_STAMP'
-      ) {
-        col = {
-          field: key,
-          text: key,
-          size: '180px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'DOCUMENTO_REFERENCIA') {
-        col = {
-          field: key,
-          text: key,
-          size: '200px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'OC_NAME') {
-        col = {
-          field: key,
-          text: key,
-          size: '150px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'ALARM_OBJECT_OPERATOR_NOTE') {
-        col = {
-          field: key,
-          text: key,
-          size: '200px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'ADDITIONAL_TEXT') {
-        col = {
-          field: key,
-          text: key,
-          size: '300px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'REGION') {
-        col = {
-          field: key,
-          text: key,
-          size: '150px',
-          // style: '',
-          sortable: true,
-          // attr: 'align=center',
-        };
-      } else if (key === 'AFECTACION') {
+      } else if (key === 'CATEGORY') {
         col = {
           field: key,
           text: key,
@@ -375,7 +135,16 @@ export class MgOperandoEyComponent implements OnInit {
           sortable: true,
           // attr: 'align=center',
         };
-      } else if (key === 'TIEMPO_SIN_EC_HRS') {
+      } else if (key === 'AREA_CIERRE') {
+        col = {
+          field: key,
+          text: key,
+          size: '200px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'FECHA_APERTURA') {
         col = {
           field: key,
           text: key,
@@ -384,7 +153,7 @@ export class MgOperandoEyComponent implements OnInit {
           sortable: true,
           // attr: 'align=center',
         };
-      } else if (key === 'TIEMPO_FUERA_HRS') {
+      } else if (key === 'FECHA_CIERRE') {
         col = {
           field: key,
           text: key,
@@ -393,11 +162,20 @@ export class MgOperandoEyComponent implements OnInit {
           sortable: true,
           // attr: 'align=center',
         };
-      } else if (key === 'DURACION_HRS') {
+      } else if (key === 'TIPO EJECUCION') {
         col = {
           field: key,
           text: key,
-          size: '130px',
+          size: '150px',
+          // style: '',
+          sortable: true,
+          // attr: 'align=center',
+        };
+      } else if (key === 'TITULO') {
+        col = {
+          field: key,
+          text: key,
+          size: '500px',
           // style: '',
           sortable: true,
           // attr: 'align=center',

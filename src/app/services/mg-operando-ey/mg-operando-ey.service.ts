@@ -9,6 +9,22 @@ import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 })
 export class MgOperandoEyService {
   constructor(private http: HttpClient, private queryService: HeaderService) {}
+  getOtDeBajaSv(input?: any) {
+    let { dateRange } = input;
+    // console.log('tipo alarma', tipoAlarma, 'afectacion', afectacion);
+
+    let { start, end } = dateRange;
+
+    start = start.toLocaleDateString();
+    end = end.toLocaleDateString();
+
+    const startDateSepratedByDash = start.replace(/\//g, '-');
+    const endDateSepratedByDash = end.replace(/\//g, '-');
+
+    return this.http.get(
+      `${environment.apiURL}/otDeBajaSv/getOtDeBajaSv/${startDateSepratedByDash}/${endDateSepratedByDash}`
+    );
+  }
   getMgOperando(input?: any) {
     let { pais, region, dateRange } = input;
     // console.log('tipo alarma', tipoAlarma, 'afectacion', afectacion);

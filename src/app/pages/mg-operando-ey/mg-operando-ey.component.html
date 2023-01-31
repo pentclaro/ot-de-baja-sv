@@ -8,7 +8,7 @@
 
             <div class="flex-container">
 
-              <mat-form-field appearance="outline"
+              <!-- <mat-form-field appearance="outline"
                 [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
                 [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>País</mat-label>
@@ -16,9 +16,9 @@
                   [disabled]="loading" (selectionChange)="optionSelected(search.pais)">
                   <mat-option *ngFor="let pais of paises" [value]="pais">{{pais}}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
 
-              <mat-form-field appearance="outline"
+              <!-- <mat-form-field appearance="outline"
                 [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
                 [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>Región</mat-label>
@@ -27,9 +27,9 @@
                   [disabled]="regiones.length === 0 || search.pais === 'Regional'">
                   <mat-option *ngFor="let region of regiones" [value]="region">{{region}}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
 
-              <mat-form-field appearance="outline"
+              <!-- <mat-form-field appearance="outline"
                 [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
                 [class.search]="search.tipoAlarma==='Corte de Energía Comercial'">
                 <mat-label>Tipo Alarma</mat-label>
@@ -37,9 +37,9 @@
                   name="tipoAlarma" [disabled]="loading">
                   <mat-option *ngFor="let tipoAlarma of tiposAlarma" [value]="tipoAlarma">{{tipoAlarma}}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
 
-              <mat-form-field appearance="outline"
+              <!-- <mat-form-field appearance="outline"
                 [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
                 [class.search]="search.tipoAlarma==='Corte de Energía Comercial'"
                 *ngIf="search.tipoAlarma==='Corte de Energía Comercial'">
@@ -48,11 +48,9 @@
                   name="afectacion" [disabled]="loading">
                   <mat-option *ngFor="let afectacion of afectaciones" [value]="afectacion">{{afectacion}}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
 
-              <mat-form-field appearance="outline"
-                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
-                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'" id="fechas">
+              <mat-form-field appearance="outline" class="search" id="fechas">
                 <mat-label>Ingresa un rango de fecha</mat-label>
                 <mat-date-range-input [rangePicker]="picker" required>
                   <input matStartDate [(ngModel)]="search.dateRange.start" placeholder="Start Date" name="start">
@@ -63,10 +61,7 @@
                 <mat-date-range-picker #picker [disabled]="false"></mat-date-range-picker>
               </mat-form-field>
 
-              <button mat-flat-button class="primary-button" type="submit"
-                [class.searchSinInputAfectacion]="search.tipoAlarma!=='Corte de Energía Comercial'"
-                [class.search]="search.tipoAlarma==='Corte de Energía Comercial'"
-                [disabled]="loading || search.pais.length === 0">
+              <button mat-flat-button class="primary-button search" type="submit" [disabled]="loading">
                 <mat-icon matPrefix>search</mat-icon>BUSCAR
               </button>
             </div>
@@ -82,7 +77,7 @@
         <div class="center" id="tituloPrincipal">
           <br>
           <h1>
-            {{tituloReporte+' '+tituloPais}}
+            Reporte OT de Baja SV
           </h1>
           <h3 id="tituloTiempo">
             Datos obtenidos el: {{updatedAt | date:'dd/MM/yyyy hh:mm:ss'}}

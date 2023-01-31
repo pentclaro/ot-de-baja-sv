@@ -46,12 +46,9 @@
   }
 
   .search {
-    // width: calc((100% - 125px)/5);
-    width: calc((100% - 125px) / 6);
+    width: calc((100% - 125px) / 4);
   }
-  .searchSinInputAfectacion {
-    width: calc((100% - 125px) / 5);
-  }
+
   .graph-container {
     margin: 50px 0;
     display: flex;
@@ -334,15 +331,11 @@
 
 @media (max-width: 768px) {
   #wrapper-reporte {
-    #container {
-    }
-
     .flex-container {
       display: inline-block !important;
     }
 
-    .search,
-    .searchSinInputAfectacion {
+    .search {
       width: 100% !important;
     }
   }
@@ -350,11 +343,7 @@
 
 @media (max-width: 768px) {
   #wrapper-reporte {
-    #container {
-    }
-
-    .search,
-    .searchSinInputAfectacion {
+    .search {
       width: 25%;
     }
   }
