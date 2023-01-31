@@ -13,6 +13,7 @@ import { HeaderService } from 'src/app/services/header.service';
 import { MgOperandoEyService } from 'src/app/services/mg-operando-ey/mg-operando-ey.service';
 import { FaultMgOperandoService } from 'src/app/services/fault/fault.service';
 
+
 @Component({
   selector: 'app-mg-operando-ey',
   templateUrl: './mg-operando-ey.component.html',
