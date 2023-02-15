@@ -35,11 +35,7 @@ export class OtDeBajaSvComponent implements OnInit {
   showDetalle: Show = {
     toolbar: true,
     footer: true,
-    header: false,
-    toolbarColumns: false,
-    toolbarInput: false,
-    toolbarSearch: false,
-    toolbarReload: false,
+    header: false
   };
   groupsDetalle: ColumnGroups[] = [];
   itemsDetalle: Item;
